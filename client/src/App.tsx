@@ -12,6 +12,7 @@ import Privacy from "@/pages/Privacy";
 import Apply from "@/pages/Apply";
 import NotFound from "@/pages/not-found";
 import { LangProvider, type Lang } from "@/lib/i18n";
+import LanguageGate from "@/components/LanguageGate";
 
 const wouterBase = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
 
@@ -52,6 +53,12 @@ function Site({ lang }: { lang: Lang }) {
   );
 }
 
+/** The language choice screen sits above both language sections, so it fades out smoothly whichever is picked. */
+function Gate() {
+  const [location] = useLocation();
+  return <LanguageGate lang={/^\/en(\/|$)/.test(location) ? "en" : "uk"} />;
+}
+
 function App() {
   return (
     <TooltipProvider>
@@ -59,6 +66,7 @@ function App() {
           Ukrainian at the root (/about), English nested under /en (/en/about): links inside a page
           stay "/about" and resolve to the right language automatically. */}
       <WouterRouter base={wouterBase}>
+        <Gate />
         <Switch>
           <Route path="/en" nest>
             <Site lang="en" />

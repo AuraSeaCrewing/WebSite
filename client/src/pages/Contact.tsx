@@ -183,7 +183,7 @@ export default function Contact() {
                 <div className="space-y-5">
                   {[
                     { icon: Mail, label: "Email", value: "crewing@aurasea.org", href: "mailto:crewing@aurasea.org", testId: "contact-email" },
-                    { icon: Phone, label: t("Phone", "Телефон"), value: t("+380978458147 (Whatsapp, Telegram)", "+380978458147 (WhatsApp, Telegram)"), href: "tel:+380978458147", testId: "contact-phone" },
+                    { icon: Phone, label: t("Phone", "Телефон"), value: t("+380978458147 (WhatsApp, Telegram)", "+380978458147 (WhatsApp, Telegram)"), href: "tel:+380978458147", testId: "contact-phone" },
                   ].map((item) => {
                     const Icon = item.icon;
                     return (

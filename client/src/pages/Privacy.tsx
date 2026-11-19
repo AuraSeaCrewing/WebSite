@@ -379,7 +379,7 @@ function English() {
       </P>
       <P>
         The application form saves your unfinished answers in your browser’s local storage, only on your device, so that you do not lose them if
-        you close the page. They are deleted after you send the form; you can also clear them in your browser settings.
+        you close the page. They are deleted after you send the form; you can also clear them in your browser settings. Your choice of language (Ukrainian or English) is remembered the same way, so we do not ask again.
       </P>
       <P>
         Links to Telegram, Instagram, LinkedIn, Facebook and WhatsApp lead to those services, which have their own privacy policies.
@@ -634,7 +634,7 @@ function Ukrainian() {
       </P>
       <P>
         Анкета зберігає незавершені відповіді в локальному сховищі вашого браузера — лише на вашому пристрої, щоб вони не загубилися, якщо ви
-        закриєте сторінку. Після відправлення анкети вони видаляються; їх також можна очистити в налаштуваннях браузера.
+        закриєте сторінку. Після відправлення анкети вони видаляються; їх також можна очистити в налаштуваннях браузера. Так само запам’ятовується обрана мова (українська чи англійська), щоб не питати знову.
       </P>
       <P>Посилання на Telegram, Instagram, LinkedIn, Facebook і WhatsApp ведуть на ці сервіси, які мають власні політики конфіденційності.</P>
 

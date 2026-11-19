@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import Logo from "./Logo";
 import { pathFor, useLang, useT, type Lang } from "@/lib/i18n";
+import { saveLang } from "./LanguageGate";
 
 /** UA | EN: the same page in the other language ("~" — path from the site root, outside the /en section). */
 function LanguageSwitch({ className, onPick }: { className?: string; onPick?: () => void }) {
@@ -20,7 +21,11 @@ function LanguageSwitch({ className, onPick }: { className?: string; onPick?: ()
         <Link
           key={it.code}
           href={"~" + pathFor(location, it.code)}
-          onClick={onPick}
+          onClick={() => {
+            // Remember the choice: next visits open the site in this language
+            saveLang(it.code);
+            onPick?.();
+          }}
           title={it.title}
           aria-current={lang === it.code ? "true" : undefined}
           hrefLang={it.code}

@@ -57,14 +57,14 @@ export default function Footer() {
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 mt-0.5 text-primary" />
                 <a href="https://wa.me/380978458147" className="text-muted-foreground hover:text-foreground" data-testid="footer-phone">
-                  +380978458147 (Whatsapp, Telegram)
+                  +380978458147 (WhatsApp, Telegram)
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 mt-0.5 text-primary" />
                 <div className="text-muted-foreground text-xs leading-relaxed">
                   <p>{t("Psychological support for Seafarers and their families 24/7:", "Психологічна підтримка моряків і їхніх родин 24/7:")}</p>
-                  <a href="tel:+380938298652" className="hover:text-foreground">+380 93 829 86 52</a> (Whatsapp, Telegram) / <a href="https://t.me/ProdiusAn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">t.me/ProdiusAn</a>
+                  <a href="tel:+380938298652" className="hover:text-foreground">+380 93 829 86 52</a> (WhatsApp, Telegram) / <a href="https://t.me/ProdiusAn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">t.me/ProdiusAn</a>
                 </div>
               </li>
               <li className="flex items-start gap-2">
