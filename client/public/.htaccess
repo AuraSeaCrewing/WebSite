@@ -22,7 +22,7 @@
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
   # Fonts, icons, video without a hash: a week
-  <FilesMatch "^[^-]*\.(ttf|woff2?|ico|mp4)$|^favicon">
+  <FilesMatch "\.(ttf|woff2?|ico|mp4)$|^favicon">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
   <FilesMatch "\.html$">
