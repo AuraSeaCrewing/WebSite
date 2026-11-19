@@ -14,6 +14,13 @@ npm run build:site # собрать статический сайт в dist/publ
 - Картинки, импортируемые из кода: `attached_assets` (алиас `@assets`)
 - Файлы, копируемые как есть (видео, шрифты, иконки, `.htaccess`): `client/public`
 
+## Анкета моряка (`/apply`)
+
+`client/src/pages/Apply.tsx` отправляет анкету прямо в CRM: `POST {VITE_CRM_URL}/api/public/apply`
+(по умолчанию `https://crm.aurasea.org`). В CRM она становится черновиком в «Анкеты на разбор».
+Поля формы должны совпадать со схемой `applicationSchema` в репозитории CRM
+(`lib/website/application.ts`) — менять их вместе.
+
 ## Публикация
 
 1. Пуш в `main` → GitHub Actions (`.github/workflows/build-deploy.yml`) собирает сайт

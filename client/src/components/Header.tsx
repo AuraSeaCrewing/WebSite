@@ -60,7 +60,14 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="hidden md:flex">
+          <div className="hidden md:flex items-center gap-2">
+            <Link
+              href="/apply"
+              data-testid="button-apply-cta"
+              className={cn(buttonVariants({ size: "sm" }), "font-medium")}
+            >
+              Apply Now
+            </Link>
             <Link
               href="/contact"
               data-testid="button-contact-cta"
@@ -106,6 +113,14 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            <Link
+              href="/apply"
+              className={cn(buttonVariants(), "w-full font-medium")}
+              onClick={() => setMobileMenuOpen(false)}
+              data-testid="mobile-button-apply"
+            >
+              Apply Now
+            </Link>
             <Link
               href="/contact"
               className={cn(buttonVariants({ variant: "secondary" }), "w-full font-medium")}
