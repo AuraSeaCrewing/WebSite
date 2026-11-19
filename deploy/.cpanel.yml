@@ -1,0 +1,7 @@
+---
+# Used by cPanel Git Version Control on the "deploy" branch (built site).
+# Copies every built file into public_html, skipping git metadata.
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/auraseao/public_html/
+    - /bin/find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .cpanel.yml -exec /bin/cp -R {} $DEPLOYPATH \;

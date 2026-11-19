@@ -1,5 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/auraseao/public_html/
-    - /bin/cp -R index.html 404.html .htaccess favicon.png favicon_high_contrast.png assets fonts textures videos $DEPLOYPATH
