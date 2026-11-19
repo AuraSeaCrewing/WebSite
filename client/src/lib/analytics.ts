@@ -3,7 +3,7 @@
 // Off until UMAMI_WEBSITE_ID is set (the setup script prints it).
 
 const UMAMI_SRC = "https://stats.aurasea.org/insights.js";
-export const UMAMI_WEBSITE_ID = "";
+export const UMAMI_WEBSITE_ID = "184d0d8a-0570-4aae-b18a-2b4eb45a41ca";
 
 /** Load the counter on the live site only: local builds and previews are not counted. */
 export function loadAnalytics() {
