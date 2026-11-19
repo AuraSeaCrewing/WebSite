@@ -17,10 +17,13 @@ const EFFECTIVE_DATE = { en: "19 November 2026", uk: "19 листопада 2026
  */
 const COMPANY = {
   brand: "AURA SEA",
-  legalName: { en: "", uk: "" }, // e.g. "AURA SEA LLC" / "ТОВ «АУРА СІ»"
-  registrationCode: "", // ЄДРПОУ
+  // Individual entrepreneur (ФОП). Her tax number (РНОКПП) is personal data and is deliberately not published here
+  legalName: { en: "Individual Entrepreneur Anastasiia Prodius", uk: "ФОП Продіус Анастасія Олегівна" },
   /** Entry in the Ministry of Economy list of employment-abroad intermediaries (declaration date / number). */
-  intermediaryRegister: { en: "", uk: "" },
+  intermediaryRegister: {
+    en: "Included in the list of businesses providing employment-abroad intermediation services kept by the Ministry of Economy of Ukraine (declaration of 06.05.2026; Ministry letter No. 4804-06/45115-07 of 13.05.2026)",
+    uk: "Включена до переліку суб’єктів господарювання, що надають послуги у сфері посередництва у працевлаштуванні за кордоном, Мінекономіки (декларація від 06.05.2026; лист Мінекономіки № 4804-06/45115-07 від 13.05.2026)",
+  },
   address: { en: "77 Prokhorovska St, Odesa, Ukraine", uk: "вул. Прохоровська, 77, м. Одеса, Україна" },
   email: "crewing@aurasea.org",
   phone: "+380 97 845 8147",
@@ -84,7 +87,6 @@ function ControllerCard({ lang }: { lang: Lang }) {
   return (
     <div className="rounded-lg border border-border/60 bg-background/40 p-5 mb-4 space-y-1 text-sm">
       <p className="text-foreground font-medium">{name ? `${name} (${COMPANY.brand})` : COMPANY.brand}</p>
-      {COMPANY.registrationCode && <p className="text-muted-foreground">{l("EDRPOU code", "Код ЄДРПОУ")}: {COMPANY.registrationCode}</p>}
       {COMPANY.intermediaryRegister[lang] && <p className="text-muted-foreground">{COMPANY.intermediaryRegister[lang]}</p>}
       <p className="text-muted-foreground">{COMPANY.address[lang]}</p>
       <p className="text-muted-foreground">
@@ -145,9 +147,9 @@ function English() {
     <>
       {h(0)}
       <P>
-        AURA SEA is a Ukrainian crewing agency: we help seafarers find work on board and help ship-owners and ship managers find crew. For the
-        personal data described here, AURA SEA is the <B>data controller</B> (in Ukrainian law, the <i>owner</i> of personal data), which means we
-        decide why and how the data is used and we are responsible for it.
+        AURA SEA is a Ukrainian crewing agency: we help seafarers find work on board and help ship-owners and ship managers find crew. AURA SEA
+        is the trade name of Individual Entrepreneur Anastasiia Prodius, who is the <B>data controller</B> for the personal data described here
+        (in Ukrainian law, the <i>owner</i> of personal data). This means we decide why and how the data is used and we are responsible for it.
       </P>
       <ControllerCard lang="en" />
       <P>
@@ -409,9 +411,9 @@ function Ukrainian() {
     <>
       {h(0)}
       <P>
-        AURA SEA — українська крюїнгова агенція: ми допомагаємо морякам знайти роботу на судні, а судновласникам і менеджерам — екіпаж. Щодо
-        персональних даних, описаних тут, AURA SEA є <B>володільцем персональних даних</B> (за GDPR — контролером): ми визначаємо мету і спосіб
-        їх обробки та відповідаємо за неї.
+        AURA SEA — українська крюїнгова агенція: ми допомагаємо морякам знайти роботу на судні, а судновласникам і менеджерам — екіпаж. AURA SEA —
+        торговельна назва ФОП Продіус Анастасії Олегівни, яка є <B>володільцем персональних даних</B>, описаних тут (за GDPR — контролером). Тобто
+        ми визначаємо мету і спосіб їх обробки та відповідаємо за неї.
       </P>
       <ControllerCard lang="uk" />
       <P>
