@@ -8,14 +8,25 @@ import { Mail, Phone, MapPin, Clock, CheckCircle, Send } from "lucide-react";
 import { motion } from "framer-motion";
 const MotionCard = motion.create(Card);
 import { track } from "@/lib/analytics";
+import { usePageMeta, useT } from "@/lib/i18n";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import contactHero from "@assets/stock_images/stormy_sea_contact.webp";
 
 export default function Contact() {
   useScrollAnimation();
+  const t = useT();
+  usePageMeta(
+    "/contact",
+    { en: "Contact Us", uk: "Контакти" },
+    {
+      en: "Contact AURA SEA crewing agency in Odesa: crewing@aurasea.org, +380 97 845 8147 (WhatsApp, Telegram), 77 Prokhorovska St.",
+      uk: "Контакти крюїнгової агенції AURA SEA в Одесі: crewing@aurasea.org, +380 97 845 8147 (WhatsApp, Telegram), вул. Прохоровська, 77.",
+    }
+  );
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sendError, setSendError] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -44,11 +55,15 @@ export default function Contact() {
       });
 
       if (!res.ok) throw new Error(`Web3Forms error: ${res.status}`);
+      setSendError(false);
 
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
       setShowSuccess(true);
       track("contact-message-sent");
       setTimeout(() => setShowSuccess(false), 5000);
+    } catch {
+      // Before: a failed send showed nothing and the visitor thought the message had gone
+      setSendError(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -71,10 +86,10 @@ export default function Contact() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-headline text-4xl sm:text-5xl font-bold mb-6 text-white drop-shadow-md" data-testid="heading-contact">
-            Contact AURA SEA
+            {t("Contact AURA SEA", "Зв’яжіться з AURA SEA")}
           </h1>
           <p className="text-lg text-white drop-shadow-md font-light max-w-2xl mx-auto">
-            Whether you're a ship-owner looking for reliable crew management or a seafarer interested in opportunities, we're here to help.
+            {t("Whether you're a ship-owner looking for reliable crew management or a seafarer interested in opportunities, we're here to help.", "Шукаєте надійне управління екіпажем як судновласник чи нові можливості як моряк — ми допоможемо.")}
           </p>
         </motion.div>
       </section>
@@ -94,20 +109,20 @@ export default function Contact() {
               <div className="glass-card rounded-xl p-6 sm:p-8 h-full flex flex-col group transition-all duration-300 hover:shadow-2xl hover:border-cyan-500/30">
                 <div className="flex items-center gap-3 mb-6">
                   <Send className="w-5 h-5 text-cyan-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-translate-y-1 group-hover:translate-x-1" />
-                  <h2 className="font-headline text-xl font-medium text-foreground">Send us a message</h2>
+                  <h2 className="font-headline text-xl font-medium text-foreground">{t("Send us a message", "Напишіть нам")}</h2>
                 </div>
 
                 {showSuccess ? (
                   <div className="text-center py-12" data-testid="success-message">
                     <CheckCircle className="w-16 h-16 mx-auto mb-4 text-emerald-400" />
-                    <h3 className="font-headline text-2xl font-semibold mb-2 text-foreground">Thank you!</h3>
-                    <p className="text-muted-foreground font-light">We've received your message and will get back to you soon.</p>
+                    <h3 className="font-headline text-2xl font-semibold mb-2 text-foreground">{t("Thank you!", "Дякуємо!")}</h3>
+                    <p className="text-muted-foreground font-light">{t("We've received your message and will get back to you soon.", "Ми отримали ваше повідомлення й незабаром відповімо.")}</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4 flex-grow flex flex-col">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name" className="text-foreground font-light text-sm">Name *</Label>
+                        <Label htmlFor="name" className="text-foreground font-light text-sm">{t("Name *", "Ім’я *")}</Label>
                         <Input id="name" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           className="mt-1 bg-background/60 border-border text-foreground placeholder:text-muted-foreground" data-testid="input-name" />
                       </div>
@@ -120,30 +135,35 @@ export default function Contact() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="phone" className="text-foreground font-light text-sm">Phone</Label>
+                        <Label htmlFor="phone" className="text-foreground font-light text-sm">{t("Phone", "Телефон")}</Label>
                         <Input id="phone" type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           className="mt-1 bg-background/60 border-border text-foreground placeholder:text-muted-foreground" data-testid="input-phone" />
                       </div>
                       <div>
-                        <Label htmlFor="subject" className="text-foreground font-light text-sm">Subject *</Label>
+                        <Label htmlFor="subject" className="text-foreground font-light text-sm">{t("Subject *", "Тема *")}</Label>
                         <Input id="subject" required value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                           className="mt-1 bg-background/60 border-border text-foreground placeholder:text-muted-foreground" data-testid="input-subject" />
                       </div>
                     </div>
 
                     <div className="flex-grow flex flex-col">
-                      <Label htmlFor="message" className="text-foreground font-light text-sm">Message *</Label>
+                      <Label htmlFor="message" className="text-foreground font-light text-sm">{t("Message *", "Повідомлення *")}</Label>
                       <Textarea id="message" required value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         className="mt-1 flex-grow bg-background/60 border-border text-foreground placeholder:text-muted-foreground min-h-[150px]" data-testid="textarea-message" />
                     </div>
 
+                    {sendError && (
+                      <p role="alert" className="text-sm text-red-300">
+                        {t("The message was not sent. Please try again or write to crewing@aurasea.org.", "Повідомлення не надіслано. Спробуйте ще раз або напишіть на crewing@aurasea.org.")}
+                      </p>
+                    )}
                     <Button
                       type="submit"
                       disabled={isSubmitting}
                       className="w-full font-normal transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-lg hover:shadow-cyan-500/20"
                       data-testid="button-submit-contact"
                     >
-                      {isSubmitting ? "Sending..." : "Send Message"}
+                      {isSubmitting ? t("Sending...", "Надсилаємо...") : t("Send Message", "Надіслати")}
                     </Button>
                   </form>
                 )}
@@ -159,11 +179,11 @@ export default function Contact() {
               className="lg:col-span-2 space-y-6">
               {/* Contact details */}
               <div className="glass-card rounded-xl p-6 group transition-all duration-300 hover:shadow-2xl hover:border-cyan-500/30">
-                <h3 className="font-headline text-lg font-medium text-foreground mb-5">Contact Information</h3>
+                <h3 className="font-headline text-lg font-medium text-foreground mb-5">{t("Contact Information", "Контактна інформація")}</h3>
                 <div className="space-y-5">
                   {[
                     { icon: Mail, label: "Email", value: "crewing@aurasea.org", href: "mailto:crewing@aurasea.org", testId: "contact-email" },
-                    { icon: Phone, label: "Phone", value: "+380978458147 (Whatsapp, Telegram)", href: "tel:+380978458147", testId: "contact-phone" },
+                    { icon: Phone, label: t("Phone", "Телефон"), value: t("+380978458147 (Whatsapp, Telegram)", "+380978458147 (WhatsApp, Telegram)"), href: "tel:+380978458147", testId: "contact-phone" },
                   ].map((item) => {
                     const Icon = item.icon;
                     return (
@@ -186,10 +206,10 @@ export default function Contact() {
                       <MapPin className="w-5 h-5 text-cyan-400" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-medium text-foreground">Address</h4>
+                      <h4 className="text-sm font-medium text-foreground">{t("Address", "Адреса")}</h4>
                       <p className="text-sm text-muted-foreground font-light" data-testid="contact-address">
-                        Ukraine, Odesa City<br />
-                        Prokhorovska 77
+                        {t("Ukraine, Odesa City", "Україна, м. Одеса")}<br />
+                        {t("Prokhorovska 77", "вул. Прохоровська, 77")}
                       </p>
                     </div>
                   </div>
@@ -199,25 +219,32 @@ export default function Contact() {
                       <Clock className="w-5 h-5 text-cyan-400" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-medium text-foreground">Working Hours</h4>
+                      <h4 className="text-sm font-medium text-foreground">{t("Working Hours", "Графік роботи")}</h4>
                       <p className="text-sm text-muted-foreground font-light">
-                        Monday - Friday: 9:00 AM - 6:00 PM<br />
-                        24/7 Emergency Support Available
+                        {t("Monday - Friday: 9:00 AM - 6:00 PM", "Понеділок – п’ятниця: 9:00–18:00")}<br />
+                        {t("24/7 Emergency Support Available", "Екстрена підтримка 24/7")}
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Map placeholder */}
-              <div className="glass-card rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:border-cyan-500/30">
-                <div className="w-full h-48 bg-gradient-to-br from-cyan-950/50 to-teal-950/50 flex items-center justify-center" data-testid="map-placeholder">
+              {/* Map: a link, not an embedded Google map — the site loads nothing from third parties (Privacy Policy) */}
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Prokhorovska+St+77+Odesa+Ukraine"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-card rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-2xl hover:border-cyan-500/30 block"
+                data-testid="map-link"
+              >
+                <div className="w-full h-48 bg-gradient-to-br from-cyan-950/50 to-teal-950/50 flex items-center justify-center">
                   <div className="text-center">
-                    <MapPin className="w-10 h-10 mx-auto mb-2 text-cyan-400/50" />
-                    <p className="text-xs text-gray-500 font-light">Interactive map will be added here</p>
+                    <MapPin className="w-10 h-10 mx-auto mb-2 text-cyan-400 transition-transform duration-300 group-hover:-translate-y-1" />
+                    <p className="text-sm text-foreground">{t("Open in Google Maps", "Відкрити в Google Maps")}</p>
+                    <p className="text-xs text-muted-foreground font-light mt-1">{t("Prokhorovska 77, Odesa", "вул. Прохоровська, 77, Одеса")}</p>
                   </div>
                 </div>
-              </div>
+              </a>
             </motion.div>
           </div>
         </div>

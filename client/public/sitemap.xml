@@ -1,11 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.aurasea.org/</loc></url>
-  <url><loc>https://www.aurasea.org/about</loc></url>
-  <url><loc>https://www.aurasea.org/ship-owners</loc></url>
-  <url><loc>https://www.aurasea.org/seafarers</loc></url>
-  <url><loc>https://www.aurasea.org/vacancies</loc></url>
-  <url><loc>https://www.aurasea.org/apply</loc></url>
-  <url><loc>https://www.aurasea.org/contact</loc></url>
-  <url><loc>https://www.aurasea.org/privacy</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.aurasea.org/</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/en</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/about</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/about"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/en/about</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/about"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/ship-owners</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/ship-owners"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/ship-owners"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/ship-owners"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/en/ship-owners</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/ship-owners"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/ship-owners"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/ship-owners"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/seafarers</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/seafarers"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/seafarers"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/seafarers"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/en/seafarers</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/seafarers"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/seafarers"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/seafarers"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/vacancies</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/vacancies"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/vacancies"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/vacancies"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/en/vacancies</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/vacancies"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/vacancies"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/vacancies"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/apply</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/apply"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/apply"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/apply"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/en/apply</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/apply"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/apply"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/apply"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/contact</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/contact"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/en/contact</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/contact"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/privacy"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/privacy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/privacy"/>
+  </url>
+  <url>
+    <loc>https://www.aurasea.org/en/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://www.aurasea.org/privacy"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.aurasea.org/en/privacy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.aurasea.org/privacy"/>
+  </url>
 </urlset>

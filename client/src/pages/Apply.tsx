@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { CERTIFICATES, DOCUMENT_TYPES, EMPLOYMENT_STATUSES, ENGLISH_LEVELS, RANKS, VESSEL_TYPES } from "@/lib/application-options";
 import { track } from "@/lib/analytics";
+import { useLang, usePageMeta, useT } from "@/lib/i18n";
 import heroImage from "@assets/stock_images/stormy_sea_2.webp";
 
 // Seafarer application form. Submits straight into the AURA SEA CRM (POST /api/public/apply), where it
@@ -70,9 +71,16 @@ function loadDraft(): Form {
 const MAX = { documents: 10, certificates: 40, voyages: 30, relatives: 3 };
 
 /** Section names for the server's list of invalid fields ("contacts.email", "voyages.2.vesselName"). */
-const SECTION_LABELS: Record<string, string> = {
-  person: "Personal details", contacts: "Contacts", physical: "Physical details", work: "Position",
-  documents: "Documents", certificates: "Certificates", voyages: "Sea service", relatives: "Next of kin", consent: "Consent",
+const SECTION_LABELS: Record<string, { en: string; uk: string }> = {
+  person: { en: "Personal details", uk: "Особисті дані" },
+  contacts: { en: "Contacts", uk: "Контакти" },
+  physical: { en: "Physical details", uk: "Фізичні дані" },
+  work: { en: "Position", uk: "Посада" },
+  documents: { en: "Documents", uk: "Документи" },
+  certificates: { en: "Certificates", uk: "Сертифікати" },
+  voyages: { en: "Sea service", uk: "Стаж у морі" },
+  relatives: { en: "Next of kin", uk: "Контактна особа" },
+  consent: { en: "Consent", uk: "Згода" },
 };
 
 const selectClass =
@@ -105,13 +113,14 @@ function Section({ icon: Icon, title, hint, children }: { icon: typeof User; tit
 }
 
 function ExpiryInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const t = useT();
   const unlimited = value === "unlimited";
   return (
     <div className="space-y-1">
       <Input type="date" value={unlimited ? "" : value} disabled={unlimited} onChange={(e) => onChange(e.target.value)} className={inputClass} />
       <label className="flex items-center gap-2 text-xs text-muted-foreground font-light cursor-pointer">
         <input type="checkbox" checked={unlimited} onChange={(e) => onChange(e.target.checked ? "unlimited" : "")} className="accent-cyan-400" />
-        Unlimited
+        {t("Unlimited", "Безстроковий")}
       </label>
     </div>
   );
@@ -134,6 +143,16 @@ function AddButton({ onClick, disabled, children }: { onClick: () => void; disab
 }
 
 export default function Apply() {
+  const t = useT();
+  const lang = useLang();
+  usePageMeta(
+    "/apply",
+    { en: "Seafarer Application Form", uk: "Анкета моряка" },
+    {
+      en: "Apply to AURA SEA online: one form with your documents, certificates and sea service goes straight to our crewing team.",
+      uk: "Подайте анкету в AURA SEA онлайн: одна форма з документами, сертифікатами й стажем — одразу до нашої команди.",
+    }
+  );
   const [form, setForm] = useState<Form>(loadDraft);
   const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
@@ -168,7 +187,7 @@ export default function Apply() {
     e.preventDefault();
     if (status === "sending") return;
     setError(null);
-    if (!form.consent) return showError("Please confirm your consent to the processing of personal data.");
+    if (!form.consent) return showError(t("Please confirm your consent to the processing of personal data.", "Підтвердьте, будь ласка, згоду на обробку персональних даних."));
 
     // Empty optional rows are not sent: the CRM requires a name in each row that is sent
     const payload = {
@@ -201,14 +220,14 @@ export default function Apply() {
       const body = (await res.json().catch(() => ({}))) as { error?: string; fields?: string[] };
       setStatus("idle");
       if (res.status === 422 && body.fields?.length) {
-        const sections = Array.from(new Set(body.fields.map((f) => SECTION_LABELS[f.split(".")[0]] ?? f)));
-        return showError(`Please check these sections: ${sections.join(", ")}.`);
+        const sections = Array.from(new Set(body.fields.map((f) => SECTION_LABELS[f.split(".")[0]]?.[lang] ?? f)));
+        return showError(t(`Please check these sections: ${sections.join(", ")}.`, `Перевірте, будь ласка, розділи: ${sections.join(", ")}.`));
       }
-      if (res.status === 429) return showError("Too many applications were sent from your network. Please try again in an hour.");
-      return showError("We could not send your application. Please try again or email it to crewing@aurasea.org.");
+      if (res.status === 429) return showError(t("Too many applications were sent from your network. Please try again in an hour.", "З вашої мережі надіслано забагато анкет. Спробуйте, будь ласка, за годину."));
+      return showError(t("We could not send your application. Please try again or email it to crewing@aurasea.org.", "Не вдалося надіслати анкету. Спробуйте ще раз або надішліть її на crewing@aurasea.org."));
     } catch {
       setStatus("idle");
-      showError("No connection to the server. Please check your internet and try again — your answers are saved in this browser.");
+      showError(t("No connection to the server. Please check your internet and try again — your answers are saved in this browser.", "Немає зв’язку з сервером. Перевірте інтернет і спробуйте ще раз — ваші відповіді збережено в цьому браузері."));
     }
   };
 
@@ -220,12 +239,15 @@ export default function Apply() {
         <section className="relative z-10 pt-40 pb-24 px-4">
           <div className="glass-card rounded-xl p-10 max-w-xl mx-auto text-center" data-testid="application-success">
             <CheckCircle className="w-16 h-16 mx-auto mb-4 text-emerald-400" />
-            <h1 className="font-headline text-3xl font-semibold mb-3 text-foreground">Application received</h1>
+            <h1 className="font-headline text-3xl font-semibold mb-3 text-foreground">{t("Application received", "Анкету отримано")}</h1>
             <p className="text-muted-foreground font-light mb-8">
-              Thank you, {form.person.firstName}! Our crewing team will review your profile and contact you when a suitable position is available.
+              {t(
+                `Thank you, ${form.person.firstName}! Our crewing team will review your profile and contact you when a suitable position is available.`,
+                `Дякуємо, ${form.person.firstName}! Наша команда розгляне вашу анкету й зв’яжеться з вами, коли з’явиться відповідна посада.`
+              )}
             </p>
             <Link href="/vacancies" className="text-cyan-400 hover:underline">
-              See current vacancies
+              {t("See current vacancies", "Переглянути актуальні вакансії")}
             </Link>
           </div>
         </section>
@@ -248,10 +270,12 @@ export default function Apply() {
           className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         >
           <h1 className="font-headline text-4xl sm:text-5xl font-bold mb-6 text-white drop-shadow-md" data-testid="heading-apply">
-            Seafarer Application Form
+            {t("Seafarer Application Form", "Анкета моряка")}
           </h1>
           <p className="text-lg text-white drop-shadow-md font-light">
-            Fill in your details once — they go straight to our crewing team. Fields marked <span className="text-cyan-300">*</span> are required; the more you add, the faster we can match you with a vessel.
+            {t("Fill in your details once — they go straight to our crewing team. Fields marked", "Заповніть дані один раз — вони одразу потраплять до нашої команди. Поля, позначені")}{" "}
+            <span className="text-cyan-300">*</span>
+            {t(" are required; the more you add, the faster we can match you with a vessel.", ", обов’язкові; що більше ви вкажете, то швидше ми підберемо судно.")}
           </p>
         </motion.div>
       </section>
@@ -265,47 +289,54 @@ export default function Apply() {
           </label>
         </div>
 
-        <Section icon={User} title="Personal details" hint="Name in Latin letters, as in your international passport.">
+        <Section icon={User} title={t("Personal details", "Особисті дані")} hint={t("Name in Latin letters, as in your international passport.", "Ім’я латиницею, як у закордонному паспорті.")}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Field label="Last name" required>
+            <Field label={t("Last name", "Прізвище")} required>
               <Input required value={person.lastName} onChange={(e) => set("person", "lastName", e.target.value)} className={inputClass} autoComplete="family-name" />
             </Field>
-            <Field label="First name" required>
+            <Field label={t("First name", "Ім’я")} required>
               <Input required value={person.firstName} onChange={(e) => set("person", "firstName", e.target.value)} className={inputClass} autoComplete="given-name" />
             </Field>
-            <Field label="Middle name">
+            <Field label={t("Middle name", "По батькові")}>
               <Input value={person.middleName} onChange={(e) => set("person", "middleName", e.target.value)} className={inputClass} autoComplete="additional-name" />
             </Field>
-            <Field label="Date of birth" required>
+            <Field label={t("Date of birth", "Дата народження")} required>
               <Input type="date" required value={person.birthDate} onChange={(e) => set("person", "birthDate", e.target.value)} className={inputClass} />
             </Field>
-            <Field label="Place of birth">
+            <Field label={t("Place of birth", "Місце народження")}>
               <Input value={person.birthPlace} onChange={(e) => set("person", "birthPlace", e.target.value)} className={inputClass} />
             </Field>
-            <Field label="Citizenship" required>
-              <Input required value={person.citizenship} onChange={(e) => set("person", "citizenship", e.target.value)} className={inputClass} placeholder="e.g. Ukraine" />
+            <Field label={t("Citizenship", "Громадянство")} required>
+              <Input required value={person.citizenship} onChange={(e) => set("person", "citizenship", e.target.value)} className={inputClass} placeholder={t("e.g. Ukraine", "напр. Україна")} />
             </Field>
-            <Field label="Sex">
+            <Field label={t("Sex", "Стать")}>
               <select value={person.sex} onChange={(e) => set("person", "sex", e.target.value)} className={selectClass}>
                 <option value="">—</option>
-                <option value="M">Male</option>
-                <option value="F">Female</option>
+                <option value="M">{t("Male", "Чоловіча")}</option>
+                <option value="F">{t("Female", "Жіноча")}</option>
               </select>
             </Field>
-            <Field label="Marital status">
+            <Field label={t("Marital status", "Сімейний стан")}>
               <select value={person.maritalStatus} onChange={(e) => set("person", "maritalStatus", e.target.value)} className={selectClass}>
                 <option value="">—</option>
-                {["Single", "Married", "Divorced", "Widowed"].map((s) => (
-                  <option key={s}>{s}</option>
+                {[
+                  ["Single", "Неодружений / неодружена"],
+                  ["Married", "Одружений / заміжня"],
+                  ["Divorced", "Розлучений / розлучена"],
+                  ["Widowed", "Вдівець / вдова"],
+                ].map(([value, uk]) => (
+                  <option key={value} value={value}>
+                    {t(value, uk)}
+                  </option>
                 ))}
               </select>
             </Field>
           </div>
         </Section>
 
-        <Section icon={Phone} title="Contacts">
+        <Section icon={Phone} title={t("Contacts", "Контакти")}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Phone (with country code)" required>
+            <Field label={t("Phone (with country code)", "Телефон (з кодом країни)")} required>
               <Input type="tel" required value={contacts.phone} onChange={(e) => set("contacts", "phone", e.target.value)} className={inputClass} placeholder="+380 …" autoComplete="tel" />
             </Field>
             <Field label="Email" required>
@@ -315,150 +346,154 @@ export default function Apply() {
               <Input type="tel" value={contacts.whatsapp} onChange={(e) => set("contacts", "whatsapp", e.target.value)} className={inputClass} />
             </Field>
             <Field label="Telegram">
-              <Input value={contacts.telegram} onChange={(e) => set("contacts", "telegram", e.target.value)} className={inputClass} placeholder="@username or phone" />
+              <Input value={contacts.telegram} onChange={(e) => set("contacts", "telegram", e.target.value)} className={inputClass} placeholder={t("@username or phone", "@username або телефон")} />
             </Field>
             <Field label="Viber">
               <Input type="tel" value={contacts.viber} onChange={(e) => set("contacts", "viber", e.target.value)} className={inputClass} />
             </Field>
-            <Field label="Nearest airport">
+            <Field label={t("Nearest airport", "Найближчий аеропорт")}>
               <Input value={contacts.nearestAirport} onChange={(e) => set("contacts", "nearestAirport", e.target.value)} className={inputClass} />
             </Field>
-            <Field label="Home address" className="sm:col-span-2">
+            <Field label={t("Home address", "Домашня адреса")} className="sm:col-span-2">
               <Input value={contacts.address} onChange={(e) => set("contacts", "address", e.target.value)} className={inputClass} autoComplete="street-address" />
             </Field>
           </div>
         </Section>
 
-        <Section icon={Anchor} title="Position and availability">
+        <Section icon={Anchor} title={t("Position and availability", "Посада та готовність")}>
           <datalist id="ranks">{RANKS.map((r) => <option key={r} value={r} />)}</datalist>
           <datalist id="vessel-types">{VESSEL_TYPES.map((r) => <option key={r} value={r} />)}</datalist>
           <datalist id="certificates">{CERTIFICATES.map((r) => <option key={r} value={r} />)}</datalist>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Position applied for" required>
-              <Input required list="ranks" value={work.desiredRank} onChange={(e) => set("work", "desiredRank", e.target.value)} className={inputClass} placeholder="Start typing, e.g. 2nd Officer" />
+            <Field label={t("Position applied for", "Бажана посада")} required>
+              <Input required list="ranks" value={work.desiredRank} onChange={(e) => set("work", "desiredRank", e.target.value)} className={inputClass} placeholder={t("Start typing, e.g. 2nd Officer", "Почніть вводити, напр. 2nd Officer")} />
             </Field>
-            <Field label="Ready to start from">
+            <Field label={t("Ready to start from", "Готовий з")}>
               <Input type="date" value={work.availableFrom} onChange={(e) => set("work", "availableFrom", e.target.value)} className={inputClass} />
             </Field>
-            <Field label="Would you accept a lower rank?">
+            <Field label={t("Would you accept a lower rank?", "Чи готові на нижчу посаду?")}>
               <select value={work.willingLowerRank} onChange={(e) => set("work", "willingLowerRank", e.target.value)} className={selectClass}>
                 <option value="">—</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
+                <option value="yes">{t("Yes", "Так")}</option>
+                <option value="no">{t("No", "Ні")}</option>
               </select>
             </Field>
-            <Field label="Current status">
+            <Field label={t("Current status", "Поточний статус")}>
               <select value={work.employmentStatus} onChange={(e) => set("work", "employmentStatus", e.target.value)} className={selectClass}>
                 <option value="">—</option>
-                {EMPLOYMENT_STATUSES.map((s) => (
-                  <option key={s}>{s}</option>
+                {EMPLOYMENT_STATUSES.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {t(o.value, o.uk)}
+                  </option>
                 ))}
               </select>
             </Field>
-            <Field label="Level of English">
+            <Field label={t("Level of English", "Рівень англійської")}>
               <select value={work.englishLevel} onChange={(e) => set("work", "englishLevel", e.target.value)} className={selectClass}>
                 <option value="">—</option>
-                {ENGLISH_LEVELS.map((s) => (
-                  <option key={s}>{s}</option>
+                {ENGLISH_LEVELS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {t(o.value, o.uk)}
+                  </option>
                 ))}
               </select>
             </Field>
-            <Field label="Expected salary">
-              <Input value={work.expectedSalary} onChange={(e) => set("work", "expectedSalary", e.target.value)} className={inputClass} placeholder="e.g. 6500 USD" />
+            <Field label={t("Expected salary", "Очікувана зарплата")}>
+              <Input value={work.expectedSalary} onChange={(e) => set("work", "expectedSalary", e.target.value)} className={inputClass} placeholder={t("e.g. 6500 USD", "напр. 6500 USD")} />
             </Field>
           </div>
         </Section>
 
-        <Section icon={IdCard} title="Documents" hint="Passport and seaman's book. Add a visa if you have one.">
+        <Section icon={IdCard} title={t("Documents", "Документи")} hint={t("Passport and seaman's book. Add a visa if you have one.", "Закордонний паспорт і мореплавна книжка. Додайте візу, якщо вона є.")}>
           <div className="space-y-4">
             {form.documents.map((d, i) => (
               <div key={i} className="rounded-lg border border-border/60 p-4">
                 <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 items-start">
-                  <Field label="Document" className="sm:col-span-2">
+                  <Field label={t("Document", "Документ")} className="sm:col-span-2">
                     <select value={d.type} onChange={(e) => setItem("documents", i, "type", e.target.value)} className={selectClass}>
-                      {DOCUMENT_TYPES.map((t) => (
-                        <option key={t.value} value={t.value}>
-                          {t.label}
+                      {DOCUMENT_TYPES.map((dt) => (
+                        <option key={dt.value} value={dt.value}>
+                          {t(dt.label, dt.uk)}
                         </option>
                       ))}
                     </select>
                   </Field>
-                  <Field label="Number" className="sm:col-span-2">
+                  <Field label={t("Number", "Номер")} className="sm:col-span-2">
                     <Input value={d.number} onChange={(e) => setItem("documents", i, "number", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Country" className="sm:col-span-2">
+                  <Field label={t("Country", "Країна")} className="sm:col-span-2">
                     <Input value={d.country} onChange={(e) => setItem("documents", i, "country", e.target.value)} className={inputClass} />
                   </Field>
                   {(d.type === "VISA" || d.type === "OTHER") && (
-                    <Field label="Name / type" className="sm:col-span-2">
+                    <Field label={t("Name / type", "Назва / вид")} className="sm:col-span-2">
                       <Input value={d.name} onChange={(e) => setItem("documents", i, "name", e.target.value)} className={inputClass} placeholder={d.type === "VISA" ? "e.g. Schengen, US C1/D" : ""} />
                     </Field>
                   )}
-                  <Field label="Issued" className="sm:col-span-2">
+                  <Field label={t("Issued", "Виданий")} className="sm:col-span-2">
                     <Input type="date" value={d.issueDate} onChange={(e) => setItem("documents", i, "issueDate", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Valid until" className="sm:col-span-2">
+                  <Field label={t("Valid until", "Дійсний до")} className="sm:col-span-2">
                     <ExpiryInput value={d.expiry} onChange={(v) => setItem("documents", i, "expiry", v)} />
                   </Field>
                 </div>
                 <div className="flex justify-end">
-                  <RemoveButton onClick={() => removeItem("documents", i)} label="Remove document" />
+                  <RemoveButton onClick={() => removeItem("documents", i)} label={t("Remove document", "Видалити документ")} />
                 </div>
               </div>
             ))}
           </div>
           <AddButton onClick={() => addItem("documents", emptyDoc("VISA"))} disabled={form.documents.length >= MAX.documents}>
-            Add document
+            {t("Add document", "Додати документ")}
           </AddButton>
         </Section>
 
-        <Section icon={FileText} title="Certificates" hint="Certificate of Competency, endorsements, STCW courses, medical certificate.">
+        <Section icon={FileText} title={t("Certificates", "Сертифікати")} hint={t("Certificate of Competency, endorsements, STCW courses, medical certificate.", "Диплом (CoC), підтвердження, курси STCW, медичний сертифікат.")}>
           <div className="space-y-4">
             {form.certificates.map((c, i) => (
               <div key={i} className="rounded-lg border border-border/60 p-4">
                 <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 items-start">
-                  <Field label="Certificate" className="sm:col-span-3">
-                    <Input list="certificates" value={c.name} onChange={(e) => setItem("certificates", i, "name", e.target.value)} className={inputClass} placeholder="Start typing, e.g. Basic Safety Training" />
+                  <Field label={t("Certificate", "Сертифікат")} className="sm:col-span-3">
+                    <Input list="certificates" value={c.name} onChange={(e) => setItem("certificates", i, "name", e.target.value)} className={inputClass} placeholder={t("Start typing, e.g. Basic Safety Training", "Почніть вводити, напр. Basic Safety Training")} />
                   </Field>
-                  <Field label="Number" className="sm:col-span-3">
+                  <Field label={t("Number", "Номер")} className="sm:col-span-3">
                     <Input value={c.number} onChange={(e) => setItem("certificates", i, "number", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Issued by" className="sm:col-span-2">
+                  <Field label={t("Issued by", "Ким виданий")} className="sm:col-span-2">
                     <Input value={c.issuedBy} onChange={(e) => setItem("certificates", i, "issuedBy", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Issued" className="sm:col-span-2">
+                  <Field label={t("Issued", "Виданий")} className="sm:col-span-2">
                     <Input type="date" value={c.issueDate} onChange={(e) => setItem("certificates", i, "issueDate", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Valid until" className="sm:col-span-2">
+                  <Field label={t("Valid until", "Дійсний до")} className="sm:col-span-2">
                     <ExpiryInput value={c.expiry} onChange={(v) => setItem("certificates", i, "expiry", v)} />
                   </Field>
                 </div>
                 <div className="flex justify-end">
-                  <RemoveButton onClick={() => removeItem("certificates", i)} label="Remove certificate" />
+                  <RemoveButton onClick={() => removeItem("certificates", i)} label={t("Remove certificate", "Видалити сертифікат")} />
                 </div>
               </div>
             ))}
           </div>
           <AddButton onClick={() => addItem("certificates", emptyCert())} disabled={form.certificates.length >= MAX.certificates}>
-            Add certificate
+            {t("Add certificate", "Додати сертифікат")}
           </AddButton>
         </Section>
 
-        <Section icon={Ship} title="Sea service" hint="Your contracts, most recent first. Leave “Sign off” empty if you are on board now.">
+        <Section icon={Ship} title={t("Sea service", "Стаж у морі")} hint={t("Your contracts, most recent first. Leave “Sign off” empty if you are on board now.", "Ваші контракти, починаючи з останнього. Залиште «Списання» порожнім, якщо ви зараз на борту.")}>
           <div className="space-y-4">
             {form.voyages.map((v, i) => (
               <div key={i} className="rounded-lg border border-border/60 p-4">
                 <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 items-start">
-                  <Field label="Vessel name" className="sm:col-span-2">
+                  <Field label={t("Vessel name", "Назва судна")} className="sm:col-span-2">
                     <Input value={v.vesselName} onChange={(e) => setItem("voyages", i, "vesselName", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Vessel type" className="sm:col-span-2">
+                  <Field label={t("Vessel type", "Тип судна")} className="sm:col-span-2">
                     <Input list="vessel-types" value={v.vesselType} onChange={(e) => setItem("voyages", i, "vesselType", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Rank" className="sm:col-span-2">
+                  <Field label={t("Rank", "Посада")} className="sm:col-span-2">
                     <Input list="ranks" value={v.rank} onChange={(e) => setItem("voyages", i, "rank", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Flag" className="sm:col-span-2">
+                  <Field label={t("Flag", "Прапор")} className="sm:col-span-2">
                     <Input value={v.flag} onChange={(e) => setItem("voyages", i, "flag", e.target.value)} className={inputClass} />
                   </Field>
                   <Field label="DWT">
@@ -467,89 +502,89 @@ export default function Apply() {
                   <Field label="IMO">
                     <Input inputMode="numeric" value={v.imo} onChange={(e) => setItem("voyages", i, "imo", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Main engine" className="sm:col-span-2">
-                    <Input value={v.engine} onChange={(e) => setItem("voyages", i, "engine", e.target.value)} className={inputClass} placeholder="e.g. MAN B&W" />
+                  <Field label={t("Main engine", "Головний двигун")} className="sm:col-span-2">
+                    <Input value={v.engine} onChange={(e) => setItem("voyages", i, "engine", e.target.value)} className={inputClass} placeholder={t("e.g. MAN B&W", "напр. MAN B&W")} />
                   </Field>
-                  <Field label="Power" className="sm:col-span-2">
-                    <Input value={v.power} onChange={(e) => setItem("voyages", i, "power", e.target.value)} className={inputClass} placeholder="e.g. 9480 kW" />
+                  <Field label={t("Power", "Потужність")} className="sm:col-span-2">
+                    <Input value={v.power} onChange={(e) => setItem("voyages", i, "power", e.target.value)} className={inputClass} placeholder={t("e.g. 9480 kW", "напр. 9480 kW")} />
                   </Field>
-                  <Field label="Ship-owner / manager" className="sm:col-span-2">
+                  <Field label={t("Ship-owner / manager", "Судновласник / менеджер")} className="sm:col-span-2">
                     <Input value={v.company} onChange={(e) => setItem("voyages", i, "company", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Crewing agency" className="sm:col-span-2">
+                  <Field label={t("Crewing agency", "Крюїнгова агенція")} className="sm:col-span-2">
                     <Input value={v.crewingAgency} onChange={(e) => setItem("voyages", i, "crewingAgency", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Sign on" className="sm:col-span-3">
+                  <Field label={t("Sign on", "Посадка")} className="sm:col-span-3">
                     <Input type="date" value={v.startDate} onChange={(e) => setItem("voyages", i, "startDate", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Sign off" className="sm:col-span-3">
+                  <Field label={t("Sign off", "Списання")} className="sm:col-span-3">
                     <Input type="date" value={v.endDate} onChange={(e) => setItem("voyages", i, "endDate", e.target.value)} className={inputClass} />
                   </Field>
                 </div>
                 <div className="flex justify-end">
-                  <RemoveButton onClick={() => removeItem("voyages", i)} label="Remove contract" />
+                  <RemoveButton onClick={() => removeItem("voyages", i)} label={t("Remove contract", "Видалити контракт")} />
                 </div>
               </div>
             ))}
           </div>
           <AddButton onClick={() => addItem("voyages", emptyVoyage())} disabled={form.voyages.length >= MAX.voyages}>
-            Add contract
+            {t("Add contract", "Додати контракт")}
           </AddButton>
         </Section>
 
-        <Section icon={ClipboardList} title="Physical details" hint="Needed for overalls and safety shoes.">
+        <Section icon={ClipboardList} title={t("Physical details", "Фізичні дані")} hint={t("Needed for overalls and safety shoes.", "Потрібні для комбінезона й захисного взуття.")}>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <Field label="Height, cm">
+            <Field label={t("Height, cm", "Зріст, см")}>
               <Input inputMode="numeric" value={physical.heightCm} onChange={(e) => set("physical", "heightCm", e.target.value)} className={inputClass} />
             </Field>
-            <Field label="Weight, kg">
+            <Field label={t("Weight, kg", "Вага, кг")}>
               <Input inputMode="numeric" value={physical.weightKg} onChange={(e) => set("physical", "weightKg", e.target.value)} className={inputClass} />
             </Field>
-            <Field label="Overall size">
+            <Field label={t("Overall size", "Розмір комбінезона")}>
               <Input value={physical.overallSize} onChange={(e) => set("physical", "overallSize", e.target.value)} className={inputClass} />
             </Field>
-            <Field label="Shoe size">
+            <Field label={t("Shoe size", "Розмір взуття")}>
               <Input value={physical.shoeSize} onChange={(e) => set("physical", "shoeSize", e.target.value)} className={inputClass} />
             </Field>
           </div>
         </Section>
 
-        <Section icon={Users} title="Next of kin" hint="Who we contact in case of emergency.">
+        <Section icon={Users} title={t("Next of kin", "Контактна особа")} hint={t("Who we contact in case of emergency.", "Кому ми телефонуємо в екстреному випадку.")}>
           <div className="space-y-4">
             {form.relatives.map((r, i) => (
               <div key={i} className="rounded-lg border border-border/60 p-4">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-start">
-                  <Field label="Full name">
+                  <Field label={t("Full name", "Ім’я та прізвище")}>
                     <Input value={r.fullName} onChange={(e) => setItem("relatives", i, "fullName", e.target.value)} className={inputClass} />
                   </Field>
-                  <Field label="Relation">
-                    <Input value={r.relation} onChange={(e) => setItem("relatives", i, "relation", e.target.value)} className={inputClass} placeholder="e.g. wife, mother" />
+                  <Field label={t("Relation", "Ким доводиться")}>
+                    <Input value={r.relation} onChange={(e) => setItem("relatives", i, "relation", e.target.value)} className={inputClass} placeholder={t("e.g. wife, mother", "напр. дружина, мати")} />
                   </Field>
-                  <Field label="Phone">
+                  <Field label={t("Phone", "Телефон")}>
                     <Input type="tel" value={r.phone} onChange={(e) => setItem("relatives", i, "phone", e.target.value)} className={inputClass} />
                   </Field>
                 </div>
                 {form.relatives.length > 1 && (
                   <div className="flex justify-end">
-                    <RemoveButton onClick={() => removeItem("relatives", i)} label="Remove contact" />
+                    <RemoveButton onClick={() => removeItem("relatives", i)} label={t("Remove contact", "Видалити контакт")} />
                   </div>
                 )}
               </div>
             ))}
           </div>
           <AddButton onClick={() => addItem("relatives", emptyRelative())} disabled={form.relatives.length >= MAX.relatives}>
-            Add contact
+            {t("Add contact", "Додати контакт")}
           </AddButton>
         </Section>
 
-        <Section icon={FileText} title="About you">
+        <Section icon={FileText} title={t("About you", "Про себе")}>
           <Textarea
             rows={5}
             maxLength={2000}
             value={work.aboutMe}
             onChange={(e) => set("work", "aboutMe", e.target.value)}
             className="bg-background/60 border-border text-foreground placeholder:text-muted-foreground resize-none"
-            placeholder="Anything else we should know: experience, preferences, questions."
+            placeholder={t("Anything else we should know: experience, preferences, questions.", "Що ще нам варто знати: досвід, побажання, запитання.")}
           />
         </Section>
 
@@ -563,10 +598,12 @@ export default function Apply() {
               data-testid="checkbox-consent"
             />
             <span className="text-sm text-muted-foreground font-light">
-              I confirm that the information is correct and I consent to AURA SEA processing my personal data to find me employment at sea, and to
-              sending my profile for specific vacancies to ship-owners and ship managers, including those outside Ukraine and the EU, as described in the{" "}
+              {t(
+                "I confirm that the information is correct and I consent to AURA SEA processing my personal data to find me employment at sea, and to sending my profile for specific vacancies to ship-owners and ship managers, including those outside Ukraine and the EU, as described in the",
+                "Підтверджую, що дані правдиві, і даю згоду AURA SEA на обробку моїх персональних даних для працевлаштування в морі та на передачу моєї анкети під конкретні вакансії судновласникам і менеджерам суден, зокрема за межами України та ЄС, як описано в"
+              )}{" "}
               <Link href="/privacy" className="text-cyan-400 hover:underline">
-                Privacy Policy
+                {t("Privacy Policy", "Політиці конфіденційності")}
               </Link>
               .
             </span>
@@ -584,9 +621,9 @@ export default function Apply() {
             className="w-full font-normal transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-lg hover:shadow-cyan-500/20"
             data-testid="button-submit-application"
           >
-            {status === "sending" ? "Sending..." : "Send application"}
+            {status === "sending" ? t("Sending...", "Надсилаємо...") : t("Send application", "Надіслати анкету")}
           </Button>
-          <p className="text-xs text-muted-foreground font-light text-center">Your answers are saved in this browser until you send them.</p>
+          <p className="text-xs text-muted-foreground font-light text-center">{t("Your answers are saved in this browser until you send them.", "Ваші відповіді зберігаються в цьому браузері, доки ви їх не надішлете.")}</p>
         </div>
       </form>
     </div>

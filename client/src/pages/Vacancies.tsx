@@ -6,14 +6,25 @@ import { Button } from "@/components/ui/button";
 import marineOfficer from "@assets/stock_images/stormy_sea_2.webp";
 import heroPhoto from "@assets/stock_images/marine_engineer_offi_4366b328.webp";
 
+import { usePageMeta, useT } from "@/lib/i18n";
+
 export default function Vacancies() {
+  const t = useT();
+  usePageMeta(
+    "/vacancies",
+    { en: "Current Vacancies for Seafarers", uk: "Актуальні вакансії для моряків" },
+    {
+      en: "Hot vacancies for seafarers from AURA SEA: we publish current openings in Telegram, Instagram, Facebook and LinkedIn. Subscribe or apply online.",
+      uk: "Гарячі вакансії для моряків від AURA SEA: актуальні пропозиції публікуємо в Telegram, Instagram, Facebook і LinkedIn. Підпишіться або подайте анкету онлайн.",
+    }
+  );
   const socialLinks = [
     {
       id: "telegram",
       name: "Telegram",
       icon: Send,
       url: "https://t.me/AURASEA_crew",
-      description: "Get instant notifications about hot vacancies directly on your phone.",
+      description: t("Get instant notifications about hot vacancies directly on your phone.", "Миттєві сповіщення про гарячі вакансії прямо на телефон."),
       color: "text-[#0088cc]",
       hoverShadow: "hover:shadow-blue-500/20"
     },
@@ -22,7 +33,7 @@ export default function Vacancies() {
       name: "Instagram",
       icon: Instagram,
       url: "https://www.instagram.com/_aura_sea/",
-      description: "Follow our daily updates, life at sea, and new career opportunities.",
+      description: t("Follow our daily updates, life at sea, and new career opportunities.", "Щоденні новини, життя в морі та нові кар’єрні можливості."),
       color: "text-[#E1306C]",
       hoverShadow: "hover:shadow-pink-500/20"
     },
@@ -31,7 +42,7 @@ export default function Vacancies() {
       name: "Facebook",
       icon: Facebook,
       url: "https://www.facebook.com/profile.php?id=61581552804551",
-      description: "Stay connected with our maritime community and professional network.",
+      description: t("Stay connected with our maritime community and professional network.", "Будьте на зв’язку з нашою морською спільнотою та професійною мережею."),
       color: "text-[#1877F2]",
       hoverShadow: "hover:shadow-blue-600/20"
     },
@@ -40,7 +51,7 @@ export default function Vacancies() {
       name: "LinkedIn",
       icon: Linkedin,
       url: "https://www.linkedin.com/company/110849089",
-      description: "Professional networking and official corporate announcements.",
+      description: t("Professional networking and official corporate announcements.", "Професійні контакти та офіційні новини компанії."),
       color: "text-[#0A66C2]",
       hoverShadow: "hover:shadow-blue-700/20"
     }
@@ -76,13 +87,13 @@ export default function Vacancies() {
             <div className="relative z-10 p-8 sm:p-12 lg:p-16 max-w-3xl text-center lg:text-left mx-auto lg:mx-0">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6 shadow-sm">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="text-xs font-medium text-emerald-50 tracking-wider uppercase">Live Updates</span>
+                <span className="text-xs font-medium text-emerald-50 tracking-wider uppercase">{t("Live Updates", "Оновлюється щодня")}</span>
               </div>
               <h1 className="font-headline text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-lg tracking-tight" data-testid="heading-vacancies">
-                Current Vacancies
+                {t("Current Vacancies", "Актуальні вакансії")}
               </h1>
               <p className="text-lg sm:text-xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0 text-white/90 drop-shadow-md">
-                We publish all current hot vacancies in our social media channels. Subscribe to stay updated and never miss an opportunity.
+                {t("We publish all current hot vacancies in our social media channels. Subscribe to stay updated and never miss an opportunity.", "Усі гарячі вакансії ми публікуємо в наших соцмережах. Підпишіться, щоб не пропустити свою можливість.")}
               </p>
             </div>
           </div>
@@ -121,7 +132,7 @@ export default function Vacancies() {
                       className="w-full bg-white/10 hover:bg-primary text-white hover:text-white border border-white/20 transition-all duration-300"
                     >
                       <a href={social.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
-                        View Vacancies <ExternalLink className="w-4 h-4" />
+                        {t("View Vacancies", "Дивитися вакансії")} <ExternalLink className="w-4 h-4" />
                       </a>
                     </Button>
                   </CardContent>

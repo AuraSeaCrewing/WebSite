@@ -10,14 +10,25 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import seafarerCrew from "@assets/stock_images/stormy_sea_3.webp";
 import heroPhoto from "@assets/stock_images/seafarer_crew_workin_81b3ed0a.webp";
 
+import { usePageMeta, useT } from "@/lib/i18n";
+
 export default function Seafarers() {
   useScrollAnimation();
+  const t = useT();
+  usePageMeta(
+    "/seafarers",
+    { en: "Jobs at Sea for Seafarers", uk: "Робота в морі для моряків" },
+    {
+      en: "Work on containers, bulk carriers, tankers, yachts and passenger vessels with AURA SEA: fair contracts, timely salary, career growth and psychological support for families.",
+      uk: "Робота на контейнеровозах, балкерах, танкерах, яхтах і пасажирських суднах з AURA SEA: чесні контракти, вчасна зарплата, кар’єрне зростання та психологічна підтримка родин.",
+    }
+  );
 
   const applicationSteps = [
-    { number: "01", title: "Register Interest", description: "Check our Hot Vacancies at Instagram page and Telegram Group Chanel for current openings and submit your application through our online form.", icon: FileText },
-    { number: "02", title: "Interview & Assessment", description: "We'll review your qualifications and conduct an interview to understand your experience and career goals.", icon: Users },
-    { number: "03", title: "Documentation", description: "Submit required certificates, medical examinations, and complete necessary paperwork with our support.", icon: Shield },
-    { number: "04", title: "Joining Vessel", description: "We coordinate all travel arrangements, briefings, and ensure smooth joining process to your assigned vessel.", icon: Anchor },
+    { number: "01", title: t("Register Interest", "Подайте анкету"), description: t("Check our Hot Vacancies at Instagram page and Telegram Group Chanel for current openings and submit your application through our online form.", "Перегляньте гарячі вакансії в нашому Instagram і Telegram-каналі та подайте анкету через онлайн-форму."), icon: FileText },
+    { number: "02", title: t("Interview & Assessment", "Співбесіда та оцінка"), description: t("We'll review your qualifications and conduct an interview to understand your experience and career goals.", "Ми переглянемо вашу кваліфікацію й проведемо співбесіду, щоб зрозуміти ваш досвід і кар’єрні цілі."), icon: Users },
+    { number: "03", title: t("Documentation", "Документи"), description: t("Submit required certificates, medical examinations, and complete necessary paperwork with our support.", "Надайте потрібні сертифікати й медогляди та оформіть документи з нашою допомогою."), icon: Shield },
+    { number: "04", title: t("Joining Vessel", "Посадка на судно"), description: t("We coordinate all travel arrangements, briefings, and ensure smooth joining process to your assigned vessel.", "Ми організуємо поїздку, інструктажі та подбаємо про спокійну посадку на ваше судно."), icon: Anchor },
   ];
 
   return (
@@ -47,10 +58,10 @@ export default function Seafarers() {
             <div className="relative z-10 p-8 sm:p-12 lg:p-16 max-w-3xl text-center lg:text-left mx-auto lg:mx-0">
 
               <h1 className="font-headline text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-lg tracking-tight" data-testid="heading-seafarers">
-                For Seafarers
+                {t("For Seafarers", "Морякам")}
               </h1>
               <p className="text-lg sm:text-xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0 text-white/90 drop-shadow-md">
-                Join AURA SEA and work with reputable operators across Container ships, Bulk carriers, General Cargo, Tankers, Yachts, and Passenger Vessels - while building a career supported by fair processes and wellbeing-focused Crew Management.
+                {t("Join AURA SEA and work with reputable operators across Container ships, Bulk carriers, General Cargo, Tankers, Yachts, and Passenger Vessels - while building a career supported by fair processes and wellbeing-focused Crew Management.", "Приєднуйтеся до AURA SEA і працюйте з надійними операторами на контейнеровозах, балкерах, суднах генерального вантажу, танкерах, яхтах і пасажирських суднах — будуйте кар’єру з чесними умовами та турботою про ваш добробут.")}
               </p>
             </div>
           </div>
@@ -62,7 +73,7 @@ export default function Seafarers() {
         <section className="py-20">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate" data-testid="heading-what-we-offer-you">
-              What We Offer You
+              {t("What We Offer You", "Що ми вам пропонуємо")}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
@@ -70,32 +81,32 @@ export default function Seafarers() {
               {[
                 {
                   icon: FileText,
-                  title: "Fair Contracts",
-                  desc: "Clear contract terms with no hidden clauses. We ensure you understand every detail before signing.",
+                  title: t("Fair Contracts", "Чесні контракти"),
+                  desc: t("Clear contract terms with no hidden clauses. We ensure you understand every detail before signing.", "Зрозумілі умови без прихованих пунктів. Ми подбаємо, щоб ви розуміли кожну деталь до підписання."),
                   iconBg: "bg-cyan-500/10",
                   iconClass: "text-cyan-400",
                   testId: "card-offer-fair-contracts",
                 },
                 {
                   icon: DollarSign,
-                  title: "Timely Payment",
-                  desc: "Reliable, on-time salary payments every month. Your financial security is our priority.",
+                  title: t("Timely Payment", "Вчасні виплати"),
+                  desc: t("Reliable, on-time salary payments every month. Your financial security is our priority.", "Надійна й вчасна зарплата щомісяця. Ваша фінансова безпека — наш пріоритет."),
                   iconBg: "bg-teal-500/10",
                   iconClass: "text-teal-400",
                   testId: "card-offer-timely-payment",
                 },
                 {
                   icon: Shield,
-                  title: "Safe & Reputable Fleets",
-                  desc: "We partner only with established ship-owners who maintain high safety and operational standards.",
+                  title: t("Safe & Reputable Fleets", "Безпечні й надійні флоти"),
+                  desc: t("We partner only with established ship-owners who maintain high safety and operational standards.", "Ми співпрацюємо лише з перевіреними судновласниками, які дотримуються високих стандартів безпеки й експлуатації."),
                   iconBg: "bg-blue-500/10",
                   iconClass: "text-blue-400",
                   testId: "card-offer-safe-fleets",
                 },
                 {
                   icon: CheckCircle,
-                  title: "Long-Term Cooperation",
-                  desc: "Opportunities for repeated contracts and career continuity with the same fleet.",
+                  title: t("Long-Term Cooperation", "Довгострокова співпраця"),
+                  desc: t("Opportunities for repeated contracts and career continuity with the same fleet.", "Повторні контракти та стабільна кар’єра в одному флоті."),
                   iconBg: "bg-cyan-500/10",
                   iconClass: "text-cyan-400",
                   testId: "card-offer-long-term",
@@ -146,33 +157,31 @@ export default function Seafarers() {
                     className="font-headline text-2xl sm:text-3xl font-semibold"
                     data-testid="heading-seafarers-wellbeing"
                   >
-                    Wellbeing &amp; family support
+                    {t("Wellbeing & family support", "Добробут і підтримка родини")}
                   </CardTitle>
                   <CardDescription className="text-base font-light leading-relaxed pt-1">
-                    Aura Sea Crewing is the first Ukrainian crewing agency integrating psychological support for seafarers and
-                    their families. Mental stability and emotional balance matter for safe, effective work at sea - and we build
-                    that into how we work with you.
+                    {t("Aura Sea Crewing is the first Ukrainian crewing agency integrating psychological support for seafarers and their families. Mental stability and emotional balance matter for safe, effective work at sea - and we build that into how we work with you.", "Aura Sea Crewing — перша українська крюїнгова агенція, що впроваджує психологічну підтримку для моряків і їхніх родин. Психологічна стабільність і емоційна рівновага важливі для безпечної та ефективної роботи в морі — і ми враховуємо це в усій співпраці з вами.")}
                   </CardDescription>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm font-medium text-foreground mb-3">Through certified psychological partners we offer:</p>
+                <p className="text-sm font-medium text-foreground mb-3">{t("Through certified psychological partners we offer:", "Разом із сертифікованими партнерами-психологами ми пропонуємо:")}</p>
                 <ul className="space-y-2 text-sm text-muted-foreground font-light">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                    <span>Support and consultations for seafarers' spouses and relatives</span>
+                    <span>{t("Support and consultations for seafarers' spouses and relatives", "Підтримка й консультації для дружин, чоловіків і родичів моряків")}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                    <span>Stress-resilience sessions for seafarers before and after contracts</span>
+                    <span>{t("Stress-resilience sessions for seafarers before and after contracts", "Заняття зі стресостійкості для моряків до і після контракту")}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                    <span>Continuous mental health awareness integrated into our HR process</span>
+                    <span>{t("Continuous mental health awareness integrated into our HR process", "Постійна увага до психічного здоров’я як частина нашого HR-процесу")}</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                    <span>Supporting the mental health of a sailor's wife and improving the quality of long-distance relationships and a comfortable stay together</span>
+                    <span>{t("Supporting the mental health of a sailor's wife and improving the quality of long-distance relationships and a comfortable stay together", "Підтримка психічного здоров’я дружини моряка, покращення стосунків на відстані та комфортного часу разом")}</span>
                   </li>
                 </ul>
               </CardContent>
@@ -184,7 +193,7 @@ export default function Seafarers() {
         <section className="py-20 relative">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate" data-testid="heading-career-path">
-              Your Career Path with AURA SEA
+              {t("Your Career Path with AURA SEA", "Ваша кар’єра з AURA SEA")}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -199,9 +208,9 @@ export default function Seafarers() {
                     <TrendingUp className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-6" />
                   </div>
                   <div>
-                    <CardTitle className="font-headline text-lg font-medium">Career Progression</CardTitle>
+                    <CardTitle className="font-headline text-lg font-medium">{t("Career Progression", "Кар’єрне зростання")}</CardTitle>
                     <CardDescription className="font-light pt-2 text-sm">
-                      We support your professional advancement through:
+                      {t("We support your professional advancement through:", "Ми підтримуємо ваше професійне зростання:")}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -209,15 +218,15 @@ export default function Seafarers() {
                   <ul className="space-y-2 text-sm text-muted-foreground font-light">
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
-                      <span>Opportunities to advance from junior to senior positions</span>
+                      <span>{t("Opportunities to advance from junior to senior positions", "Можливість рости від молодших до старших посад")}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
-                      <span>Regular performance assessments and career guidance</span>
+                      <span>{t("Regular performance assessments and career guidance", "Регулярна оцінка роботи й кар’єрні поради")}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
-                      <span>Priority consideration for matching openings</span>
+                      <span>{t("Priority consideration for matching openings", "Пріоритет при розгляді на відповідні вакансії")}</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -235,9 +244,9 @@ export default function Seafarers() {
                     <Award className="w-6 h-6 text-teal-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6" />
                   </div>
                   <div>
-                    <CardTitle className="font-headline text-lg font-medium">Training &amp; Development</CardTitle>
+                    <CardTitle className="font-headline text-lg font-medium">{t("Training & Development", "Навчання та розвиток")}</CardTitle>
                     <CardDescription className="font-light pt-2 text-sm">
-                      Invest in your skills with our support:
+                      {t("Invest in your skills with our support:", "Розвивайте навички з нашою підтримкою:")}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -245,15 +254,15 @@ export default function Seafarers() {
                   <ul className="space-y-2 text-sm text-muted-foreground font-light">
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                      <span>Information about training courses and certifications</span>
+                      <span>{t("Information about training courses and certifications", "Інформація про курси й сертифікацію")}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                      <span>Guidance on required qualifications for advancement</span>
+                      <span>{t("Guidance on required qualifications for advancement", "Поради щодо кваліфікації, потрібної для підвищення")}</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                      <span>Connections to approved training institutions</span>
+                      <span>{t("Connections to approved training institutions", "Зв’язок зі схваленими навчальними центрами")}</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -266,7 +275,7 @@ export default function Seafarers() {
         <section className="py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate" data-testid="heading-how-process-works">
-              How the Process Works
+              {t("How the Process Works", "Як усе відбувається")}
             </h2>
 
             <div className="timeline-line space-y-6">
@@ -300,9 +309,9 @@ export default function Seafarers() {
               <div className="feature-row">
                 <CheckCircle className="w-7 h-7 text-cyan-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-headline text-base font-medium text-foreground mb-1">Important Note</h3>
+                  <h3 className="font-headline text-base font-medium text-foreground mb-1">{t("Important Note", "Важливо")}</h3>
                   <p className="text-sm text-muted-foreground font-light">
-                    Active vacancies are regularly posted on our Socials (<a href="https://t.me/AURASEA_crew" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Telegram</a>, <a href="https://www.instagram.com/_aura_sea/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Instagram</a>, <a href="https://www.linkedin.com/company/110849089" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">LinkedIn</a>). When you find a matching position, <Link href="/apply" className="text-cyan-400 hover:underline">submit your application</Link> and our team will review your profile.
+                    {t("Active vacancies are regularly posted on our Socials", "Актуальні вакансії ми регулярно публікуємо в соцмережах")} (<a href="https://t.me/AURASEA_crew" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Telegram</a>, <a href="https://www.instagram.com/_aura_sea/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Instagram</a>, <a href="https://www.linkedin.com/company/110849089" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">LinkedIn</a>). {t("When you find a matching position,", "Знайшли відповідну посаду —")} <Link href="/apply" className="text-cyan-400 hover:underline">{t("submit your application", "подайте анкету")}</Link>{t(" and our team will review your profile.", ", і наша команда розгляне вашу кандидатуру.")}
                   </p>
                 </div>
               </div>
@@ -321,10 +330,10 @@ export default function Seafarers() {
                 <Anchor className="w-8 h-8 text-teal-400" />
               </div>
               <h3 className="font-headline text-2xl font-semibold mb-4 text-foreground" data-testid="heading-cta-check-vacancies">
-                Ready to Start Your Journey?
+                {t("Ready to Start Your Journey?", "Готові вирушити в рейс?")}
               </h3>
               <p className="text-lg text-muted-foreground mb-8 font-light max-w-2xl mx-auto leading-relaxed">
-                Fill in our application form, check current vacancies or get in touch to learn more about opportunities with AURA SEA.
+                {t("Fill in our application form, check current vacancies or get in touch to learn more about opportunities with AURA SEA.", "Заповніть анкету, перегляньте актуальні вакансії або зв’яжіться з нами, щоб дізнатися більше про можливості з AURA SEA.")}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -333,14 +342,14 @@ export default function Seafarers() {
                   data-testid="button-apply-seafarers"
                   data-umami-event="apply-button-seafarers"
                 >
-                  Apply Now
+                  {t("Apply Now", "Подати анкету")}
                 </Link>
                 <Link
                   href="/vacancies"
                   className={cn(buttonVariants({ size: "lg", variant: "secondary" }), "inline-flex font-normal px-8 h-12 text-base")}
                   data-testid="button-view-vacancies"
                 >
-                  View Vacancies
+                  {t("View Vacancies", "Вакансії")}
                 </Link>
                 <Link
                   href="/contact"
@@ -350,7 +359,7 @@ export default function Seafarers() {
                   )}
                   data-testid="button-contact-seafarers"
                 >
-                  Contact Us
+                  {t("Contact Us", "Контакти")}
                 </Link>
               </div>
             </div>

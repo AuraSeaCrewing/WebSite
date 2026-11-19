@@ -15,30 +15,40 @@ import { motion } from "framer-motion";
 const MotionCard = motion.create(Card);
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import aboutHero from "@assets/stock_images/stormy_sea_about.webp";
+import { usePageMeta, useT } from "@/lib/i18n";
 import heroPhoto from "@assets/stock_images/venti-views-1cqIcrWFQBI-unsplash.webp";
 
 export default function About() {
   useScrollAnimation();
+  const t = useT();
+  usePageMeta(
+    "/about",
+    { en: "About Us", uk: "Про нас" },
+    {
+      en: "AURA SEA is a Ukrainian crewing agency founded by seafarers in Odesa: 500+ verified seafarers, modern HR system and psychological support for crews and families.",
+      uk: "AURA SEA — українська крюїнгова агенція, яку заснували моряки в Одесі: понад 500 перевірених моряків, сучасна HR-система та психологічна підтримка екіпажів і родин.",
+    }
+  );
 
   const missionVisionValues = [
     {
       icon: Target,
-      title: "Mission",
-      desc: "To provide reliable crewing solutions through transparent communication, modern processes, and long-term partnerships built on trust and excellence.",
+      title: t("Mission", "Місія"),
+      desc: t("To provide reliable crewing solutions through transparent communication, modern processes, and long-term partnerships built on trust and excellence.", "Надавати надійні крюїнгові рішення завдяки прозорій комунікації, сучасним процесам і довгостроковій співпраці, побудованій на довірі та якості."),
       iconBg: "bg-cyan-500/10",
       iconClass: "text-cyan-400",
     },
     {
       icon: TrendingUp,
-      title: "Vision",
-      desc: "To become a leading maritime holding company, continuously innovating in crew management, training, psychology crew and family wellnes and related services while maintaining our commitment to care.",
+      title: t("Vision", "Бачення"),
+      desc: t("To become a leading maritime holding company, continuously innovating in crew management, training, psychology crew and family wellnes and related services while maintaining our commitment to care.", "Стати провідним морським холдингом, який постійно вдосконалює управління екіпажами, навчання, психологічну підтримку моряків і їхніх родин та суміжні послуги, зберігаючи відданість турботі."),
       iconBg: "bg-teal-500/10",
       iconClass: "text-teal-400",
     },
     {
       icon: Award,
-      title: "Values",
-      desc: "Safety, transparency, respect, reliability, and professional development guide every decision we make.",
+      title: t("Values", "Цінності"),
+      desc: t("Safety, transparency, respect, reliability, and professional development guide every decision we make.", "Безпека, прозорість, повага, надійність і професійний розвиток визначають кожне наше рішення."),
       iconBg: "bg-blue-500/10",
       iconClass: "text-blue-400",
     },
@@ -47,29 +57,29 @@ export default function About() {
   const coreValues = [
     {
       icon: Shield,
-      title: "Safety First",
-      desc: "Ensuring the safety and well-being of seafarers is our top priority, with rigorous vetting and compliance procedures.",
+      title: t("Safety First", "Безпека понад усе"),
+      desc: t("Ensuring the safety and well-being of seafarers is our top priority, with rigorous vetting and compliance procedures.", "Безпека й добробут моряків — наш головний пріоритет, тому ми ретельно перевіряємо кандидатів і дотримуємося всіх вимог."),
       iconBg: "bg-cyan-500/10",
       iconClass: "text-cyan-400",
     },
     {
       icon: Target,
-      title: "Transparency",
-      desc: "Open, honest communication in all our dealings, from contract terms to operational updates.",
+      title: t("Transparency", "Прозорість"),
+      desc: t("Open, honest communication in all our dealings, from contract terms to operational updates.", "Відкрита й чесна комунікація в усьому — від умов контракту до поточних новин."),
       iconBg: "bg-teal-500/10",
       iconClass: "text-teal-400",
     },
     {
       icon: Heart,
-      title: "Respect",
-      desc: "Treating every seafarer and partner with dignity, recognizing the vital role they play in global maritime trade.",
+      title: t("Respect", "Повага"),
+      desc: t("Treating every seafarer and partner with dignity, recognizing the vital role they play in global maritime trade.", "Ставимося до кожного моряка й партнера з гідністю, визнаючи їхню важливу роль у світовій морській торгівлі."),
       iconBg: "bg-blue-500/10",
       iconClass: "text-blue-400",
     },
     {
       icon: TrendingUp,
-      title: "Development",
-      desc: "Supporting continuous professional growth through training opportunities and career advancement.",
+      title: t("Development", "Розвиток"),
+      desc: t("Supporting continuous professional growth through training opportunities and career advancement.", "Підтримуємо постійне професійне зростання через навчання та кар’єрне просування."),
       iconBg: "bg-cyan-500/10",
       iconClass: "text-cyan-400",
     },
@@ -78,23 +88,23 @@ export default function About() {
   const leadership = [
     {
       icon: Users,
-      title: "Managing Director",
-      badge: "Leadership",
-      desc: "4 years in maritime operations and crew management.",
+      title: t("Managing Director", "Керуючий директор"),
+      badge: t("Leadership", "Керівництво"),
+      desc: t("4 years in maritime operations and crew management.", "4 роки в морських операціях і управлінні екіпажами."),
       gradient: "from-cyan-500 to-teal-600",
     },
     {
       icon: Target,
-      title: "Operations Director",
-      badge: "Operations",
-      desc: "Expert in crew deployment and vessel operations management.",
+      title: t("Operations Director", "Операційний директор"),
+      badge: t("Operations", "Операції"),
+      desc: t("Expert in crew deployment and vessel operations management.", "Експерт із розстановки екіпажів і управління суднами."),
       gradient: "from-teal-500 to-blue-600",
     },
     {
       icon: Heart,
-      title: "HR Director",
-      badge: "Human Resources",
-      desc: "Dedicated to seafarer welfare and career development.",
+      title: t("HR Director", "HR-директор"),
+      badge: t("Human Resources", "Персонал"),
+      desc: t("Dedicated to seafarer welfare and career development.", "Опікується добробутом моряків і їхнім кар’єрним розвитком."),
       gradient: "from-blue-500 to-cyan-600",
     },
   ] as const;
@@ -128,10 +138,10 @@ export default function About() {
                 className="font-headline text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-lg tracking-tight"
                 data-testid="heading-about"
               >
-                About AURA SEA
+                {t("About AURA SEA", "Про AURA SEA")}
               </h1>
               <p className="text-lg sm:text-xl font-light leading-relaxed text-white/90 drop-shadow-md">
-                Maritime experience, digital innovation, and mental health awareness - where professionalism meets care
+                {t("Maritime experience, digital innovation, and mental health awareness - where professionalism meets care", "Морський досвід, цифрові інновації та увага до психічного здоров’я — де професіоналізм поєднується з турботою")}
               </p>
             </div>
           </div>
@@ -143,7 +153,7 @@ export default function About() {
         <section className="py-20">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate">
-              Mission, vision &amp; values
+              {t("Mission, vision & values", "Місія, бачення та цінності")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
               {missionVisionValues.map((item, i) => {
@@ -185,21 +195,19 @@ export default function About() {
                   className="font-headline text-2xl sm:text-3xl font-semibold"
                   data-testid="heading-about-company"
                 >
-                  About the company
+                  {t("About the company", "Про компанію")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 text-muted-foreground font-light leading-relaxed">
-                <p className="text-foreground/90 font-normal">Founded in April 2022 in Odesa, Ukraine</p>
+                <p className="text-foreground/90 font-normal">{t("Founded in April 2022 in Odesa, Ukraine", "Заснована у квітні 2022 року в Одесі, Україна")}</p>
                 <p>
-                  Aura Sea Crewing is a professional crewing agency established and operated by experienced seafarers.
+                  {t("Aura Sea Crewing is a professional crewing agency established and operated by experienced seafarers.", "Aura Sea Crewing — професійна крюїнгова агенція, яку заснували й ведуть досвідчені моряки.")}
                 </p>
                 <p>
-                  We specialize in providing qualified and verified Ukrainian crew members for various vessel types,
-                  including Container Ships, Bulk Carriers, General Cargo, VLCCs, Tankers, Yachts, and Passenger vessels.
+                  {t("We specialize in providing qualified and verified Ukrainian crew members for various vessel types, including Container Ships, Bulk Carriers, General Cargo, VLCCs, Tankers, Yachts, and Passenger vessels.", "Ми підбираємо кваліфікованих і перевірених українських моряків для суден різних типів: контейнеровозів, балкерів, суден генерального вантажу, VLCC, танкерів, яхт і пасажирських суден.")}
                 </p>
                 <p>
-                  Our operations are built on modern technology, efficiency, and accountability - ensuring shipowners receive
-                  reliable and competent personnel, ready to join worldwide.
+                  {t("Our operations are built on modern technology, efficiency, and accountability - ensuring shipowners receive reliable and competent personnel, ready to join worldwide.", "Наша робота спирається на сучасні технології, ефективність і відповідальність — судновласники отримують надійних і компетентних фахівців, готових до посадки в будь-якій точці світу.")}
                 </p>
               </CardContent>
             </MotionCard>
@@ -225,22 +233,20 @@ export default function About() {
                       className="font-headline text-2xl sm:text-3xl font-semibold"
                       data-testid="heading-our-system"
                     >
-                      Our system
+                      {t("Our system", "Наша система")}
                     </CardTitle>
                     <CardDescription className="text-base font-light leading-relaxed">
-                      Aura Sea Crewing applies the newest generation of HR technologies and data-driven recruitment
-                      algorithms tailored for the maritime industry. We utilize structured evaluation workflows that
-                      include:
+                      {t("Aura Sea Crewing applies the newest generation of HR technologies and data-driven recruitment algorithms tailored for the maritime industry. We utilize structured evaluation workflows that include:", "Aura Sea Crewing застосовує HR-технології нового покоління та алгоритми підбору на основі даних, створені для морської галузі. Наш структурований процес оцінки включає:")}
                     </CardDescription>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-6 flex-1 flex flex-col">
                   <ul className="space-y-3 text-sm text-muted-foreground font-light flex-1">
                     {[
-                      "Real-time database management and continuous updates",
-                      "Automated verification of maritime documents and certificates",
-                      "Competency-based interviewing and psychological assessment",
-                      "Candidate scoring system based on performance and readiness",
+                      t("Real-time database management and continuous updates", "Базу даних, що оновлюється в реальному часі"),
+                      t("Automated verification of maritime documents and certificates", "Автоматизовану перевірку морських документів і сертифікатів"),
+                      t("Competency-based interviewing and psychological assessment", "Співбесіди на основі компетенцій і психологічну оцінку"),
+                      t("Candidate scoring system based on performance and readiness", "Оцінку кандидатів за результатами роботи та готовністю"),
                     ].map((line) => (
                       <li key={line} className="flex items-start gap-3">
                         <CheckCircle className="w-5 h-5 text-teal-400 mt-0.5 flex-shrink-0" />
@@ -249,7 +255,7 @@ export default function About() {
                     ))}
                   </ul>
                   <p className="text-muted-foreground font-light leading-relaxed text-sm border-t border-border/60 pt-6 mt-auto">
-                    This ensures every seafarer profile is authentic, current, and job-ready.
+                    {t("This ensures every seafarer profile is authentic, current, and job-ready.", "Тож кожна анкета моряка — достовірна, актуальна й готова до роботи.")}
                   </p>
                 </CardContent>
               </MotionCard>
@@ -271,21 +277,20 @@ export default function About() {
                       className="font-headline text-2xl sm:text-3xl font-semibold"
                       data-testid="heading-technology-innovation"
                     >
-                      Technology &amp; innovation
+                      {t("Technology & innovation", "Технології та інновації")}
                     </CardTitle>
                     <CardDescription className="text-base font-light leading-relaxed">
-                      We implement modern HR standards, digital tracking systems, and automated analytics to improve every
-                      stage of the crewing process. Our adaptive digital infrastructure allows us to:
+                      {t("We implement modern HR standards, digital tracking systems, and automated analytics to improve every stage of the crewing process. Our adaptive digital infrastructure allows us to:", "Ми впроваджуємо сучасні HR-стандарти, цифрові системи обліку й автоматизовану аналітику, щоб покращувати кожен етап крюїнгу. Наша гнучка цифрова інфраструктура дає змогу:")}
                     </CardDescription>
                   </div>
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col">
                   <ul className="space-y-3 text-sm text-muted-foreground font-light">
                     {[
-                      "Locate and verify crew members globally",
-                      "Reduce recruitment time and administrative workload",
-                      "Maintain stable communication between shipowners and crew",
-                      "Guarantee compliance with MLC 2006 and international labor standards",
+                      t("Locate and verify crew members globally", "Знаходити й перевіряти моряків по всьому світу"),
+                      t("Reduce recruitment time and administrative workload", "Скорочувати час підбору та адміністративне навантаження"),
+                      t("Maintain stable communication between shipowners and crew", "Підтримувати стабільний зв’язок між судновласниками й екіпажем"),
+                      t("Guarantee compliance with MLC 2006 and international labor standards", "Гарантувати відповідність MLC 2006 і міжнародним трудовим стандартам"),
                     ].map((line) => (
                       <li key={line} className="flex items-start gap-3">
                         <CheckCircle className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
@@ -306,7 +311,7 @@ export default function About() {
               className="font-headline text-3xl font-semibold text-center text-foreground scroll-animate"
               data-testid="heading-database-wellbeing"
             >
-              Crew database &amp; wellbeing
+              {t("Crew database & wellbeing", "База моряків і добробут")}
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <MotionCard
@@ -319,18 +324,14 @@ export default function About() {
                   <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
                     <Database className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-6" />
                   </div>
-                  <CardTitle className="font-headline text-xl sm:text-2xl font-semibold">Our crew database</CardTitle>
+                  <CardTitle className="font-headline text-xl sm:text-2xl font-semibold">{t("Our crew database", "Наша база моряків")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-muted-foreground font-light leading-relaxed text-sm">
                   <p>
-                    Our crew database includes over 500 verified professionals across all maritime positions and ranks.
-                    Each profile is personally reviewed, regularly updated, and tracked for certification status and
-                    contract availability. We maintain direct contact with every candidate, tracking contracts,
-                    availability dates, and certification status.
+                    {t("Our crew database includes over 500 verified professionals across all maritime positions and ranks. Each profile is personally reviewed, regularly updated, and tracked for certification status and contract availability. We maintain direct contact with every candidate, tracking contracts, availability dates, and certification status.", "У нашій базі понад 500 перевірених фахівців усіх морських посад і рангів. Кожну анкету ми переглядаємо особисто, регулярно оновлюємо й стежимо за сертифікатами та готовністю до контракту. Ми на прямому зв’язку з кожним кандидатом і відстежуємо контракти, дати готовності та строки сертифікатів.")}
                   </p>
                   <p>
-                    Over the last three years, Aura Sea Crewing has successfully placed more than 200 Ukrainian seafarers
-                    on vessels of different types, building long-term partnerships with trusted operators.
+                    {t("Over the last three years, Aura Sea Crewing has successfully placed more than 200 Ukrainian seafarers on vessels of different types, building long-term partnerships with trusted operators.", "За останні три роки Aura Sea Crewing успішно працевлаштувала понад 200 українських моряків на судна різних типів і збудувала довгострокову співпрацю з надійними операторами.")}
                   </p>
                 </CardContent>
               </MotionCard>
@@ -346,22 +347,20 @@ export default function About() {
                     <Heart className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6" />
                   </div>
                   <CardTitle className="font-headline text-xl sm:text-2xl font-semibold">
-                    Wellbeing &amp; psychological support
+                    {t("Wellbeing & psychological support", "Добробут і психологічна підтримка")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-muted-foreground font-light leading-relaxed text-sm">
-                    Beyond recruitment, Aura Sea Crewing is the first Ukrainian agency integrating psychological support
-                    programs for seafarers and their families. We believe that mental stability and emotional balance are
-                    critical for safe and effective work at sea.
+                    {t("Beyond recruitment, Aura Sea Crewing is the first Ukrainian agency integrating psychological support programs for seafarers and their families. We believe that mental stability and emotional balance are critical for safe and effective work at sea.", "Крім підбору, Aura Sea Crewing — перша українська агенція, що впроваджує програми психологічної підтримки для моряків і їхніх родин. Ми переконані: психологічна стабільність і емоційна рівновага критично важливі для безпечної та ефективної роботи в морі.")}
                   </p>
-                  <p className="text-sm font-medium text-foreground">Our certified psychological partners provide:</p>
+                  <p className="text-sm font-medium text-foreground">{t("Our certified psychological partners provide:", "Наші сертифіковані партнери-психологи надають:")}</p>
                   <ul className="space-y-3 text-sm text-muted-foreground font-light">
                     {[
-                      "Support and consultations for seafarers' spouses and relatives",
-                      "Stress-resilience sessions for seafarers before and after contracts",
-                      "Continuous mental health awareness integrated into our HR process",
-                      "Supporting the mental health of a sailor's wife and improving the quality of long-distance relationships and a comfortable stay together",
+                      t("Support and consultations for seafarers' spouses and relatives", "Підтримку й консультації для дружин, чоловіків і родичів моряків"),
+                      t("Stress-resilience sessions for seafarers before and after contracts", "Заняття зі стресостійкості для моряків до і після контракту"),
+                      t("Continuous mental health awareness integrated into our HR process", "Постійну увагу до психічного здоров’я як частину нашого HR-процесу"),
+                      t("Supporting the mental health of a sailor's wife and improving the quality of long-distance relationships and a comfortable stay together", "Підтримку психічного здоров’я дружини моряка, покращення стосунків на відстані та комфортного часу разом"),
                     ].map((line) => (
                       <li key={line} className="flex items-start gap-3">
                         <CheckCircle className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
@@ -370,8 +369,7 @@ export default function About() {
                     ))}
                   </ul>
                   <p className="text-muted-foreground font-light leading-relaxed text-sm pt-2 border-t border-border/60">
-                    This approach allows us not only to fill vacancies - but to build sustainable, motivated, and mentally
-                    healthy maritime teams.
+                    {t("This approach allows us not only to fill vacancies - but to build sustainable, motivated, and mentally healthy maritime teams.", "Такий підхід дає змогу не просто закривати вакансії, а формувати стабільні, вмотивовані й психологічно здорові морські команди.")}
                   </p>
                 </CardContent>
               </MotionCard>
@@ -383,7 +381,7 @@ export default function About() {
         <section className="py-20 relative">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate" data-testid="heading-core-values">
-              Our core values
+              {t("Our core values", "Наші ключові цінності")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {coreValues.map((item, i) => {
@@ -418,7 +416,7 @@ export default function About() {
         <section className="py-20">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate" data-testid="heading-leadership">
-              Leadership team
+              {t("Leadership team", "Команда керівників")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {leadership.map((item, i) => {
