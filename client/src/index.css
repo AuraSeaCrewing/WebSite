@@ -678,3 +678,35 @@
       0 0 0 1px hsl(215 20% 85% / 0.4);
   }
 }
+
+/* ── Language choice screen (components/LanguageGate.tsx) ── */
+/* Ukrainian: blue and yellow flowing across the button */
+.lang-btn-ua {
+  /* the pattern repeats every half: a yellow band is always somewhere on the button while it flows */
+  background-image: linear-gradient(115deg, #0057b7 0%, #1f6fd6 18%, #ffd500 27%, #1f6fd6 36%, #0057b7 50%, #1f6fd6 68%, #ffd500 77%, #1f6fd6 86%, #0057b7 100%);
+  background-size: 200% 100%;
+  animation: lang-ua-flow 5s linear infinite;
+  border: 1.5px solid rgba(255, 213, 0, 0.75);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 8px 32px rgba(0, 87, 183, 0.45), 0 0 28px rgba(255, 213, 0, 0.25);
+}
+@keyframes lang-ua-flow {
+  from { background-position: 100% 50%; }
+  to { background-position: 0% 50%; }
+}
+/* English: a blue globe with meridians and parallels as the texture */
+.lang-btn-en {
+  background: radial-gradient(circle at 50% 40%, #1d4ed8 0%, #12307f 55%, #0a1c4d 100%);
+  border: 1px solid rgba(102, 228, 245, 0.45);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 8px 32px rgba(29, 78, 216, 0.4);
+}
+/* the globe turns slowly: the land drifts behind the grid */
+.lang-globe-land {
+  animation: lang-globe-turn 24s linear infinite;
+}
+@keyframes lang-globe-turn {
+  from { transform: translateX(0); }
+  to { transform: translateX(-200px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lang-btn-ua, .lang-globe-land { animation: none; }
+}

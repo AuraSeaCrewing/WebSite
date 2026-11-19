@@ -178,19 +178,20 @@ const SECTION_LABELS: Record<string, { en: string; uk: string; step: number }> =
   consent: { en: "Consent", uk: "Згода", step: 5 },
 };
 
+// Large fields and text: the form is often filled in on a phone, sometimes from a ship
 const selectClass =
-  "flex h-9 w-full rounded-md border border-border bg-background/60 px-3 py-1 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring";
-const inputClass = "mt-1 bg-background/60 border-border text-foreground placeholder:text-muted-foreground";
+  "flex h-12 w-full rounded-lg border border-border bg-background/60 px-4 py-2 text-base text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+const inputClass = "mt-1 h-12 rounded-lg px-4 !text-base bg-background/60 border-border text-foreground placeholder:text-muted-foreground";
 
 function Field({ label, required, hint, className, children }: { label: string; required?: boolean; hint?: string; className?: string; children: ReactNode }) {
   return (
     <div className={className}>
-      <Label className="text-foreground font-light text-sm">
+      <Label className="text-foreground text-base">
         {label}
         {required && <span className="text-cyan-400"> *</span>}
       </Label>
       <div className="mt-1">{children}</div>
-      {hint && <p className="mt-1 text-xs text-muted-foreground font-light leading-snug">{hint}</p>}
+      {hint && <p className="mt-1.5 text-sm text-muted-foreground font-light leading-snug">{hint}</p>}
     </div>
   );
 }
@@ -198,15 +199,15 @@ function Field({ label, required, hint, className, children }: { label: string; 
 /** A block of fields. `bare` — the step has one block and its title is already in the step header. */
 function Section({ icon: Icon, title, hint, bare, children }: { icon: typeof User; title: string; hint?: string; bare?: boolean; children: ReactNode }) {
   return (
-    <section className="glass-card rounded-xl p-6 sm:p-8" aria-label={bare ? title : undefined}>
+    <section className="glass-card rounded-2xl p-5 sm:p-8 lg:p-10" aria-label={bare ? title : undefined}>
       {!bare && (
         <div className="flex items-center gap-3 mb-1">
-          <Icon className="w-5 h-5 text-cyan-400" />
-          <h2 className="font-headline text-xl font-medium text-foreground">{title}</h2>
+          <Icon className="w-6 h-6 text-cyan-400" />
+          <h2 className="font-headline text-2xl font-medium text-foreground">{title}</h2>
         </div>
       )}
-      {hint && <p className="text-sm text-muted-foreground font-light mb-5">{hint}</p>}
-      <div className={cn(!hint && !bare && "mt-5")}>{children}</div>
+      {hint && <p className="text-base text-muted-foreground font-light mb-6 mt-1">{hint}</p>}
+      <div className={cn(!hint && !bare && "mt-6")}>{children}</div>
     </section>
   );
 }
@@ -217,7 +218,7 @@ function ExpiryInput({ value, onChange }: { value: string; onChange: (v: string)
   return (
     <div className="space-y-1">
       <Input type="date" value={unlimited ? "" : value} disabled={unlimited} onChange={(e) => onChange(e.target.value)} className={inputClass} />
-      <label className="flex items-center gap-2 text-xs text-muted-foreground font-light cursor-pointer">
+      <label className="flex items-center gap-2 text-sm text-muted-foreground font-light cursor-pointer">
         <input type="checkbox" checked={unlimited} onChange={(e) => onChange(e.target.checked ? "unlimited" : "")} className="accent-cyan-400" />
         {t("Unlimited", "Безстроковий")}
       </label>
@@ -250,10 +251,10 @@ function Choice({ checked, onChange, title, hint, testId }: { checked: boolean; 
         checked ? "border-cyan-400/60 bg-cyan-500/10" : "border-border/60 hover:border-cyan-500/40"
       )}
     >
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="mt-1 accent-cyan-400 w-4 h-4 flex-shrink-0" data-testid={testId} />
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="mt-1 accent-cyan-400 w-5 h-5 flex-shrink-0" data-testid={testId} />
       <span>
-        <span className="block text-sm text-foreground">{title}</span>
-        <span className="block text-xs text-muted-foreground font-light mt-1 leading-snug">{hint}</span>
+        <span className="block text-base text-foreground">{title}</span>
+        <span className="block text-sm text-muted-foreground font-light mt-1 leading-snug">{hint}</span>
       </span>
     </label>
   );
@@ -264,9 +265,6 @@ function Progress({ step, onPick }: { step: number; onPick: (n: number) => void 
   const t = useT();
   return (
     <nav aria-label={t("Application steps", "Кроки анкети")} className="mb-6">
-      <p className="text-sm text-white/80 mb-3 text-center sm:hidden">
-        {t(`Step ${step + 1} of ${STEPS.length}`, `Крок ${step + 1} з ${STEPS.length}`)} · {STEPS[step].title[lang]}
-      </p>
       <ol className="flex items-center gap-1 sm:gap-2">
         {STEPS.map((s, i) => {
           const done = i < step;
@@ -284,13 +282,13 @@ function Progress({ step, onPick }: { step: number; onPick: (n: number) => void 
               >
                 <span
                   className={cn(
-                    "block h-1.5 rounded-full transition-colors",
+                    "block h-2 rounded-full transition-colors",
                     done ? "bg-cyan-400" : current ? "bg-cyan-300" : "bg-white/15"
                   )}
                 />
                 <span
                   className={cn(
-                    "hidden sm:block mt-2 text-xs truncate",
+                    "hidden sm:block mt-2 text-sm truncate",
                     current ? "text-white" : done ? "text-cyan-200 group-hover:underline" : "text-white/50"
                   )}
                 >
@@ -474,7 +472,7 @@ export default function Apply() {
         </motion.div>
       </section>
 
-      <form ref={formRef} onSubmit={handleSubmit} className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-6">
+      <form ref={formRef} onSubmit={handleSubmit} className="relative z-10 w-full max-w-screen-2xl mx-auto px-3 sm:px-6 lg:px-10 pb-24 space-y-6">
         {/* Hidden from people; bots fill it in */}
         <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
           <label>
@@ -485,14 +483,14 @@ export default function Apply() {
 
         <div ref={topRef} className="scroll-mt-24">
           <Progress step={step} onPick={goTo} />
-          <div className="glass-card rounded-xl p-5 sm:p-6 flex gap-4" data-testid="apply-step-intro">
-            <current.icon className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-0.5" />
+          <div className="glass-card rounded-2xl p-5 sm:p-8 flex gap-4 sm:gap-6" data-testid="apply-step-intro">
+            <current.icon className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400 flex-shrink-0 mt-1" />
             <div>
-              <p className="text-xs tracking-wide text-cyan-300 mb-1">
+              <p className="text-sm sm:text-base tracking-wide text-cyan-300 mb-1">
                 {t(`Step ${step + 1} of ${STEPS.length}`, `Крок ${step + 1} з ${STEPS.length}`)}
               </p>
-              <h2 className="font-headline text-2xl font-semibold text-foreground mb-2">{current.title[lang]}</h2>
-              <p className="text-sm text-muted-foreground font-light leading-relaxed">{current.intro[lang]}</p>
+              <h2 className="font-headline text-2xl sm:text-3xl font-semibold text-foreground mb-3">{current.title[lang]}</h2>
+              <p className="text-base sm:text-lg text-foreground/85 font-light leading-relaxed max-w-5xl">{current.intro[lang]}</p>
             </div>
           </div>
         </div>
@@ -505,7 +503,7 @@ export default function Apply() {
           {step === 0 && (
             <>
               <Section icon={User} title={t("Personal details", "Особисті дані")}>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                   <Field label={t("Last name", "Прізвище")} required hint={t("In Latin letters, as in your passport", "Латиницею, як у паспорті")}>
                     <Input required value={person.lastName} onChange={(e) => set("person", "lastName", e.target.value)} className={inputClass} autoComplete="family-name" />
                   </Field>
@@ -550,7 +548,7 @@ export default function Apply() {
               </Section>
 
               <Section icon={ClipboardList} title={t("Physical details", "Фізичні дані")} hint={t("Needed to order overalls and safety shoes for you on board.", "Потрібні, щоб замовити для вас комбінезон і захисне взуття на судно.")}>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
                   <Field label={t("Height, cm", "Зріст, см")}>
                     <Input inputMode="numeric" value={physical.heightCm} onChange={(e) => set("physical", "heightCm", e.target.value)} className={inputClass} />
                   </Field>
@@ -567,7 +565,7 @@ export default function Apply() {
               </Section>
 
               <Section icon={Phone} title={t("Contacts", "Контакти")} hint={t("We will call or write to you about vacancies. A phone with WhatsApp or Telegram is the fastest way.", "Ми зателефонуємо чи напишемо вам щодо вакансій. Найшвидше — телефон із WhatsApp або Telegram.")}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <Field label={t("Phone (with country code)", "Телефон (з кодом країни)")} required>
                     <Input type="tel" required minLength={5} value={contacts.phone} onChange={(e) => set("contacts", "phone", e.target.value)} className={inputClass} placeholder="+380 …" autoComplete="tel" />
                   </Field>
@@ -595,8 +593,8 @@ export default function Apply() {
               <Section icon={Users} title={t("Next of kin", "Контактна особа")} hint={t("Who we contact if something happens to you at sea — usually a spouse or parent.", "Кому ми зателефонуємо, якщо з вами щось трапиться в морі, — зазвичай дружина, чоловік чи батьки.")}>
                 <div className="space-y-4">
                   {form.relatives.map((r, i) => (
-                    <div key={i} className="rounded-lg border border-border/60 p-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-start">
+                    <div key={i} className="rounded-xl border border-border/60 p-4 sm:p-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 items-start">
                         <Field label={t("Full name", "Ім’я та прізвище")}>
                           <Input value={r.fullName} onChange={(e) => setItem("relatives", i, "fullName", e.target.value)} className={inputClass} />
                         </Field>
@@ -624,7 +622,7 @@ export default function Apply() {
 
           {step === 1 && (
             <Section bare icon={Anchor} title={t("Position and availability", "Посада та готовність")}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <Field label={t("Position applied for", "Бажана посада")} required hint={t("Start typing and pick from the list", "Почніть вводити й оберіть зі списку")}>
                   <Input required list="ranks" value={work.desiredRank} onChange={(e) => setWork("desiredRank", e.target.value)} className={inputClass} placeholder={t("e.g. 2nd Officer", "напр. 2nd Officer")} />
                 </Field>
@@ -657,15 +655,15 @@ export default function Apply() {
               </div>
 
               <div className="mt-8">
-                <h3 className="font-headline text-base font-medium text-foreground mb-1">{t("Career plans", "Кар’єрні плани")}</h3>
-                <p className="text-xs text-muted-foreground font-light mb-4 flex items-start gap-2">
-                  <Info className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+                <h3 className="font-headline text-xl font-medium text-foreground mb-2">{t("Career plans", "Кар’єрні плани")}</h3>
+                <p className="text-base text-muted-foreground font-light mb-4 flex items-start gap-2">
+                  <Info className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
                   {t(
                     "Optional. Tick what interests you — a recruiter will contact you for a free consultation on what is needed.",
                     "Необов’язково. Позначте, що вас цікавить, — рекрутер зв’яжеться з вами для безкоштовної консультації щодо того, що для цього потрібно."
                   )}
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <Choice
                     checked={work.startPosition}
                     onChange={(v) => setWork("startPosition", v)}
@@ -702,8 +700,8 @@ export default function Apply() {
             <Section bare icon={IdCard} title={t("Documents", "Документи")}>
               <div className="space-y-4">
                 {form.documents.map((d, i) => (
-                  <div key={i} className="rounded-lg border border-border/60 p-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 items-start">
+                  <div key={i} className="rounded-xl border border-border/60 p-4 sm:p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-6 gap-4 sm:gap-5 items-start">
                       <Field label={t("Document", "Документ")} className="sm:col-span-2">
                         <select value={d.type} onChange={(e) => setItem("documents", i, "type", e.target.value)} className={selectClass}>
                           {DOCUMENT_TYPES.map((dt) => (
@@ -747,8 +745,8 @@ export default function Apply() {
             <Section bare icon={FileText} title={t("Certificates", "Сертифікати")}>
               <div className="space-y-4">
                 {form.certificates.map((c, i) => (
-                  <div key={i} className="rounded-lg border border-border/60 p-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 items-start">
+                  <div key={i} className="rounded-xl border border-border/60 p-4 sm:p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-6 gap-4 sm:gap-5 items-start">
                       <Field label={t("Certificate", "Сертифікат")} className="sm:col-span-3">
                         <Input list="certificates" value={c.name} onChange={(e) => setItem("certificates", i, "name", e.target.value)} className={inputClass} placeholder={t("Start typing, e.g. Basic Safety Training", "Почніть вводити, напр. Basic Safety Training")} />
                       </Field>
@@ -781,8 +779,8 @@ export default function Apply() {
             <Section bare icon={Ship} title={t("Sea service", "Стаж у морі")}>
               <div className="space-y-4">
                 {form.voyages.map((v, i) => (
-                  <div key={i} className="rounded-lg border border-border/60 p-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 items-start">
+                  <div key={i} className="rounded-xl border border-border/60 p-4 sm:p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-6 gap-4 sm:gap-5 items-start">
                       <Field label={t("Vessel name", "Назва судна")} className="sm:col-span-2">
                         <Input value={v.vesselName} onChange={(e) => setItem("voyages", i, "vesselName", e.target.value)} className={inputClass} />
                       </Field>
@@ -840,7 +838,7 @@ export default function Apply() {
                   maxLength={2000}
                   value={work.aboutMe}
                   onChange={(e) => setWork("aboutMe", e.target.value)}
-                  className="bg-background/60 border-border text-foreground placeholder:text-muted-foreground resize-none"
+                  className="rounded-lg px-4 py-3 !text-base bg-background/60 border-border text-foreground placeholder:text-muted-foreground resize-none"
                   placeholder={t(
                     "For example: what vessels and routes you prefer, contract length, why you are looking for a new company, questions for us.",
                     "Наприклад: яким суднам і рейсам надаєте перевагу, бажана тривалість контракту, чому шукаєте нову компанію, запитання до нас."
@@ -854,10 +852,10 @@ export default function Apply() {
                     type="checkbox"
                     checked={form.consent}
                     onChange={(e) => setForm((f) => ({ ...f, consent: e.target.checked }))}
-                    className="mt-1 accent-cyan-400 w-4 h-4 flex-shrink-0"
+                    className="mt-1 accent-cyan-400 w-5 h-5 flex-shrink-0"
                     data-testid="checkbox-consent"
                   />
-                  <span className="text-sm text-muted-foreground font-light">
+                  <span className="text-base text-muted-foreground font-light leading-relaxed">
                     {t(
                       "I confirm that the information is correct and I consent to AURA SEA processing my personal data to find me employment at sea, and to sending my profile for specific vacancies to ship-owners and ship managers, including those outside Ukraine and the EU, as described in the",
                       "Підтверджую, що дані правдиві, і даю згоду AURA SEA на обробку моїх персональних даних для працевлаштування в морі та на передачу моєї анкети під конкретні вакансії судновласникам і менеджерам суден, зокрема за межами України та ЄС, як описано в"
@@ -881,7 +879,7 @@ export default function Apply() {
 
         <div className="flex flex-col-reverse sm:flex-row gap-3 sm:items-center sm:justify-between">
           {step > 0 ? (
-            <Button type="button" variant="outline" onClick={() => goTo(step - 1)} data-testid="button-apply-back">
+            <Button type="button" variant="outline" size="lg" onClick={() => goTo(step - 1)} className="h-12 text-base" data-testid="button-apply-back">
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t("Back", "Назад")}
             </Button>
@@ -892,19 +890,20 @@ export default function Apply() {
             <Button
               type="submit"
               disabled={status === "sending"}
-              className="sm:min-w-[240px] font-normal transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-lg hover:shadow-cyan-500/20"
+              size="lg"
+              className="h-12 text-base sm:min-w-[300px] font-normal transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] hover:shadow-lg hover:shadow-cyan-500/20"
               data-testid="button-submit-application"
             >
               {status === "sending" ? t("Sending...", "Надсилаємо...") : t("Send application", "Надіслати анкету")}
             </Button>
           ) : (
-            <Button type="button" onClick={next} className="sm:min-w-[240px] font-normal" data-testid="button-apply-next">
+            <Button type="button" size="lg" onClick={next} className="h-12 text-base sm:min-w-[300px] font-normal" data-testid="button-apply-next">
               {t(`Next: ${STEPS[step + 1].title.en}`, `Далі: ${STEPS[step + 1].title.uk}`)}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           )}
         </div>
-        <p className="text-xs text-white/60 font-light text-center">
+        <p className="text-sm text-white/60 font-light text-center">
           {t("Your answers are saved in this browser until you send them.", "Ваші відповіді зберігаються в цьому браузері, доки ви їх не надішлете.")}
         </p>
       </form>
