@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { CERTIFICATES, DOCUMENT_TYPES, EMPLOYMENT_STATUSES, ENGLISH_LEVELS, RANKS, VESSEL_TYPES } from "@/lib/application-options";
+import { track } from "@/lib/analytics";
 import heroImage from "@assets/stock_images/stormy_sea_2.webp";
 
 // Seafarer application form. Submits straight into the AURA SEA CRM (POST /api/public/apply), where it
@@ -188,6 +189,7 @@ export default function Apply() {
       });
       if (res.ok) {
         setStatus("done");
+        track("application-sent");
         try {
           localStorage.removeItem(DRAFT_KEY);
         } catch {

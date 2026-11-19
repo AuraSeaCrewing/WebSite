@@ -114,7 +114,7 @@ const SECTIONS: Record<Lang, { id: string; title: string }[]> = {
     { id: "security", title: "How we protect your data" },
     { id: "rights", title: "Your rights" },
     { id: "complaints", title: "Complaints" },
-    { id: "cookies", title: "Cookies and browser storage" },
+    { id: "cookies", title: "Cookies, statistics and browser storage" },
     { id: "minors", title: "Minors" },
     { id: "changes", title: "Changes to this policy" },
   ],
@@ -131,7 +131,7 @@ const SECTIONS: Record<Lang, { id: string; title: string }[]> = {
     { id: "security", title: "Як ми захищаємо дані" },
     { id: "rights", title: "Ваші права" },
     { id: "complaints", title: "Скарги" },
-    { id: "cookies", title: "Файли cookie та сховище браузера" },
+    { id: "cookies", title: "Файли cookie, статистика та сховище браузера" },
     { id: "minors", title: "Неповнолітні" },
     { id: "changes", title: "Зміни до політики" },
   ],
@@ -284,7 +284,7 @@ function English() {
       <Table
         head={["Provider", "What they do for us"]}
         rows={[
-          ["Asura Hosting", "Hosts this website and the server of our candidate database (CRM)"],
+          ["Asura Hosting", "Hosts this website and our server with the candidate database (CRM) and visit statistics"],
           ["Google (Gmail / Google Workspace)", "Our email: messages and CVs you send to us"],
           ["Anthropic", "AI reading of CV and application files (see section 6). Under Anthropic’s commercial terms, data sent through its API is not used to train its models"],
           ["Web3Forms", "Delivers messages from the website contact form to our email"],
@@ -367,7 +367,15 @@ function English() {
 
       {h(12)}
       <P>
-        This website <B>does not use cookies</B>, analytics or advertising trackers, and does not load fonts or scripts from third-party services.
+        This website <B>does not use cookies</B> or advertising trackers, and does not load fonts or scripts from third-party services.
+      </P>
+      <P>
+        We count visits with <B>Umami</B>, an open-source statistics tool that runs on our own server (stats.aurasea.org) and is not shared
+        with anyone. It records the page, the website or app you came from (for example Google or Threads), your country, device type and
+        browser, and actions such as sending the application form. It does not use cookies, does not store your IP address and does not
+        identify you or follow you across other websites; visits are counted with an anonymous identifier that changes regularly. We use
+        these figures to understand how people find us and to improve the website (our legitimate interest, Art. 6(1)(f) GDPR). If you
+        block the statistics script in your browser, the website works the same.
       </P>
       <P>
         The application form saves your unfinished answers in your browser’s local storage, only on your device, so that you do not lose them if
@@ -533,7 +541,7 @@ function Ukrainian() {
       <Table
         head={["Постачальник", "Що робить для нас"]}
         rows={[
-          ["Asura Hosting", "Хостинг цього сайту і сервера нашої бази кандидатів (CRM)"],
+          ["Asura Hosting", "Хостинг цього сайту і нашого сервера з базою кандидатів (CRM) та статистикою відвідувань"],
           ["Google (Gmail / Google Workspace)", "Наша електронна пошта: листи й резюме, які ви нам надсилаєте"],
           ["Anthropic", "Читання файлів резюме та анкет штучним інтелектом (розділ 6). За комерційними умовами Anthropic дані, надіслані через її API, не використовуються для навчання моделей"],
           ["Web3Forms", "Доставляє повідомлення з форми зворотного зв’язку на нашу пошту"],
@@ -615,7 +623,15 @@ function Ukrainian() {
 
       {h(12)}
       <P>
-        Цей сайт <B>не використовує файли cookie</B>, аналітику чи рекламні трекери і не завантажує шрифти чи скрипти зі сторонніх сервісів.
+        Цей сайт <B>не використовує файли cookie</B> і рекламні трекери та не завантажує шрифти чи скрипти зі сторонніх сервісів.
+      </P>
+      <P>
+        Відвідування ми рахуємо за допомогою <B>Umami</B> — статистики з відкритим кодом, яка працює на нашому власному сервері
+        (stats.aurasea.org) і нікому не передається. Вона фіксує сторінку, сайт чи застосунок, з якого ви перейшли (наприклад, Google чи
+        Threads), країну, тип пристрою і браузер, а також дії, як-от відправлення анкети. Вона не використовує cookie, не зберігає вашу
+        IP-адресу, не встановлює вашу особу й не стежить за вами на інших сайтах; відвідування рахуються за анонімним ідентифікатором,
+        який регулярно змінюється. Ці дані потрібні, щоб розуміти, як нас знаходять, і покращувати сайт (наш законний інтерес, ст. 6(1)(f)
+        GDPR). Якщо ви заблокуєте скрипт статистики в браузері, сайт працюватиме так само.
       </P>
       <P>
         Анкета зберігає незавершені відповіді в локальному сховищі вашого браузера — лише на вашому пристрої, щоб вони не загубилися, якщо ви
@@ -644,14 +660,14 @@ const SUMMARY: Record<Lang, string[]> = {
     "We use your data to find you work at sea — nothing else. We do not sell it or use it for advertising.",
     "Your profile goes to a ship-owner only for a specific vacancy.",
     "A person reviews every application; AI only helps read CV files.",
-    "No cookies or trackers on this website.",
+    "No cookies or advertising trackers; anonymous visit statistics stay on our own server.",
     `Write to ${COMPANY.email} to see, correct or delete your data.`,
   ],
   uk: [
     "Ми використовуємо ваші дані, щоб знайти вам роботу в морі, — і більше ні для чого. Не продаємо їх і не використовуємо для реклами.",
     "Ваша анкета потрапляє до судновласника лише під конкретну вакансію.",
     "Кожну анкету перевіряє людина; штучний інтелект лише допомагає читати файли резюме.",
-    "На сайті немає cookie і трекерів.",
+    "На сайті немає cookie і рекламних трекерів; анонімна статистика відвідувань — лише на нашому сервері.",
     `Напишіть на ${COMPANY.email}, щоб переглянути, виправити або видалити свої дані.`,
   ],
 };

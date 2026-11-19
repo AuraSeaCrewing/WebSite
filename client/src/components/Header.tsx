@@ -64,6 +64,7 @@ export default function Header() {
             <Link
               href="/apply"
               data-testid="button-apply-cta"
+              data-umami-event="apply-button-header"
               className={cn(buttonVariants({ size: "sm" }), "font-medium")}
             >
               Apply Now
@@ -118,6 +119,7 @@ export default function Header() {
               className={cn(buttonVariants(), "w-full font-medium")}
               onClick={() => setMobileMenuOpen(false)}
               data-testid="mobile-button-apply"
+              data-umami-event="apply-button-header"
             >
               Apply Now
             </Link>

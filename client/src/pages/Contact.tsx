@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, Clock, CheckCircle, Send } from "lucide-react";
 import { motion } from "framer-motion";
 const MotionCard = motion.create(Card);
+import { track } from "@/lib/analytics";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import contactHero from "@assets/stock_images/stormy_sea_contact.webp";
 
@@ -46,6 +47,7 @@ export default function Contact() {
 
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
       setShowSuccess(true);
+      track("contact-message-sent");
       setTimeout(() => setShowSuccess(false), 5000);
     } finally {
       setIsSubmitting(false);

@@ -331,6 +331,7 @@ export default function Seafarers() {
                   href="/apply"
                   className={cn(buttonVariants({ size: "lg" }), "inline-flex font-normal px-8 h-12 text-base")}
                   data-testid="button-apply-seafarers"
+                  data-umami-event="apply-button-seafarers"
                 >
                   Apply Now
                 </Link>
