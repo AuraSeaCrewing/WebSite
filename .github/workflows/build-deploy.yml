@@ -1,0 +1,52 @@
+# Builds the site on every push to main and commits the result to the
+# "deploy" branch. cPanel (Git Version Control) tracks "deploy":
+# Update from Remote -> Deploy HEAD Commit publishes it to public_html.
+name: Build site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build:site
+
+      - name: Commit build to the deploy branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git fetch --depth=1 origin deploy; then
+            git worktree add -B deploy out origin/deploy
+          else
+            git worktree add --orphan -b deploy out
+          fi
+          find out -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R dist/public/. out/
+          cp deploy/.cpanel.yml out/.cpanel.yml
+          cd out
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Build unchanged, nothing to commit."
+            exit 0
+          fi
+          git commit -q -m "Build from ${GITHUB_SHA::7}"
+          git push origin deploy
