@@ -7,8 +7,8 @@ import { CheckCircle, DollarSign, TrendingUp, Shield, Users, FileText, Anchor, A
 import { motion } from "framer-motion";
 const MotionCard = motion.create(Card);
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import seafarerCrew from "@assets/stock_images/stormy_sea_3.png";
-import heroPhoto from "@assets/stock_images/seafarer_crew_workin_81b3ed0a.jpg";
+import seafarerCrew from "@assets/stock_images/stormy_sea_3.webp";
+import heroPhoto from "@assets/stock_images/seafarer_crew_workin_81b3ed0a.webp";
 
 export default function Seafarers() {
   useScrollAnimation();

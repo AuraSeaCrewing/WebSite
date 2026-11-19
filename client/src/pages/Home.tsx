@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 
 const MotionCard = motion.create(Card);
 
-import backgroundPhoto from "@assets/stock_images/Gemini_Generated_Image_x18mj0x18mj0x18m.png";
+import backgroundPhoto from "@assets/stock_images/Gemini_Generated_Image_x18mj0x18mj0x18m.webp";
 
 export default function Home() {
   return (

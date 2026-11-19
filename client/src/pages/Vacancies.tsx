@@ -3,8 +3,8 @@ import { Send, Instagram, Facebook, Linkedin, ExternalLink } from "lucide-react"
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import marineOfficer from "@assets/stock_images/stormy_sea_2.png";
-import heroPhoto from "@assets/stock_images/marine_engineer_offi_4366b328.jpg";
+import marineOfficer from "@assets/stock_images/stormy_sea_2.webp";
+import heroPhoto from "@assets/stock_images/marine_engineer_offi_4366b328.webp";
 
 export default function Vacancies() {
   const socialLinks = [

@@ -14,8 +14,8 @@ import {
 import { motion } from "framer-motion";
 const MotionCard = motion.create(Card);
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import aboutHero from "@assets/stock_images/stormy_sea_about.png";
-import heroPhoto from "@assets/stock_images/venti-views-1cqIcrWFQBI-unsplash.jpg";
+import aboutHero from "@assets/stock_images/stormy_sea_about.webp";
+import heroPhoto from "@assets/stock_images/venti-views-1cqIcrWFQBI-unsplash.webp";
 
 export default function About() {
   useScrollAnimation();

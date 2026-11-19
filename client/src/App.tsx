@@ -1,5 +1,5 @@
-import { Router as WouterRouter, Switch, Route } from "wouter";
-import { useHashLocation } from "wouter/use-hash-location";
+import { useEffect } from "react";
+import { Router as WouterRouter, Switch, Route, useLocation } from "wouter";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
@@ -13,6 +13,15 @@ import Apply from "@/pages/Apply";
 import NotFound from "@/pages/not-found";
 
 const wouterBase = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
+
+/** New page opens at the top (the browser keeps the scroll position on client-side navigation). */
+function ScrollToTop() {
+  const [location] = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+  return null;
+}
 
 function AppRoutes() {
   return (
@@ -35,7 +44,9 @@ function App() {
   return (
     <TooltipProvider>
       {/* Router must wrap Layout so Header/Footer Links share the same base as routes */}
-      <WouterRouter base={wouterBase} hook={useHashLocation}>
+      {/* Real paths (/about, /apply) so search engines index every page; .htaccess serves index.html for them */}
+      <WouterRouter base={wouterBase}>
+        <ScrollToTop />
         <Layout>
           <AppRoutes />
         </Layout>
