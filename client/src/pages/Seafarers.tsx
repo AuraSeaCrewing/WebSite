@@ -302,7 +302,7 @@ export default function Seafarers() {
                 <div>
                   <h3 className="font-headline text-base font-medium text-foreground mb-1">Important Note</h3>
                   <p className="text-sm text-muted-foreground font-light">
-                    Active vacancies are regularly posted on our Socials (<a href="https://t.me/AURASEA_crew" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Telegram</a>, <a href="https://www.instagram.com/_aura_sea/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Instagram</a>, <a href="https://www.linkedin.com/company/110849089" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">LinkedIn</a>). When you find a matching position, submit your application and our team will review your profile.
+                    Active vacancies are regularly posted on our Socials (<a href="https://t.me/AURASEA_crew" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Telegram</a>, <a href="https://www.instagram.com/_aura_sea/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Instagram</a>, <a href="https://www.linkedin.com/company/110849089" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">LinkedIn</a>). When you find a matching position, <Link href="/apply" className="text-cyan-400 hover:underline">submit your application</Link> and our team will review your profile.
                   </p>
                 </div>
               </div>
@@ -324,12 +324,19 @@ export default function Seafarers() {
                 Ready to Start Your Journey?
               </h3>
               <p className="text-lg text-muted-foreground mb-8 font-light max-w-2xl mx-auto leading-relaxed">
-                Check our current vacancies or get in touch to learn more about opportunities with AURA SEA.
+                Fill in our application form, check current vacancies or get in touch to learn more about opportunities with AURA SEA.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  href="/vacancies"
+                  href="/apply"
                   className={cn(buttonVariants({ size: "lg" }), "inline-flex font-normal px-8 h-12 text-base")}
+                  data-testid="button-apply-seafarers"
+                >
+                  Apply Now
+                </Link>
+                <Link
+                  href="/vacancies"
+                  className={cn(buttonVariants({ size: "lg", variant: "secondary" }), "inline-flex font-normal px-8 h-12 text-base")}
                   data-testid="button-view-vacancies"
                 >
                   View Vacancies

@@ -9,6 +9,7 @@ import Seafarers from "@/pages/Seafarers";
 import Vacancies from "@/pages/Vacancies";
 import Contact from "@/pages/Contact";
 import Privacy from "@/pages/Privacy";
+import Apply from "@/pages/Apply";
 import NotFound from "@/pages/not-found";
 
 const wouterBase = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
@@ -24,6 +25,7 @@ function AppRoutes() {
       <Route path="/vacancies" component={Vacancies} />
       <Route path="/contact" component={Contact} />
       <Route path="/privacy" component={Privacy} />
+      <Route path="/apply" component={Apply} />
       <Route component={NotFound} />
     </Switch>
   );
