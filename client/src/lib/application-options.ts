@@ -30,14 +30,26 @@ export const CERTIFICATES = [
   "COVID-19 Vaccination", "Drug and Alcohol Test",
 ];
 
-export const ENGLISH_LEVELS = ["Elementary", "Pre-Intermediate", "Intermediate", "Upper-Intermediate", "Advanced", "Fluent"];
+/** value goes to the CRM in English; uk — label on the Ukrainian page. */
+export const ENGLISH_LEVELS = [
+  { value: "Elementary", uk: "Elementary — початковий" },
+  { value: "Pre-Intermediate", uk: "Pre-Intermediate — нижче середнього" },
+  { value: "Intermediate", uk: "Intermediate — середній" },
+  { value: "Upper-Intermediate", uk: "Upper-Intermediate — вище середнього" },
+  { value: "Advanced", uk: "Advanced — просунутий" },
+  { value: "Fluent", uk: "Fluent — вільно" },
+];
 
-export const EMPLOYMENT_STATUSES = ["Looking for a job", "On vacation", "On board"];
+export const EMPLOYMENT_STATUSES = [
+  { value: "Looking for a job", uk: "Шукаю роботу" },
+  { value: "On vacation", uk: "У відпустці" },
+  { value: "On board", uk: "На борту" },
+];
 
 export const DOCUMENT_TYPES = [
-  { value: "PASSPORT", label: "International passport" },
-  { value: "SEAMANS_BOOK", label: "Seaman's book" },
-  { value: "INTERNAL_PASSPORT", label: "National ID / internal passport" },
-  { value: "VISA", label: "Visa" },
-  { value: "OTHER", label: "Other document" },
+  { value: "PASSPORT", label: "International passport", uk: "Закордонний паспорт" },
+  { value: "SEAMANS_BOOK", label: "Seaman’s book", uk: "Мореплавна книжка (Seaman’s book)" },
+  { value: "INTERNAL_PASSPORT", label: "National ID / internal passport", uk: "Внутрішній паспорт / ID-картка" },
+  { value: "VISA", label: "Visa", uk: "Віза" },
+  { value: "OTHER", label: "Other document", uk: "Інший документ" },
 ] as const;

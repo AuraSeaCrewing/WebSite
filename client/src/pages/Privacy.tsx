@@ -1,7 +1,7 @@
-import { useEffect, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Link } from "wouter";
 import { ShieldCheck } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useLang, usePageMeta, type Lang } from "@/lib/i18n";
 
 // Privacy Policy / Політика конфіденційності.
 // Describes what the site and the AURA SEA CRM actually do (application form → CRM draft reviewed by a
@@ -30,8 +30,6 @@ const COMPANY = {
   phoneHref: "+380978458147",
 };
 
-type Lang = "en" | "uk";
-const LANG_KEY = "aurasea-privacy-lang";
 
 function H2({ id, n, children }: { id: string; n: number; children: ReactNode }) {
   return (
@@ -381,8 +379,7 @@ function English() {
       </P>
       <P>
         The application form saves your unfinished answers in your browser’s local storage, only on your device, so that you do not lose them if
-        you close the page. They are deleted after you send the form; you can also clear them in your browser settings. The language you choose
-        on this page is remembered the same way.
+        you close the page. They are deleted after you send the form; you can also clear them in your browser settings. Your choice of language (Ukrainian or English) is remembered the same way, so we do not ask again.
       </P>
       <P>
         Links to Telegram, Instagram, LinkedIn, Facebook and WhatsApp lead to those services, which have their own privacy policies.
@@ -441,7 +438,7 @@ function Ukrainian() {
         rows={[
           [
             <B>Анкета на сайті</B>,
-            "Ім’я та прізвище, дата і місце народження, громадянство, стать, сімейний стан; телефон, email, WhatsApp, Viber, Telegram, домашня адреса, найближчий аеропорт; бажана посада, дата готовності, очікувана зарплата, рівень англійської, поточний статус, інформація про себе; дані закордонного паспорта, посвідчення моряка (мореплавна книжка) і віз (номери, країни, дати); сертифікати (назви, номери, ким видані, дати); стаж (судна, типи, прапори, DWT, IMO, двигун, судновласники, крюїнгові агенції, посади, дати); зріст, вага, розмір комбінезона і взуття; ім’я, ступінь спорідненості й телефон контактної особи.",
+            "Ім’я та прізвище, дата і місце народження, громадянство, стать, сімейний стан; телефон, email, WhatsApp, Viber, Telegram, домашня адреса, найближчий аеропорт; бажана посада, дата готовності, очікувана зарплата, рівень англійської, поточний статус, інформація про себе; дані закордонного паспорта, мореплавної книжки і віз (номери, країни, дати); сертифікати (назви, номери, ким видані, дати); стаж (судна, типи, прапори, DWT, IMO, двигун, судновласники, крюїнгові агенції, посади, дати); зріст, вага, розмір комбінезона і взуття; ім’я, ступінь спорідненості й телефон контактної особи.",
           ],
           [
             <B>Резюме чи анкета, які ви надсилаєте</B>,
@@ -637,8 +634,7 @@ function Ukrainian() {
       </P>
       <P>
         Анкета зберігає незавершені відповіді в локальному сховищі вашого браузера — лише на вашому пристрої, щоб вони не загубилися, якщо ви
-        закриєте сторінку. Після відправлення анкети вони видаляються; їх також можна очистити в налаштуваннях браузера. Так само
-        запам’ятовується мова, яку ви обрали на цій сторінці.
+        закриєте сторінку. Після відправлення анкети вони видаляються; їх також можна очистити в налаштуваннях браузера. Так само запам’ятовується обрана мова (українська чи англійська), щоб не питати знову.
       </P>
       <P>Посилання на Telegram, Instagram, LinkedIn, Facebook і WhatsApp ведуть на ці сервіси, які мають власні політики конфіденційності.</P>
 
@@ -675,53 +671,27 @@ const SUMMARY: Record<Lang, string[]> = {
 };
 
 export default function Privacy() {
-  const [lang, setLang] = useState<Lang>(() => {
-    try {
-      const saved = localStorage.getItem(LANG_KEY);
-      if (saved === "en" || saved === "uk") return saved;
-    } catch {
-      /* storage unavailable */
+  const lang = useLang();
+  usePageMeta(
+    "/privacy",
+    { en: "Privacy Policy", uk: "Політика конфіденційності" },
+    {
+      en: "How AURA SEA collects, uses and protects seafarers’ personal data: purposes, recipients, transfers abroad, retention and your rights.",
+      uk: "Як AURA SEA збирає, використовує й захищає персональні дані моряків: цілі, отримувачі, передача за кордон, строки зберігання та ваші права.",
     }
-    return typeof navigator !== "undefined" && /^(uk|ru)/i.test(navigator.language) ? "uk" : "en";
-  });
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(LANG_KEY, lang);
-    } catch {
-      /* storage unavailable */
-    }
-  }, [lang]);
-
+  );
   const t = lang === "en";
 
   return (
-    <div className="min-h-screen pb-16" lang={lang}>
+    <div className="min-h-screen pb-16">
       <section className="maritime-gradient pt-32 pb-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-headline text-4xl sm:text-5xl font-bold mb-4" data-testid="heading-privacy">
             {t ? "Privacy Policy" : "Політика конфіденційності"}
           </h1>
-          <p className="text-muted-foreground mb-6">
+          <p className="text-muted-foreground">
             {t ? "Effective from" : "Діє з"} {EFFECTIVE_DATE[lang]}
           </p>
-          <div role="group" aria-label="Language" className="inline-flex rounded-full border border-border bg-background/40 p-1">
-            {(["en", "uk"] as const).map((l) => (
-              <button
-                key={l}
-                type="button"
-                onClick={() => setLang(l)}
-                aria-pressed={lang === l}
-                className={cn(
-                  "px-4 py-1.5 rounded-full text-sm transition-colors",
-                  lang === l ? "bg-cyan-500/20 text-foreground" : "text-muted-foreground hover:text-foreground"
-                )}
-                data-testid={`privacy-lang-${l}`}
-              >
-                {l === "en" ? "English" : "Українська"}
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 

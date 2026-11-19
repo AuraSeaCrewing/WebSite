@@ -11,6 +11,8 @@ import Contact from "@/pages/Contact";
 import Privacy from "@/pages/Privacy";
 import Apply from "@/pages/Apply";
 import NotFound from "@/pages/not-found";
+import { LangProvider, type Lang } from "@/lib/i18n";
+import LanguageGate from "@/components/LanguageGate";
 
 const wouterBase = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
 
@@ -40,16 +42,39 @@ function AppRoutes() {
   );
 }
 
+function Site({ lang }: { lang: Lang }) {
+  return (
+    <LangProvider lang={lang}>
+      <ScrollToTop />
+      <Layout>
+        <AppRoutes />
+      </Layout>
+    </LangProvider>
+  );
+}
+
+/** The language choice screen sits above both language sections, so it fades out smoothly whichever is picked. */
+function Gate() {
+  const [location] = useLocation();
+  return <LanguageGate lang={/^\/en(\/|$)/.test(location) ? "en" : "uk"} />;
+}
+
 function App() {
   return (
     <TooltipProvider>
-      {/* Router must wrap Layout so Header/Footer Links share the same base as routes */}
-      {/* Real paths (/about, /apply) so search engines index every page; .htaccess serves index.html for them */}
+      {/* Real paths so search engines index every page; .htaccess serves index.html for them.
+          Ukrainian at the root (/about), English nested under /en (/en/about): links inside a page
+          stay "/about" and resolve to the right language automatically. */}
       <WouterRouter base={wouterBase}>
-        <ScrollToTop />
-        <Layout>
-          <AppRoutes />
-        </Layout>
+        <Gate />
+        <Switch>
+          <Route path="/en" nest>
+            <Site lang="en" />
+          </Route>
+          <Route>
+            <Site lang="uk" />
+          </Route>
+        </Switch>
       </WouterRouter>
     </TooltipProvider>
   );

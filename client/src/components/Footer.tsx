@@ -1,8 +1,10 @@
 import { Link } from "wouter";
 import { Mail, Phone, MapPin, Facebook, Linkedin, Twitter, Instagram, Send } from "lucide-react";
 import Logo from "./Logo";
+import { useT } from "@/lib/i18n";
 
 export default function Footer() {
+  const t = useT();
   return (
     <footer className="glass-card">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -10,41 +12,41 @@ export default function Footer() {
           <div>
             <Logo className="mb-4" />
             <p className="text-sm text-muted-foreground mb-2">
-              4+ years crewing management experience
+              {t("4+ years crewing management experience", "Понад 4 роки досвіду в крюїнгу")}
             </p>
             <p className="text-sm text-muted-foreground">
-              Specializing in Container Vessels, Bulk-Carriers, Tankers, Passenger Ship's and Yachts fleets
+              {t("Specializing in Container Vessels, Bulk-Carriers, Tankers, Passenger Ship's and Yachts fleets", "Спеціалізуємося на контейнеровозах, балкерах, танкерах, пасажирських суднах і яхтах")}
             </p>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-semibold mb-4">{t("Quick Links", "Розділи")}</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/about" data-testid="footer-link-about">
-                  <span className="text-muted-foreground hover:text-foreground cursor-pointer">About Company</span>
+                  <span className="text-muted-foreground hover:text-foreground cursor-pointer">{t("About Company", "Про компанію")}</span>
                 </Link>
               </li>
               <li>
                 <Link href="/ship-owners" data-testid="footer-link-ship-owners">
-                  <span className="text-muted-foreground hover:text-foreground cursor-pointer">For Ship-Owners</span>
+                  <span className="text-muted-foreground hover:text-foreground cursor-pointer">{t("For Ship-Owners", "Судновласникам")}</span>
                 </Link>
               </li>
               <li>
                 <Link href="/seafarers" data-testid="footer-link-seafarers">
-                  <span className="text-muted-foreground hover:text-foreground cursor-pointer">For Seafarers</span>
+                  <span className="text-muted-foreground hover:text-foreground cursor-pointer">{t("For Seafarers", "Морякам")}</span>
                 </Link>
               </li>
               <li>
                 <Link href="/vacancies" data-testid="footer-link-vacancies">
-                  <span className="text-muted-foreground hover:text-foreground cursor-pointer">Vacancies</span>
+                  <span className="text-muted-foreground hover:text-foreground cursor-pointer">{t("Vacancies", "Вакансії")}</span>
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Contact</h4>
+            <h4 className="font-semibold mb-4">{t("Contact", "Контакти")}</h4>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 mt-0.5 text-primary" />
@@ -55,27 +57,27 @@ export default function Footer() {
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 mt-0.5 text-primary" />
                 <a href="https://wa.me/380978458147" className="text-muted-foreground hover:text-foreground" data-testid="footer-phone">
-                  +380978458147 (Whatsapp, Telegram)
+                  +380978458147 (WhatsApp, Telegram)
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 mt-0.5 text-primary" />
                 <div className="text-muted-foreground text-xs leading-relaxed">
-                  <p>Psychological support for Seafarers and their families 24/7:</p>
-                  <a href="tel:+380938298652" className="hover:text-foreground">+380 93 829 86 52</a> (Whatsapp, Telegram) / <a href="https://t.me/ProdiusAn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">t.me/ProdiusAn</a>
+                  <p>{t("Psychological support for Seafarers and their families 24/7:", "Психологічна підтримка моряків і їхніх родин 24/7:")}</p>
+                  <a href="tel:+380938298652" className="hover:text-foreground">+380 93 829 86 52</a> (WhatsApp, Telegram) / <a href="https://t.me/ProdiusAn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">t.me/ProdiusAn</a>
                 </div>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 mt-0.5 text-primary" />
                 <span className="text-muted-foreground" data-testid="footer-address">
-                  Ukraine, Odesa City, Prokhorovska 77
+                  {t("Ukraine, Odesa City, Prokhorovska 77", "Україна, м. Одеса, вул. Прохоровська, 77")}
                 </span>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Follow Us</h4>
+            <h4 className="font-semibold mb-4">{t("Follow Us", "Ми в соцмережах")}</h4>
             <div className="flex flex-wrap gap-3 mb-6">
               <a href="https://www.linkedin.com/company/110849089" target="_blank" rel="noopener noreferrer" className="hover-elevate p-2 rounded-md" data-testid="social-linkedin">
                 <Linkedin className="w-5 h-5 text-primary" />
@@ -93,7 +95,7 @@ export default function Footer() {
             <div>
               <Link href="/privacy" data-testid="footer-link-privacy">
                 <span className="text-sm text-muted-foreground hover:text-foreground cursor-pointer">
-                  Privacy Policy
+                  {t("Privacy Policy", "Політика конфіденційності")}
                 </span>
               </Link>
             </div>
@@ -101,7 +103,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} AURA SEA. All rights reserved. | Crewing with Care</p>
+          <p>&copy; {new Date().getFullYear()} AURA SEA. {t("All rights reserved.", "Усі права захищено.")} | {t("Crewing with Care", "Крюїнг з турботою")}</p>
         </div>
       </div>
     </footer>

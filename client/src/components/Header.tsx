@@ -4,9 +4,47 @@ import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import Logo from "./Logo";
+import { pathFor, useLang, useT, type Lang } from "@/lib/i18n";
+import { saveLang } from "./LanguageGate";
+
+/** UA | EN: the same page in the other language ("~" — path from the site root, outside the /en section). */
+function LanguageSwitch({ className, onPick }: { className?: string; onPick?: () => void }) {
+  const lang = useLang();
+  const [location] = useLocation();
+  const items: { code: Lang; label: string; title: string }[] = [
+    { code: "uk", label: "UA", title: "Українська" },
+    { code: "en", label: "EN", title: "English" },
+  ];
+  return (
+    <div role="group" aria-label="Language / Мова" className={cn("inline-flex rounded-full border border-white/20 p-0.5 text-xs font-semibold", className)}>
+      {items.map((it) => (
+        <Link
+          key={it.code}
+          href={"~" + pathFor(location, it.code)}
+          onClick={() => {
+            // Remember the choice: next visits open the site in this language
+            saveLang(it.code);
+            onPick?.();
+          }}
+          title={it.title}
+          aria-current={lang === it.code ? "true" : undefined}
+          hrefLang={it.code}
+          data-testid={`lang-${it.code}`}
+          className={cn(
+            "px-2.5 py-1 rounded-full transition-colors",
+            lang === it.code ? "bg-white/15 text-white" : "text-white/70 hover:text-cyan-200"
+          )}
+        >
+          {it.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 export default function Header() {
   const [location] = useLocation();
+  const t = useT();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -18,11 +56,11 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/ship-owners", label: "For Ship-Owners" },
-    { href: "/seafarers", label: "For Seafarers" },
-    { href: "/vacancies", label: "Vacancies" },
+    { href: "/", id: "home", label: t("Home", "Головна") },
+    { href: "/about", id: "about", label: t("About", "Про нас") },
+    { href: "/ship-owners", id: "for-ship-owners", label: t("For Ship-Owners", "Судновласникам") },
+    { href: "/seafarers", id: "for-seafarers", label: t("For Seafarers", "Морякам") },
+    { href: "/vacancies", id: "vacancies", label: t("Vacancies", "Вакансії") },
   ];
 
   return (
@@ -46,7 +84,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                data-testid={`link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+                data-testid={`link-${link.id}`}
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
                   "header-nav-ghost text-base font-semibold border-0",
@@ -61,23 +99,26 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:flex items-center gap-2">
+            <LanguageSwitch />
             <Link
               href="/apply"
               data-testid="button-apply-cta"
               data-umami-event="apply-button-header"
               className={cn(buttonVariants({ size: "sm" }), "font-medium")}
             >
-              Apply Now
+              {t("Apply Now", "Подати анкету")}
             </Link>
             <Link
               href="/contact"
               data-testid="button-contact-cta"
               className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "font-medium")}
             >
-              Contact Us
+              {t("Contact Us", "Контакти")}
             </Link>
           </div>
 
+          <div className="flex items-center gap-2 md:hidden">
+          <LanguageSwitch />
           <Button
             variant="ghost"
             size="icon"
@@ -87,6 +128,7 @@ export default function Header() {
           >
             {mobileMenuOpen ? <X /> : <Menu />}
           </Button>
+          </div>
         </div>
 
         {mobileMenuOpen && (
@@ -109,7 +151,7 @@ export default function Header() {
                     : "text-white/90 hover:text-cyan-200"
                 )}
                 onClick={() => setMobileMenuOpen(false)}
-                data-testid={`mobile-link-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+                data-testid={`mobile-link-${link.id}`}
               >
                 {link.label}
               </Link>
@@ -121,7 +163,7 @@ export default function Header() {
               data-testid="mobile-button-apply"
               data-umami-event="apply-button-header"
             >
-              Apply Now
+              {t("Apply Now", "Подати анкету")}
             </Link>
             <Link
               href="/contact"
@@ -129,7 +171,7 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(false)}
               data-testid="mobile-button-contact"
             >
-              Contact Us
+              {t("Contact Us", "Контакти")}
             </Link>
           </div>
         )}
