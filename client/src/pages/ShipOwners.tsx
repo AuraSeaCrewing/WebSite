@@ -17,8 +17,8 @@ import {
 import { motion } from "framer-motion";
 const MotionCard = motion.create(Card);
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import portShips from "@assets/stock_images/stormy_sea_2.png";
-import heroPhoto from "@assets/stock_images/maritime_shipping_po_c83c1900.jpg";
+import portShips from "@assets/stock_images/stormy_sea_2.webp";
+import heroPhoto from "@assets/stock_images/maritime_shipping_po_c83c1900.webp";
 
 export default function ShipOwners() {
   useScrollAnimation();
