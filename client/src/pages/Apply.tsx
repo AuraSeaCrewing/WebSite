@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { CERTIFICATES, DOCUMENT_TYPES, EMPLOYMENT_STATUSES, ENGLISH_LEVELS, RANKS, VESSEL_TYPES } from "@/lib/application-options";
+import { track } from "@/lib/analytics";
 import heroImage from "@assets/stock_images/stormy_sea_2.webp";
 
 // Seafarer application form. Submits straight into the AURA SEA CRM (POST /api/public/apply), where it
@@ -188,6 +189,7 @@ export default function Apply() {
       });
       if (res.ok) {
         setStatus("done");
+        track("application-sent");
         try {
           localStorage.removeItem(DRAFT_KEY);
         } catch {
@@ -561,7 +563,8 @@ export default function Apply() {
               data-testid="checkbox-consent"
             />
             <span className="text-sm text-muted-foreground font-light">
-              I confirm that the information is correct and I agree to AURA SEA processing my personal data to consider me for employment and to share my profile with ship-owners for this purpose, as described in the{" "}
+              I confirm that the information is correct and I consent to AURA SEA processing my personal data to find me employment at sea, and to
+              sending my profile for specific vacancies to ship-owners and ship managers, including those outside Ukraine and the EU, as described in the{" "}
               <Link href="/privacy" className="text-cyan-400 hover:underline">
                 Privacy Policy
               </Link>
