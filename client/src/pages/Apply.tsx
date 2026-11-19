@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { CERTIFICATES, DOCUMENT_TYPES, EMPLOYMENT_STATUSES, ENGLISH_LEVELS, RANKS, VESSEL_TYPES } from "@/lib/application-options";
-import heroImage from "@assets/stock_images/stormy_sea_2.png";
+import heroImage from "@assets/stock_images/stormy_sea_2.webp";
 
 // Seafarer application form. Submits straight into the AURA SEA CRM (POST /api/public/apply), where it
 // becomes a draft for a recruiter to review. Field names must match `applicationSchema` in the CRM

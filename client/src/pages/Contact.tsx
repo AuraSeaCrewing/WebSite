@@ -8,7 +8,7 @@ import { Mail, Phone, MapPin, Clock, CheckCircle, Send } from "lucide-react";
 import { motion } from "framer-motion";
 const MotionCard = motion.create(Card);
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import contactHero from "@assets/stock_images/stormy_sea_contact.png";
+import contactHero from "@assets/stock_images/stormy_sea_contact.webp";
 
 export default function Contact() {
   useScrollAnimation();
