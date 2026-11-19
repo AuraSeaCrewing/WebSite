@@ -561,7 +561,8 @@ export default function Apply() {
               data-testid="checkbox-consent"
             />
             <span className="text-sm text-muted-foreground font-light">
-              I confirm that the information is correct and I agree to AURA SEA processing my personal data to consider me for employment and to share my profile with ship-owners for this purpose, as described in the{" "}
+              I confirm that the information is correct and I consent to AURA SEA processing my personal data to find me employment at sea, and to
+              sending my profile for specific vacancies to ship-owners and ship managers, including those outside Ukraine and the EU, as described in the{" "}
               <Link href="/privacy" className="text-cyan-400 hover:underline">
                 Privacy Policy
               </Link>
