@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { motion, type Variants } from "framer-motion";
-import { ArrowRight, Check, Heart, Phone, ShieldCheck, Target, Users } from "lucide-react";
+import { ArrowRight, Check, Heart, Phone, ShieldCheck } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import { useLang, usePageMeta, useT } from "@/lib/i18n";
@@ -10,13 +10,20 @@ import heroPhoto from "@assets/stock_images/stormy_sea_about.webp";
 import storyPhoto from "@assets/ship_owners/horizon-top.webp";
 import workPhoto from "@assets/services/documents.webp";
 import familyPhoto from "@assets/ship_owners/beyond.webp";
+import directorPhoto from "@assets/team/managing-director.webp";
+import anastasiiaPhoto from "@assets/team/anastasiia-prodius.webp";
+import atSea from "@assets/gallery/at-sea.webp";
+import training1 from "@assets/gallery/training-1.webp";
+import training2 from "@assets/gallery/training-2.webp";
+import careerFair from "@assets/gallery/career-fair.webp";
+import summit from "@assets/gallery/summit-2025.webp";
 
 // "About us", rebuilt 20.11.2026 after the impeccable / taste / motion review: facts first (founded by
 // seafarers in Odesa, April 2022; 2000+ seafarers in the base; 200+ placed), how the work is really done
 // (what the CRM does: every CV checked by a recruiter, document expiry tracking, matching by rank and
 // vessel type, feedback after each contract — no "algorithms" or guarantees), the family support that
 // sets the agency apart, values once (not twice), the team and the Ministry list entry for trust,
-// and two ways forward at the end. Names and photos of the team: the owner will send them.
+// and two ways forward at the end. Team and gallery: the owner's photos (20.11.2026).
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const rise: Variants = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } } };
@@ -97,11 +104,34 @@ export default function About() {
     { title: t("Development", "Розвиток"), text: t("We support professional growth through training, documents and the next rank.", "Підтримуємо професійне зростання — через навчання, документи й наступну посаду.") },
   ];
 
-  // Names and photos to come from the owner; until then the roles alone
+  // The team (owner's photos, 20.11.2026). The managing director's name: to come from the owner.
   const team = [
-    { icon: Users, role: t("Managing Director", "Керуючий директор"), text: t("Over 4 years in maritime operations and crew management.", "Понад 4 роки в морських операціях і управлінні екіпажами.") },
-    { icon: Target, role: t("Operations Director", "Операційний директор"), text: t("Crew deployment, crew changes and work with vessel operators.", "Розстановка екіпажів, заміни та робота з операторами суден.") },
-    { icon: Heart, role: t("HR Director", "HR-директор"), text: t("Seafarers' welfare and career development.", "Добробут моряків і їхній кар’єрний розвиток.") },
+    {
+      photo: directorPhoto,
+      name: null as string | null,
+      role: t("Managing & Operations Director", "Керуючий та операційний директор"),
+      text: t(
+        "Over 4 years in maritime operations and crew management: ship-owners, vacancies, crew changes and the agency's development.",
+        "Понад 4 роки в морських операціях і управлінні екіпажами: судновласники, заявки, заміни екіпажів і розвиток агенції."
+      ),
+    },
+    {
+      photo: anastasiiaPhoto,
+      name: t("Anastasiia Prodius", "Анастасія Продіус"),
+      role: t("HR Director, staff psychologist", "HR-директор, штатний психолог"),
+      text: t(
+        "Seafarers' welfare and careers, and psychological support for seafarers and their families.",
+        "Добробут і кар’єра моряків, психологічна підтримка моряків і їхніх родин."
+      ),
+    },
+  ];
+
+  const gallery = [
+    { src: atSea, caption: t("At sea", "У рейсі") },
+    { src: training1, caption: t("Training at a maritime training centre", "Навчання в морському тренажерному центрі") },
+    { src: training2, caption: t("Courses and meetings with instructors", "Курси й зустрічі з інструкторами") },
+    { src: careerFair, caption: t("Maritime career fair", "Морський ярмарок кар’єри") },
+    { src: summit, caption: t("Marine Insight Summit 2025: certificate of participation", "Marine Insight Summit 2025: сертифікат учасника") },
   ];
 
   const primary = cn(buttonVariants({ size: "lg" }), "h-14 px-8 text-lg !text-white gap-2");
@@ -296,22 +326,33 @@ export default function About() {
       <section className="py-20 sm:py-28">
         <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
           <h2 className={h2} data-testid="heading-leadership">{t("Leadership team", "Команда керівників")}</h2>
-          <ul className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((m) => {
-              const Icon = m.icon;
-              return (
-                <li key={m.role} className="flex items-start gap-4">
-                  <span className="grid size-16 flex-shrink-0 place-items-center rounded-full bg-cyan-500/15" aria-hidden="true">
-                    <Icon className="w-7 h-7 text-cyan-300" />
-                  </span>
-                  <span>
-                    <span className="block font-headline text-xl font-semibold">{m.role}</span>
-                    <span className="mt-1 block text-base text-white/80 leading-relaxed">{m.text}</span>
-                  </span>
-                </li>
-              );
-            })}
+          <ul className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 max-w-4xl">
+            {team.map((m) => (
+              <li key={m.role} data-testid="team-member">
+                <div className="overflow-hidden rounded-2xl ring-1 ring-white/10 aspect-[4/5] max-w-sm">
+                  <img src={m.photo} alt={m.name ?? m.role} loading="lazy" className="h-full w-full object-cover" />
+                </div>
+                {m.name && <p className="mt-5 font-headline text-2xl font-semibold">{m.name}</p>}
+                <p className={cn("text-lg font-semibold text-cyan-300", m.name ? "mt-1" : "mt-5")}>{m.role}</p>
+                <p className="mt-2 text-base sm:text-lg text-white/80 leading-relaxed max-w-sm">{m.text}</p>
+              </li>
+            ))}
           </ul>
+        </motion.div>
+      </section>
+
+      {/* ═══════════ GALLERY ═══════════ */}
+      <section className="pb-20 sm:pb-28">
+        <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
+          <h2 className={h2}>{t("AURA SEA at work", "AURA SEA у роботі")}</h2>
+          <div className="mt-10 columns-1 sm:columns-2 lg:columns-3 gap-5 [&>figure]:mb-5" data-testid="about-gallery">
+            {gallery.map((g) => (
+              <figure key={g.caption} className="break-inside-avoid">
+                <img src={g.src} alt={g.caption} loading="lazy" className="w-full rounded-2xl ring-1 ring-white/10" />
+                <figcaption className="mt-2 text-sm sm:text-base text-white/70">{g.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
         </motion.div>
       </section>
 
