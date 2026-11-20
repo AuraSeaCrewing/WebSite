@@ -1,21 +1,26 @@
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { CheckCircle, DollarSign, TrendingUp, Shield, Users, FileText, Anchor, Award, Heart } from "lucide-react";
-import { motion } from "framer-motion";
-const MotionCard = motion.create(Card);
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { motion, type Variants } from "framer-motion";
+import { Anchor, ArrowRight, CheckCircle, FileText, Heart, Shield, Users } from "lucide-react";
+
+import { buttonVariants } from "@/components/ui/button";
+import { usePageMeta, useT, useLang } from "@/lib/i18n";
+import { orderedServices } from "@/lib/services";
+import { cn } from "@/lib/utils";
+import { ServiceTiles } from "@/pages/Service";
 import seafarerCrew from "@assets/stock_images/stormy_sea_3.webp";
 import heroPhoto from "@assets/stock_images/seafarer_crew_workin_81b3ed0a.webp";
 
-import { usePageMeta, useT } from "@/lib/i18n";
-import { ServiceTiles } from "@/pages/Service";
+// "For Seafarers". Its main job (owner's decision 20.11.2026): lead seafarers to the paid services —
+// the first screen asks what matters now (promotion, fleet, interview, documents) and the full service
+// tiles follow right under it. Looking for a job is the second path: the application and vacancies.
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+const rise: Variants = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } } };
+const inView = { initial: "hidden", whileInView: "show", viewport: { once: true, margin: "-60px" } } as const;
 
 export default function Seafarers() {
-  useScrollAnimation();
   const t = useT();
+  const lang = useLang();
   usePageMeta(
     "/seafarers",
     { en: "Jobs at Sea for Seafarers", uk: "Робота в морі для моряків" },
@@ -25,337 +30,306 @@ export default function Seafarers() {
     }
   );
 
-  const applicationSteps = [
-    { number: "01", title: t("Register Interest", "Подайте анкету"), description: t("Check our Hot Vacancies at Instagram page and Telegram Group Chanel for current openings and submit your application through our online form.", "Перегляньте гарячі вакансії в нашому Instagram і Telegram-каналі та подайте анкету через онлайн-форму."), icon: FileText },
-    { number: "02", title: t("Interview & Assessment", "Співбесіда та оцінка"), description: t("We'll review your qualifications and conduct an interview to understand your experience and career goals.", "Ми переглянемо вашу кваліфікацію й проведемо співбесіду, щоб зрозуміти ваш досвід і кар’єрні цілі."), icon: Users },
-    { number: "03", title: t("Documentation", "Документи"), description: t("Submit required certificates, medical examinations, and complete necessary paperwork with our support.", "Надайте потрібні сертифікати й медогляди та оформіть документи з нашою допомогою."), icon: Shield },
-    { number: "04", title: t("Joining Vessel", "Посадка на судно"), description: t("We coordinate all travel arrangements, briefings, and ensure smooth joining process to your assigned vessel.", "Ми організуємо поїздку, інструктажі та подбаємо про спокійну посадку на ваше судно."), icon: Anchor },
+  const goals = orderedServices().filter((s) => s.slug !== "crewing-start");
+
+  const offers = [
+    {
+      title: t("Fair Contracts", "Чесні контракти"),
+      desc: t("Clear contract terms with no hidden clauses. We ensure you understand every detail before signing.", "Зрозумілі умови без прихованих пунктів. Ми подбаємо, щоб ви розуміли кожну деталь до підписання."),
+      testId: "card-offer-fair-contracts",
+    },
+    {
+      title: t("Timely Payment", "Вчасні виплати"),
+      desc: t("Reliable, on-time salary payments every month. Your financial security is our priority.", "Надійна й вчасна зарплата щомісяця. Ваша фінансова безпека — наш пріоритет."),
+      testId: "card-offer-timely-payment",
+    },
+    {
+      title: t("Safe & Reputable Fleets", "Безпечні й надійні флоти"),
+      desc: t("We partner only with established ship-owners who maintain high safety and operational standards.", "Ми співпрацюємо лише з перевіреними судновласниками, які дотримуються високих стандартів безпеки й експлуатації."),
+      testId: "card-offer-safe-fleets",
+    },
+    {
+      title: t("Long-Term Cooperation", "Довгострокова співпраця"),
+      desc: t("Opportunities for repeated contracts and career continuity with the same fleet.", "Повторні контракти та стабільна кар’єра в одному флоті."),
+      testId: "card-offer-long-term",
+    },
   ];
+
+  const careers = [
+    {
+      title: t("Career Progression", "Кар’єрне зростання"),
+      lead: t("We support your professional advancement through:", "Ми підтримуємо ваше професійне зростання:"),
+      items: [
+        t("Opportunities to advance from junior to senior positions", "Можливість рости від молодших до старших посад"),
+        t("Regular performance assessments and career guidance", "Регулярна оцінка роботи й кар’єрні поради"),
+        t("Priority consideration for matching openings", "Пріоритет при розгляді на відповідні вакансії"),
+      ],
+      link: { href: "/services/promotion", label: t("Personal preparation for promotion", "Особиста підготовка до підвищення") },
+    },
+    {
+      title: t("Training & Development", "Навчання та розвиток"),
+      lead: t("Invest in your skills with our support:", "Розвивайте навички з нашою підтримкою:"),
+      items: [
+        t("Information about training courses and certifications", "Інформація про курси й сертифікацію"),
+        t("Guidance on required qualifications for advancement", "Поради щодо кваліфікації, потрібної для підвищення"),
+        t("Connections to approved training institutions", "Зв’язок зі схваленими навчальними центрами"),
+      ],
+      link: { href: "/services/documents", label: t("We take care of your documents", "Оформимо ваші документи") },
+    },
+  ];
+
+  const steps = [
+    {
+      title: t("Register Interest", "Подайте анкету"),
+      description: t("Check our Hot Vacancies at Instagram page and Telegram Group Chanel for current openings and submit your application through our online form.", "Перегляньте гарячі вакансії в нашому Instagram і Telegram-каналі та подайте анкету через онлайн-форму."),
+      icon: FileText,
+    },
+    {
+      title: t("Interview & Assessment", "Співбесіда та оцінка"),
+      description: t("We'll review your qualifications and conduct an interview to understand your experience and career goals.", "Ми переглянемо вашу кваліфікацію й проведемо співбесіду, щоб зрозуміти ваш досвід і кар’єрні цілі."),
+      icon: Users,
+      link: { href: "/services/interview", label: t("Want to prepare? Interview preparation", "Хочете підготуватися? Підготовка до співбесіди") },
+    },
+    {
+      title: t("Documentation", "Документи"),
+      description: t("Submit required certificates, medical examinations, and complete necessary paperwork with our support.", "Надайте потрібні сертифікати й медогляди та оформіть документи з нашою допомогою."),
+      icon: Shield,
+      link: { href: "/services/documents", label: t("Something expiring? Maritime documents", "Щось закінчується? Морські документи") },
+    },
+    {
+      title: t("Joining Vessel", "Посадка на судно"),
+      description: t("We coordinate all travel arrangements, briefings, and ensure smooth joining process to your assigned vessel.", "Ми організуємо поїздку, інструктажі та подбаємо про спокійну посадку на ваше судно."),
+      icon: Anchor,
+    },
+  ];
+
+  const serviceLink = "inline-flex items-center gap-1.5 text-base font-medium text-cyan-300 hover:text-cyan-200 underline-offset-4 hover:underline";
 
   return (
     <div className="min-h-screen pb-16 relative">
       <div className="fixed inset-0 bg-cover bg-center bg-no-repeat z-0" style={{ backgroundImage: `url(${seafarerCrew})` }} />
-      <div className="fixed inset-0 bg-black/40 z-0" />
+      <div className="fixed inset-0 bg-[#0b1118]/70 z-0" />
 
-      {/* ═══════════ HERO ═══════════ */}
-      <section className="py-24 pt-32 relative flex items-center z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="relative rounded-3xl border border-white/10 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] min-h-[400px] flex items-center">
-            {/* Background Image */}
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${heroPhoto})` }}
-            />
-            {/* Elegant Gradient Overlays for Text Legibility and Aesthetics */}
-            <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-slate-950/95 via-slate-950/70 to-slate-950/20 backdrop-blur-none" />
-            <div className="absolute inset-0 bg-teal-900/20 mix-blend-color" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_40%)]" />
+      {/* ═══════════ HERO: what matters to you now ═══════════ */}
+      <section className="relative z-10 min-h-[100svh] flex items-end overflow-hidden" data-testid="seafarers-hero">
+        <motion.img
+          src={heroPhoto}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2.2, ease: EASE }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0b1118] via-[#0b1118]/80 to-[#0b1118]/30" />
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } } }}
+          className="relative w-full max-w-6xl mx-auto px-5 sm:px-8 pt-28 pb-12 sm:pb-20"
+        >
+          <motion.h1
+            variants={{
+              hidden: { opacity: 0, y: 32, clipPath: "inset(0 0 100% 0)" },
+              show: { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", transition: { duration: 0.9, ease: EASE } },
+            }}
+            className="font-headline text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.02] text-white max-w-4xl text-balance"
+            data-testid="heading-seafarers"
+          >
+            {t("Your next contract\u00a0— a step higher", "Ваш наступний контракт\u00a0— на крок вище")}
+          </motion.h1>
+          <motion.p variants={rise} className="mt-5 text-lg sm:text-2xl text-white/85 leading-relaxed max-w-2xl">
+            {t(
+              "Promotion, a new fleet, a confident interview and documents in order. From seafarers to seafarers.",
+              "Підвищення, новий флот, впевнена співбесіда й документи в порядку. Від моряків — морякам."
+            )}
+          </motion.p>
 
-            <div className="relative z-10 p-8 sm:p-12 lg:p-16 max-w-3xl text-center lg:text-left mx-auto lg:mx-0">
+          <motion.p variants={rise} className="mt-9 text-base sm:text-lg font-semibold text-cyan-200">
+            {t("What matters to you now?", "Що для вас зараз головне?")}
+          </motion.p>
+          <motion.ul variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }} className="mt-3 grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 max-w-5xl">
+            {goals.map((s) => {
+              const Icon = s.icon;
+              return (
+                <motion.li key={s.slug} variants={rise}>
+                  <Link
+                    href={`/services/${s.slug}`}
+                    className="group flex h-full min-h-[64px] items-center gap-3 rounded-2xl border border-white/20 bg-[#0b1118]/60 px-4 py-3 text-left backdrop-blur-md transition-colors duration-200 hover:border-cyan-300 hover:bg-cyan-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300"
+                    data-testid={`goal-${s.slug}`}
+                    data-umami-event={`seafarers-goal-${s.slug}`}
+                  >
+                    <Icon className="w-6 h-6 text-cyan-300 flex-shrink-0" aria-hidden="true" />
+                    <span className="flex-1 text-base sm:text-lg font-semibold leading-tight text-white">{s.goal[lang]}</span>
+                    <ArrowRight className="hidden sm:block w-5 h-5 text-cyan-300 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+                  </Link>
+                </motion.li>
+              );
+            })}
+          </motion.ul>
 
-              <h1 className="font-headline text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-lg tracking-tight" data-testid="heading-seafarers">
-                {t("For Seafarers", "Морякам")}
-              </h1>
-              <p className="text-lg sm:text-xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0 text-white/90 drop-shadow-md">
-                {t("Join AURA SEA and work with reputable operators across Container ships, Bulk carriers, General Cargo, Tankers, Yachts, and Passenger Vessels - while building a career supported by fair processes and wellbeing-focused Crew Management.", "Приєднуйтеся до AURA SEA і працюйте з надійними операторами на контейнеровозах, балкерах, суднах генерального вантажу, танкерах, яхтах і пасажирських суднах — будуйте кар’єру з чесними умовами та турботою про ваш добробут.")}
-              </p>
-            </div>
-          </div>
+          <motion.div variants={rise} className="mt-6 flex flex-col sm:flex-row sm:items-center gap-x-8 gap-y-3 text-base sm:text-lg">
+            <Link href="/apply" className={serviceLink} data-umami-event="apply-button-seafarers-hero">
+              {t("Looking for a job? Apply", "Шукаєте роботу? Подати анкету")}
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </Link>
+            <Link href="/services/crewing-start" className={serviceLink} data-umami-event="seafarers-goal-crewing-start">
+              {t("Open your own crewing agency", "Відкрити свій крюїнг")}
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </Link>
+          </motion.div>
         </motion.div>
       </section>
 
       <div className="relative z-10">
-        {/* ═══════════ WHAT WE OFFER — accent bg ═══════════ */}
-        <section className="py-20">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate" data-testid="heading-what-we-offer-you">
-              {t("What We Offer You", "Що ми вам пропонуємо")}
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-              {/* What We Offer Cards */}
-              {[
-                {
-                  icon: FileText,
-                  title: t("Fair Contracts", "Чесні контракти"),
-                  desc: t("Clear contract terms with no hidden clauses. We ensure you understand every detail before signing.", "Зрозумілі умови без прихованих пунктів. Ми подбаємо, щоб ви розуміли кожну деталь до підписання."),
-                  iconBg: "bg-cyan-500/10",
-                  iconClass: "text-cyan-400",
-                  testId: "card-offer-fair-contracts",
-                },
-                {
-                  icon: DollarSign,
-                  title: t("Timely Payment", "Вчасні виплати"),
-                  desc: t("Reliable, on-time salary payments every month. Your financial security is our priority.", "Надійна й вчасна зарплата щомісяця. Ваша фінансова безпека — наш пріоритет."),
-                  iconBg: "bg-teal-500/10",
-                  iconClass: "text-teal-400",
-                  testId: "card-offer-timely-payment",
-                },
-                {
-                  icon: Shield,
-                  title: t("Safe & Reputable Fleets", "Безпечні й надійні флоти"),
-                  desc: t("We partner only with established ship-owners who maintain high safety and operational standards.", "Ми співпрацюємо лише з перевіреними судновласниками, які дотримуються високих стандартів безпеки й експлуатації."),
-                  iconBg: "bg-blue-500/10",
-                  iconClass: "text-blue-400",
-                  testId: "card-offer-safe-fleets",
-                },
-                {
-                  icon: CheckCircle,
-                  title: t("Long-Term Cooperation", "Довгострокова співпраця"),
-                  desc: t("Opportunities for repeated contracts and career continuity with the same fleet.", "Повторні контракти та стабільна кар’єра в одному флоті."),
-                  iconBg: "bg-cyan-500/10",
-                  iconClass: "text-cyan-400",
-                  testId: "card-offer-long-term",
-                },
-              ].map((item, i) => {
-                const Icon = item.icon;
-                return (
-                  <MotionCard
-                    key={item.title}
-                    initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-                    whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.8, delay: (0.1 + (i * 0.2)).toFixed(1), ease: "easeOut" }}
-                    className={`glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
-                    data-testid={item.testId}
-                  >
-                    <CardHeader className="text-center">
-                      <div className={`w-12 h-12 rounded-lg ${item.iconBg} flex items-center justify-center mx-auto mb-2`}>
-                        <Icon className={`w-6 h-6 transition-transform duration-500 ease-out ${item.iconClass}`} />
-                      </div>
-                      <CardTitle className="font-headline text-lg">{item.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground font-light leading-relaxed text-center">{item.desc}</p>
-                    </CardContent>
-                  </MotionCard>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════ WELLBEING & FAMILY SUPPORT ═══════════ */}
-        <section className="py-20">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <MotionCard
-  initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-  whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-  viewport={{ once: true, margin: "-50px" }}
-  transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-teal-500/20 border-teal-500/20 shadow-md shadow-teal-950/5 dark:shadow-teal-950/15">
-              <CardHeader className="flex flex-col sm:flex-row sm:items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                  <Heart className="w-6 h-6 text-teal-400 transition-transform duration-500 ease-out" />
-                </div>
-                <div className="space-y-1 flex-1">
-                  <CardTitle
-                    className="font-headline text-2xl sm:text-3xl font-semibold"
-                    data-testid="heading-seafarers-wellbeing"
-                  >
-                    {t("Wellbeing & family support", "Добробут і підтримка родини")}
-                  </CardTitle>
-                  <CardDescription className="text-base font-light leading-relaxed pt-1">
-                    {t("Aura Sea Crewing is the first Ukrainian crewing agency integrating psychological support for seafarers and their families. Mental stability and emotional balance matter for safe, effective work at sea - and we build that into how we work with you.", "Aura Sea Crewing — перша українська крюїнгова агенція, що впроваджує психологічну підтримку для моряків і їхніх родин. Психологічна стабільність і емоційна рівновага важливі для безпечної та ефективної роботи в морі — і ми враховуємо це в усій співпраці з вами.")}
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm font-medium text-foreground mb-3">{t("Through certified psychological partners we offer:", "Разом із сертифікованими партнерами-психологами ми пропонуємо:")}</p>
-                <ul className="space-y-2 text-sm text-muted-foreground font-light">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                    <span>{t("Support and consultations for seafarers' spouses and relatives", "Підтримка й консультації для дружин, чоловіків і родичів моряків")}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                    <span>{t("Stress-resilience sessions for seafarers before and after contracts", "Заняття зі стресостійкості для моряків до і після контракту")}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                    <span>{t("Continuous mental health awareness integrated into our HR process", "Постійна увага до психічного здоров’я як частина нашого HR-процесу")}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                    <span>{t("Supporting the mental health of a sailor's wife and improving the quality of long-distance relationships and a comfortable stay together", "Підтримка психічного здоров’я дружини моряка, покращення стосунків на відстані та комфортного часу разом")}</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </MotionCard>
-          </div>
-        </section>
-
-        {/* ═══════════ PAID SERVICES (pages hidden from search) ═══════════ */}
-        <section className="py-20" data-testid="section-services">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="font-headline text-3xl font-semibold text-center text-foreground">
+        {/* ═══════════ SERVICES ═══════════ */}
+        <section id="services" className="py-20 sm:py-24 scroll-mt-20" data-testid="section-services">
+          <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
+            <h2 className="font-headline text-3xl sm:text-5xl font-semibold text-white text-balance max-w-3xl">
               {t("Grow with AURA SEA", "Зростайте разом з AURA SEA")}
             </h2>
-            <p className="mt-3 mb-10 text-center text-lg text-white/80 max-w-2xl mx-auto">
+            <p className="mt-4 mb-10 text-lg sm:text-xl text-white/80 max-w-2xl">
               {t(
-                "Promotion, a new fleet, a stronger interview, documents in order — or your own crewing agency.",
-                "Підвищення, новий флот, сильна співбесіда, документи в порядку — або власний крюїнг."
+                "We prepare, sort out documents and recommend you to ship-owners: we work with them every day.",
+                "Готуємо, оформлюємо документи й рекомендуємо судновласникам: ми працюємо з ними щодня."
               )}
             </p>
             <ServiceTiles />
-          </div>
+          </motion.div>
+        </section>
+
+        {/* ═══════════ WHAT WE OFFER ═══════════ */}
+        <section className="py-20 sm:py-24">
+          <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
+            <h2 className="font-headline text-3xl sm:text-4xl font-semibold text-white" data-testid="heading-what-we-offer-you">
+              {t("What We Offer You", "Що ми вам пропонуємо")}
+            </h2>
+            <ul className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+              {offers.map((o) => (
+                <li key={o.testId} className="border-t-2 border-cyan-400/70 pt-5" data-testid={o.testId}>
+                  <h3 className="font-headline text-xl sm:text-2xl font-semibold text-white">{o.title}</h3>
+                  <p className="mt-2 text-base sm:text-lg text-white/80 leading-relaxed max-w-xl">{o.desc}</p>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        </section>
+
+        {/* ═══════════ WELLBEING & FAMILY SUPPORT ═══════════ */}
+        <section className="py-20 sm:py-24">
+          <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
+            <div className="glass-card rounded-3xl p-6 sm:p-10 lg:p-12 border-teal-500/20 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-14">
+              <div>
+                <Heart className="w-8 h-8 text-teal-300" aria-hidden="true" />
+                <h2 className="mt-4 font-headline text-3xl sm:text-4xl font-semibold text-white" data-testid="heading-seafarers-wellbeing">
+                  {t("Wellbeing & family support", "Добробут і підтримка родини")}
+                </h2>
+                <p className="mt-4 text-base sm:text-lg text-white/80 leading-relaxed">
+                  {t(
+                    "Aura Sea Crewing is the first Ukrainian crewing agency integrating psychological support for seafarers and their families. Mental stability and emotional balance matter for safe, effective work at sea - and we build that into how we work with you.",
+                    "Aura Sea Crewing — перша українська крюїнгова агенція, що впроваджує психологічну підтримку для моряків і їхніх родин. Психологічна стабільність і емоційна рівновага важливі для безпечної та ефективної роботи в морі — і ми враховуємо це в усій співпраці з вами."
+                  )}
+                </p>
+              </div>
+              <div>
+                <p className="text-base font-semibold text-white">{t("Through certified psychological partners we offer:", "Разом із сертифікованими партнерами-психологами ми пропонуємо:")}</p>
+                <ul className="mt-4 space-y-3 text-base text-white/80 leading-relaxed">
+                  {[
+                    t("Support and consultations for seafarers' spouses and relatives", "Підтримка й консультації для дружин, чоловіків і родичів моряків"),
+                    t("Stress-resilience sessions for seafarers before and after contracts", "Заняття зі стресостійкості для моряків до і після контракту"),
+                    t("Continuous mental health awareness integrated into our HR process", "Постійна увага до психічного здоров’я як частина нашого HR-процесу"),
+                    t("Supporting the mental health of a sailor's wife and improving the quality of long-distance relationships and a comfortable stay together", "Підтримка психічного здоров’я дружини моряка, покращення стосунків на відстані та комфортного часу разом"),
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-teal-300 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </motion.div>
         </section>
 
         {/* ═══════════ CAREER PATH ═══════════ */}
-        <section className="py-20 relative">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate" data-testid="heading-career-path">
+        <section className="py-20 sm:py-24">
+          <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
+            <h2 className="font-headline text-3xl sm:text-4xl font-semibold text-white" data-testid="heading-career-path">
               {t("Your Career Path with AURA SEA", "Ваша кар’єра з AURA SEA")}
             </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <MotionCard
-  initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-  whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-  viewport={{ once: true, margin: "-50px" }}
-  transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/20 border-cyan-500/20 shadow-md shadow-cyan-950/5 dark:shadow-cyan-950/15">
-                <CardHeader className="flex flex-row items-start gap-4 space-y-0">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out" />
-                  </div>
-                  <div>
-                    <CardTitle className="font-headline text-lg font-medium">{t("Career Progression", "Кар’єрне зростання")}</CardTitle>
-                    <CardDescription className="font-light pt-2 text-sm">
-                      {t("We support your professional advancement through:", "Ми підтримуємо ваше професійне зростання:")}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-sm text-muted-foreground font-light">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
-                      <span>{t("Opportunities to advance from junior to senior positions", "Можливість рости від молодших до старших посад")}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
-                      <span>{t("Regular performance assessments and career guidance", "Регулярна оцінка роботи й кар’єрні поради")}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
-                      <span>{t("Priority consideration for matching openings", "Пріоритет при розгляді на відповідні вакансії")}</span>
-                    </li>
+            <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+              {careers.map((c) => (
+                <div key={c.title} className="border-t-2 border-cyan-400/70 pt-5">
+                  <h3 className="font-headline text-xl sm:text-2xl font-semibold text-white">{c.title}</h3>
+                  <p className="mt-2 text-base sm:text-lg text-white/80">{c.lead}</p>
+                  <ul className="mt-4 space-y-2.5 text-base text-white/80">
+                    {c.items.map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <CheckCircle className="w-5 h-5 text-cyan-300 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
                   </ul>
-                </CardContent>
-              </MotionCard>
-
-              <MotionCard
-  initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-  whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-  viewport={{ once: true, margin: "-50px" }}
-  transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-teal-500/20 scroll-animate-delay-1 border-teal-500/20 shadow-md shadow-teal-950/5 dark:shadow-teal-950/15"
-              >
-                <CardHeader className="flex flex-row items-start gap-4 space-y-0">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-teal-500/10 flex items-center justify-center">
-                    <Award className="w-6 h-6 text-teal-400 transition-transform duration-500 ease-out" />
-                  </div>
-                  <div>
-                    <CardTitle className="font-headline text-lg font-medium">{t("Training & Development", "Навчання та розвиток")}</CardTitle>
-                    <CardDescription className="font-light pt-2 text-sm">
-                      {t("Invest in your skills with our support:", "Розвивайте навички з нашою підтримкою:")}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-sm text-muted-foreground font-light">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                      <span>{t("Information about training courses and certifications", "Інформація про курси й сертифікацію")}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                      <span>{t("Guidance on required qualifications for advancement", "Поради щодо кваліфікації, потрібної для підвищення")}</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
-                      <span>{t("Connections to approved training institutions", "Зв’язок зі схваленими навчальними центрами")}</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </MotionCard>
+                  <Link href={c.link.href} className={cn(serviceLink, "mt-5")} data-umami-event={`seafarers-career-${c.link.href.split("/").pop()}`}>
+                    {c.link.label}
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  </Link>
+                </div>
+              ))}
             </div>
-          </div>
+          </motion.div>
         </section>
 
-        {/* ═══════════ PROCESS STEPS — dark with timeline ═══════════ */}
-        <section className="py-20">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate" data-testid="heading-how-process-works">
+        {/* ═══════════ PROCESS ═══════════ */}
+        <section className="py-20 sm:py-24">
+          <motion.div {...inView} variants={rise} className="max-w-4xl mx-auto px-5 sm:px-8">
+            <h2 className="font-headline text-3xl sm:text-4xl font-semibold text-white" data-testid="heading-how-process-works">
               {t("How the Process Works", "Як усе відбувається")}
             </h2>
-
-            <div className="timeline-line space-y-6">
-              {applicationSteps.map((step, i) => {
+            <ol className="timeline-line mt-10 space-y-6">
+              {steps.map((step) => {
                 const Icon = step.icon;
                 return (
-                  <motion.div 
-                    key={step.number} 
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: (i * 0.15).toFixed(2) }}
-                    className={`flex gap-5 group cursor-default transition-all duration-300 hover:-translate-y-1 hover:shadow-cyan-500/10`}>
-                    <div className="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center z-10 shadow-lg shadow-cyan-900/30">
-                      <Icon className="w-7 h-7 text-foreground" />
+                  <li key={step.title} className="flex gap-5">
+                    <span className="flex-shrink-0 w-14 h-14 rounded-full bg-cyan-600 flex items-center justify-center z-10">
+                      <Icon className="w-6 h-6 text-white" aria-hidden="true" />
+                    </span>
+                    <div className="flex-1 glass-card rounded-xl p-5">
+                      <h3 className="font-headline text-lg sm:text-xl font-semibold text-white">{step.title}</h3>
+                      <p className="mt-1.5 text-base text-white/80 leading-relaxed">{step.description}</p>
+                      {step.link && (
+                        <Link href={step.link.href} className={cn(serviceLink, "mt-3")} data-umami-event={`seafarers-step-${step.link.href.split("/").pop()}`}>
+                          {step.link.label}
+                          <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                        </Link>
+                      )}
                     </div>
-                    <div className="flex-1 glass-card rounded-xl p-5 ml-1 transition-all duration-300 group-hover:shadow-xl group-hover:border-primary/20">
-                      <div className="flex items-center gap-3 mb-2">
-                        <Badge variant="secondary" className="font-light text-xs">{step.number}</Badge>
-                        <h3 className="font-headline text-lg font-medium text-foreground">{step.title}</h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground font-light leading-relaxed">{step.description}</p>
-                    </div>
-                  </motion.div>
+                  </li>
                 );
               })}
-            </div>
+            </ol>
 
-            {/* Note box */}
-            <div className="mt-12 scroll-animate">
-              <div className="feature-row">
-                <CheckCircle className="w-7 h-7 text-cyan-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="font-headline text-base font-medium text-foreground mb-1">{t("Important Note", "Важливо")}</h3>
-                  <p className="text-sm text-muted-foreground font-light">
-                    {t("Active vacancies are regularly posted on our Socials", "Актуальні вакансії ми регулярно публікуємо в соцмережах")} (<a href="https://t.me/AURASEA_crew" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Telegram</a>, <a href="https://www.instagram.com/_aura_sea/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Instagram</a>, <a href="https://www.linkedin.com/company/110849089" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">LinkedIn</a>). {t("When you find a matching position,", "Знайшли відповідну посаду —")} <Link href="/apply" className="text-cyan-400 hover:underline">{t("submit your application", "подайте анкету")}</Link>{t(" and our team will review your profile.", ", і наша команда розгляне вашу кандидатуру.")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+            <p className="mt-10 text-base text-white/80 leading-relaxed">
+              <span className="font-semibold text-white">{t("Important Note", "Важливо")}: </span>
+              {t("Active vacancies are regularly posted on our Socials", "Актуальні вакансії ми регулярно публікуємо в соцмережах")} (<a href="https://t.me/AURASEA_crew" target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">Telegram</a>, <a href="https://www.instagram.com/_aura_sea/" target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">Instagram</a>, <a href="https://www.linkedin.com/company/110849089" target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">LinkedIn</a>). {t("When you find a matching position,", "Знайшли відповідну посаду —")} <Link href="/apply" className="text-cyan-300 hover:underline">{t("submit your application", "подайте анкету")}</Link>{t(" and our team will review your profile.", ", і наша команда розгляне вашу кандидатуру.")}
+            </p>
+          </motion.div>
         </section>
 
-        {/* ═══════════ CTA — accent ═══════════ */}
-        <section className="py-16 relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal-500/10 rounded-full blur-[120px] opacity-50" />
-          </div>
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="glass-premium rounded-3xl p-8 sm:p-12 text-center group transition-all duration-500 hover:border-teal-500/40 hover:shadow-2xl hover:shadow-teal-500/20 scroll-animate-scale">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-teal-500/10 flex items-center justify-center border border-teal-500/20">
-                <Anchor className="w-8 h-8 text-teal-400" />
-              </div>
-              <h3 className="font-headline text-2xl font-semibold mb-4 text-foreground" data-testid="heading-cta-check-vacancies">
+        {/* ═══════════ CLOSE ═══════════ */}
+        <section className="py-16 sm:py-20">
+          <motion.div {...inView} variants={rise} className="max-w-4xl mx-auto px-5 sm:px-8">
+            <div className="glass-premium rounded-3xl p-7 sm:p-12 text-center">
+              <h2 className="font-headline text-3xl sm:text-4xl font-semibold text-white text-balance" data-testid="heading-cta-check-vacancies">
                 {t("Ready to Start Your Journey?", "Готові вирушити в рейс?")}
-              </h3>
-              <p className="text-lg text-muted-foreground mb-8 font-light max-w-2xl mx-auto leading-relaxed">
+              </h2>
+              <p className="mt-4 text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
                 {t("Fill in our application form, check current vacancies or get in touch to learn more about opportunities with AURA SEA.", "Заповніть анкету, перегляньте актуальні вакансії або зв’яжіться з нами, щоб дізнатися більше про можливості з AURA SEA.")}
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                 <Link
                   href="/apply"
-                  className={cn(buttonVariants({ size: "lg" }), "inline-flex font-normal px-8 h-12 text-base")}
+                  className={cn(buttonVariants({ size: "lg" }), "inline-flex px-8 h-14 text-lg !text-white")}
                   data-testid="button-apply-seafarers"
                   data-umami-event="apply-button-seafarers"
                 >
@@ -363,24 +337,25 @@ export default function Seafarers() {
                 </Link>
                 <Link
                   href="/vacancies"
-                  className={cn(buttonVariants({ size: "lg", variant: "secondary" }), "inline-flex font-normal px-8 h-12 text-base")}
+                  className={cn(buttonVariants({ size: "lg", variant: "secondary" }), "inline-flex px-8 h-14 text-lg !text-white")}
                   data-testid="button-view-vacancies"
                 >
                   {t("View Vacancies", "Вакансії")}
                 </Link>
-                <Link
-                  href="/contact"
-                  className={cn(
-                    buttonVariants({ size: "lg", variant: "secondary" }),
-                    "inline-flex font-normal px-8 h-12 text-base transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] hover:shadow-lg hover:shadow-white/10",
-                  )}
-                  data-testid="button-contact-seafarers"
-                >
-                  {t("Contact Us", "Контакти")}
-                </Link>
               </div>
+              <p className="mt-8 text-base text-white/80">
+                {t("Want to grow faster?", "Хочете зростати швидше?")}{" "}
+                {goals.map((s, i) => (
+                  <span key={s.slug}>
+                    {i > 0 && " · "}
+                    <Link href={`/services/${s.slug}`} className="text-cyan-300 hover:underline underline-offset-4" data-umami-event={`seafarers-close-${s.slug}`}>
+                      {s.name[lang]}
+                    </Link>
+                  </span>
+                ))}
+              </p>
             </div>
-          </div>
+          </motion.div>
         </section>
       </div>
     </div>

@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RANKS } from "@/lib/application-options";
 import { track } from "@/lib/analytics";
 import { useLang, usePageMeta, useT } from "@/lib/i18n";
-import { SERVICES, serviceBySlug, type PlanKey, type Service as ServiceData } from "@/lib/services";
+import { orderedServices, serviceBySlug, type PlanKey, type Service as ServiceData } from "@/lib/services";
 import { cn } from "@/lib/utils";
 import NotFound from "@/pages/not-found";
 
@@ -266,32 +266,58 @@ function ServicePage({ service }: { service: ServiceData }) {
   );
 }
 
-/** Tiles of all services: on "For Seafarers" and at the end of each service page. */
+/**
+ * Tiles of all services: on "For Seafarers", after an application and at the end of each service page.
+ * The most asked-for services first, each with its photo and who it is for; own crewing — a different
+ * audience — closes the set as one wide tile. The whole tile is the link.
+ */
 export function ServiceTiles({ exclude, className }: { exclude?: string; className?: string }) {
   const lang = useLang();
   const t = useT();
+  const list = orderedServices().filter((s) => s.slug !== exclude);
+  const regular = list.filter((s) => s.slug !== "crewing-start");
+  const wide = list.find((s) => s.slug === "crewing-start");
+  const tile = (s: ServiceData, wideTile: boolean, spanBoth: boolean) => {
+    const Icon = s.icon;
+    return (
+      <li key={s.slug} className={cn(spanBoth && "sm:col-span-2")}>
+        <Link
+          href={`/services/${s.slug}`}
+          className={cn(
+            "group relative flex h-full overflow-hidden rounded-2xl border border-white/10 bg-[#0e1722] transition-colors duration-200 hover:border-cyan-400/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300",
+            wideTile ? "flex-col md:flex-row" : "flex-col"
+          )}
+          data-testid={`service-tile-${s.slug}`}
+          data-umami-event={`service-tile-${s.slug}`}
+        >
+          <span className={cn("relative block overflow-hidden", wideTile ? "h-40 md:h-auto md:w-2/5" : "h-36 sm:h-40")}>
+            <img
+              src={s.image}
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+            />
+            <span className="absolute inset-0 bg-gradient-to-t from-[#0e1722] via-[#0e1722]/30 to-transparent" />
+          </span>
+          <span className={cn("relative flex flex-1 flex-col gap-2 p-5 sm:p-6", wideTile && "md:justify-center md:p-8")}>
+            <span className="flex items-center gap-2.5">
+              <Icon className="w-6 h-6 text-cyan-300 flex-shrink-0" aria-hidden="true" />
+              <span className="font-headline text-xl sm:text-2xl font-semibold text-white">{s.name[lang]}</span>
+            </span>
+            <span className="text-base text-white/75 leading-snug flex-1">{s.forWhom[lang]}</span>
+            <span className="mt-1 inline-flex items-center gap-1.5 text-base font-medium text-cyan-300">
+              {t("Learn more", "Детальніше")}
+              <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+            </span>
+          </span>
+        </Link>
+      </li>
+    );
+  };
   return (
-    <ul className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4", className)}>
-      {SERVICES.filter((s) => s.slug !== exclude).map((s) => {
-        const Icon = s.icon;
-        return (
-          <li key={s.slug}>
-            <Link
-              href={`/services/${s.slug}`}
-              className="group glass-card rounded-2xl p-6 flex h-full flex-col gap-3 border border-white/10 transition-colors hover:border-cyan-400/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300"
-              data-testid={`service-tile-${s.slug}`}
-            >
-              <Icon className="w-8 h-8 text-cyan-300" aria-hidden="true" />
-              <span className="font-headline text-xl font-semibold text-white">{s.name[lang]}</span>
-              <span className="text-base text-white/70 leading-snug flex-1">{s.eyebrow[lang]}</span>
-              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300">
-                {t("Learn more", "Детальніше")}
-                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
-              </span>
-            </Link>
-          </li>
-        );
-      })}
+    <ul className={cn("grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5", className)}>
+      {regular.map((s, i) => tile(s, false, regular.length % 2 === 1 && i === regular.length - 1))}
+      {wide && tile(wide, true, true)}
     </ul>
   );
 }
