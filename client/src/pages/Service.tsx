@@ -12,6 +12,7 @@ import { useLang, usePageMeta, useT } from "@/lib/i18n";
 import { orderedServices, serviceBySlug, type PlanKey, type Service as ServiceData } from "@/lib/services";
 import { cn } from "@/lib/utils";
 import NotFound from "@/pages/not-found";
+import { TimeAndMoney } from "@/components/TimeAndMoney";
 
 // One page per paid service (/services/:slug). Hidden from search engines (noindex, not in the sitemap):
 // seafarers come from the "For Seafarers" tiles, from the application form and from links the agency sends.
@@ -104,6 +105,9 @@ function ServicePage({ service }: { service: ServiceData }) {
           </motion.div>
         </motion.div>
       </section>
+
+      {/* ═══════════ TIME AND MONEY ═══════════ */}
+      <TimeAndMoney className="pb-0 sm:pb-0" />
 
       {/* ═══════════ SOUNDS FAMILIAR ═══════════ */}
       <section className="py-20 sm:py-28">

@@ -7,6 +7,7 @@ import { usePageMeta, useT, useLang } from "@/lib/i18n";
 import { orderedServices } from "@/lib/services";
 import { cn } from "@/lib/utils";
 import { ServiceTiles } from "@/pages/Service";
+import { TimeAndMoney } from "@/components/TimeAndMoney";
 import seafarerCrew from "@assets/stock_images/stormy_sea_3.webp";
 import heroPhoto from "@assets/stock_images/seafarer_crew_workin_81b3ed0a.webp";
 
@@ -140,8 +141,8 @@ export default function Seafarers() {
           </motion.h1>
           <motion.p variants={rise} className="mt-5 text-lg sm:text-2xl text-white/85 leading-relaxed max-w-2xl">
             {t(
-              "Promotion, a new fleet, a confident interview and documents in order. From seafarers to seafarers.",
-              "Підвищення, новий флот, впевнена співбесіда й документи в порядку. Від моряків — морякам."
+              "Less time in queues — more days at home. A higher rank — higher pay. From seafarers to seafarers.",
+              "Менше часу в чергах — більше днів удома. Вища посада — більший заробіток. Від моряків — морякам."
             )}
           </motion.p>
 
@@ -182,6 +183,9 @@ export default function Seafarers() {
       </section>
 
       <div className="relative z-10">
+        {/* ═══════════ TIME AND MONEY: what the services give ═══════════ */}
+        <TimeAndMoney className="pb-0 sm:pb-0" />
+
         {/* ═══════════ SERVICES ═══════════ */}
         <section id="services" className="py-20 sm:py-24 scroll-mt-20" data-testid="section-services">
           <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
