@@ -11,6 +11,7 @@ import seafarerCrew from "@assets/stock_images/stormy_sea_3.webp";
 import heroPhoto from "@assets/stock_images/seafarer_crew_workin_81b3ed0a.webp";
 
 import { usePageMeta, useT } from "@/lib/i18n";
+import { ServiceTiles } from "@/pages/Service";
 
 export default function Seafarers() {
   useScrollAnimation();
@@ -186,6 +187,22 @@ export default function Seafarers() {
                 </ul>
               </CardContent>
             </MotionCard>
+          </div>
+        </section>
+
+        {/* ═══════════ PAID SERVICES (pages hidden from search) ═══════════ */}
+        <section className="py-20" data-testid="section-services">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="font-headline text-3xl font-semibold text-center text-foreground">
+              {t("Grow with AURA SEA", "Зростайте разом з AURA SEA")}
+            </h2>
+            <p className="mt-3 mb-10 text-center text-lg text-white/80 max-w-2xl mx-auto">
+              {t(
+                "Promotion, a new fleet, a stronger interview, documents in order — or your own crewing agency.",
+                "Підвищення, новий флот, сильна співбесіда, документи в порядку — або власний крюїнг."
+              )}
+            </p>
+            <ServiceTiles />
           </div>
         </section>
 
