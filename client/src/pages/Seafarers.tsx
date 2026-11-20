@@ -120,12 +120,12 @@ export default function Seafarers() {
                     whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.8, delay: (0.1 + (i * 0.2)).toFixed(1), ease: "easeOut" }}
-                    className={`glass-card h-full group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
+                    className={`glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
                     data-testid={item.testId}
                   >
                     <CardHeader className="text-center">
                       <div className={`w-12 h-12 rounded-lg ${item.iconBg} flex items-center justify-center mx-auto mb-2`}>
-                        <Icon className={`w-6 h-6 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-6 ${item.iconClass}`} />
+                        <Icon className={`w-6 h-6 transition-transform duration-500 ease-out ${item.iconClass}`} />
                       </div>
                       <CardTitle className="font-headline text-lg">{item.title}</CardTitle>
                     </CardHeader>
@@ -147,10 +147,10 @@ export default function Seafarers() {
   whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
   viewport={{ once: true, margin: "-50px" }}
   transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-500/20 border-teal-500/20 shadow-md shadow-teal-950/5 dark:shadow-teal-950/15">
+  className="glass-card group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-teal-500/20 border-teal-500/20 shadow-md shadow-teal-950/5 dark:shadow-teal-950/15">
               <CardHeader className="flex flex-col sm:flex-row sm:items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                  <Heart className="w-6 h-6 text-teal-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-3" />
+                  <Heart className="w-6 h-6 text-teal-400 transition-transform duration-500 ease-out" />
                 </div>
                 <div className="space-y-1 flex-1">
                   <CardTitle
@@ -202,10 +202,10 @@ export default function Seafarers() {
   whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
   viewport={{ once: true, margin: "-50px" }}
   transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/20 border-cyan-500/20 shadow-md shadow-cyan-950/5 dark:shadow-cyan-950/15">
+  className="glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/20 border-cyan-500/20 shadow-md shadow-cyan-950/5 dark:shadow-cyan-950/15">
                 <CardHeader className="flex flex-row items-start gap-4 space-y-0">
                   <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-6" />
+                    <TrendingUp className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out" />
                   </div>
                   <div>
                     <CardTitle className="font-headline text-lg font-medium">{t("Career Progression", "Кар’єрне зростання")}</CardTitle>
@@ -237,11 +237,11 @@ export default function Seafarers() {
   whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
   viewport={{ once: true, margin: "-50px" }}
   transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-500/20 scroll-animate-delay-1 border-teal-500/20 shadow-md shadow-teal-950/5 dark:shadow-teal-950/15"
+  className="glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-teal-500/20 scroll-animate-delay-1 border-teal-500/20 shadow-md shadow-teal-950/5 dark:shadow-teal-950/15"
               >
                 <CardHeader className="flex flex-row items-start gap-4 space-y-0">
                   <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-teal-500/10 flex items-center justify-center">
-                    <Award className="w-6 h-6 text-teal-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6" />
+                    <Award className="w-6 h-6 text-teal-400 transition-transform duration-500 ease-out" />
                   </div>
                   <div>
                     <CardTitle className="font-headline text-lg font-medium">{t("Training & Development", "Навчання та розвиток")}</CardTitle>

@@ -62,7 +62,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 mt-0.5 text-primary" />
-                <div className="text-muted-foreground text-xs leading-relaxed">
+                <div className="text-muted-foreground text-sm leading-relaxed">
                   <p>{t("Psychological support for Seafarers and their families 24/7:", "Психологічна підтримка моряків і їхніх родин 24/7:")}</p>
                   <a href="tel:+380938298652" className="hover:text-foreground">+380 93 829 86 52</a> (WhatsApp, Telegram) / <a href="https://t.me/ProdiusAn" target="_blank" rel="noopener noreferrer" className="hover:text-foreground underline">t.me/ProdiusAn</a>
                 </div>

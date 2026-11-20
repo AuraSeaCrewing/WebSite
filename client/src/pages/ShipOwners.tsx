@@ -134,7 +134,7 @@ export default function ShipOwners() {
                       <div key={item.title} className={`scroll-animate scroll-animate-delay-${Math.min(i + 1, 4)}`}>
                         <div className="flex items-start gap-4 group cursor-default transition-all duration-300 hover:-translate-y-1">
                           <div className={`flex-shrink-0 w-12 h-12 rounded-2xl bg-${item.color}-500/10 flex items-center justify-center border border-${item.color}-500/20`}>
-                            <Icon className={`w-6 h-6 text-${item.color}-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-6`} />
+                            <Icon className={`w-6 h-6 text-${item.color}-400 transition-transform duration-500 ease-out`} />
                           </div>
                           <div>
                             <h3 className="font-headline text-lg font-medium text-foreground mb-2">{item.title}</h3>
@@ -200,12 +200,12 @@ export default function ShipOwners() {
                     whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.8, delay: (0.1 + (i * 0.2)).toFixed(1), ease: "easeOut" }}
-                    className={`glass-card h-full group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
+                    className={`glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
                     data-testid={item.testId}
                   >
                     <CardHeader>
                       <div className={`w-12 h-12 rounded-lg ${item.iconBg} flex items-center justify-center mb-2`}>
-                        <Icon className={`w-6 h-6 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-6 ${item.iconClass}`} />
+                        <Icon className={`w-6 h-6 transition-transform duration-500 ease-out ${item.iconClass}`} />
                       </div>
                       <CardTitle className="font-headline text-lg">{item.title}</CardTitle>
                     </CardHeader>

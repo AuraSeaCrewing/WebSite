@@ -465,7 +465,7 @@
     background: transparent !important;
     background-color: transparent !important;
     transition:
-      transform 220ms cubic-bezier(0.34, 1.35, 0.64, 1),
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
       box-shadow 200ms ease,
       border-color 200ms ease,
       filter 200ms ease;
@@ -707,6 +707,21 @@
   from { transform: translateX(0); }
   to { transform: translateX(-200px); }
 }
+.lang-btn-ua:hover, .lang-btn-ua:focus-visible { animation-duration: 2.2s; }
+.lang-btn-en:hover .lang-globe-land, .lang-btn-en:focus-visible .lang-globe-land { animation-duration: 7s; }
 @media (prefers-reduced-motion: reduce) {
   .lang-btn-ua, .lang-globe-land { animation: none; }
+}
+
+/* Visitors who switched animations off in the system: no CSS movement anywhere on the site
+   (framer-motion follows the same setting through <MotionConfig reducedMotion="user"> in App.tsx) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -165,14 +165,14 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.8, delay: (0.1 + (i * 0.2)).toFixed(1), ease: "easeOut" }}
-                    className={`glass-card h-full text-center group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
+                    className={`glass-card h-full text-center group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
                     data-testid={`card-about-${item.title.toLowerCase()}`}
                   >
                     <CardHeader>
                       <div
                         className={`w-14 h-14 rounded-xl ${item.iconBg} flex items-center justify-center mx-auto mb-2`}
                       >
-                        <Icon className={`w-7 h-7 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-3 ${item.iconClass}`} />
+                        <Icon className={`w-7 h-7 transition-transform duration-500 ease-out ${item.iconClass}`} />
                       </div>
                       <CardTitle className="font-headline text-xl font-medium">{item.title}</CardTitle>
                     </CardHeader>
@@ -223,10 +223,10 @@ export default function About() {
   whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
   viewport={{ once: true, margin: "-50px" }}
   transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full flex flex-col group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30" data-testid="card-our-system">
+  className="glass-card h-full flex flex-col group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30" data-testid="card-our-system">
                 <CardHeader className="flex flex-col sm:flex-row sm:items-start gap-4">
                   <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                    <Sparkles className="w-6 h-6 text-teal-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-6" />
+                    <Sparkles className="w-6 h-6 text-teal-400 transition-transform duration-500 ease-out" />
                   </div>
                   <div className="space-y-1 flex-1">
                     <CardTitle
@@ -265,12 +265,12 @@ export default function About() {
   whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
   viewport={{ once: true, margin: "-50px" }}
   transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full flex flex-col group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30 scroll-animate-delay-1"
+  className="glass-card h-full flex flex-col group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30 scroll-animate-delay-1"
                 data-testid="card-technology"
               >
                 <CardHeader className="flex flex-col sm:flex-row sm:items-start gap-4">
                   <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-blue-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6" />
+                    <TrendingUp className="w-6 h-6 text-blue-400 transition-transform duration-500 ease-out" />
                   </div>
                   <div className="space-y-1 flex-1">
                     <CardTitle
@@ -319,10 +319,10 @@ export default function About() {
   whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
   viewport={{ once: true, margin: "-50px" }}
   transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30" data-testid="card-crew-database">
+  className="glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30" data-testid="card-crew-database">
                 <CardHeader className="flex flex-row items-center gap-4">
                   <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-                    <Database className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-6" />
+                    <Database className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out" />
                   </div>
                   <CardTitle className="font-headline text-xl sm:text-2xl font-semibold">{t("Our crew database", "Наша база моряків")}</CardTitle>
                 </CardHeader>
@@ -341,10 +341,10 @@ export default function About() {
   whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
   viewport={{ once: true, margin: "-50px" }}
   transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30 scroll-animate-delay-1" data-testid="card-wellbeing">
+  className="glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30 scroll-animate-delay-1" data-testid="card-wellbeing">
                 <CardHeader className="flex flex-row items-center gap-4">
                   <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-                    <Heart className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6" />
+                    <Heart className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out" />
                   </div>
                   <CardTitle className="font-headline text-xl sm:text-2xl font-semibold">
                     {t("Wellbeing & psychological support", "Добробут і психологічна підтримка")}
@@ -393,12 +393,12 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.8, delay: (0.1 + (Math.min(i, 3) * 0.2)).toFixed(1), ease: "easeOut" }}
-                    className={`glass-card h-full group cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
+                    className={`glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
                     data-testid={`card-core-value-${item.title.toLowerCase().replace(/\s+/g, "-")}`}
                   >
                     <CardHeader className="flex flex-row items-start gap-4 space-y-0">
                       <div className={`flex-shrink-0 w-12 h-12 rounded-lg ${item.iconBg} flex items-center justify-center`}>
-                        <Icon className={`w-6 h-6 transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-6 ${item.iconClass}`} />
+                        <Icon className={`w-6 h-6 transition-transform duration-500 ease-out ${item.iconClass}`} />
                       </div>
                       <div>
                         <CardTitle className="font-headline text-lg font-medium mb-2">{item.title}</CardTitle>
@@ -428,14 +428,14 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
                     transition={{ duration: 0.8, delay: (0.1 + (i * 0.2)).toFixed(1), ease: "easeOut" }}
-                    className={`glass-card text-center group transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
+                    className={`glass-card text-center group transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
                     data-testid={`card-leadership-${item.badge.toLowerCase().replace(/\s+/g, "-")}`}
                   >
                     <CardHeader className="items-center pb-2">
                       <div
                         className={`w-20 h-20 rounded-full bg-gradient-to-br ${item.gradient} mb-4 flex items-center justify-center shadow-lg`}
                       >
-                        <Icon className="w-10 h-10 text-primary-foreground transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-[15deg]" />
+                        <Icon className="w-10 h-10 text-primary-foreground transition-transform duration-500 ease-out" />
                       </div>
                       <CardTitle className="font-headline text-lg font-medium">{item.title}</CardTitle>
                       <Badge variant="secondary" className="mt-2 font-light text-xs w-fit mx-auto">

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Router as WouterRouter, Switch, Route, useLocation } from "wouter";
+import { MotionConfig } from "framer-motion";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
@@ -61,6 +62,9 @@ function Gate() {
 
 function App() {
   return (
+    // reducedMotion="user": with "reduce motion" switched on in the system, framer-motion drops movement
+    // and keeps only opacity, so nothing slides, zooms or parallaxes for those visitors
+    <MotionConfig reducedMotion="user">
     <TooltipProvider>
       {/* Real paths so search engines index every page; .htaccess serves index.html for them.
           Ukrainian at the root (/about), English nested under /en (/en/about): links inside a page
@@ -77,6 +81,7 @@ function App() {
         </Switch>
       </WouterRouter>
     </TooltipProvider>
+    </MotionConfig>
   );
 }
 
