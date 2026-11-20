@@ -651,6 +651,12 @@ export default function Apply() {
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   // Photo: kept only in memory (not in the saved draft), sent with the application as a small JPEG
   const [photo, setPhoto] = useState("");
+  // Applying for a vacancy from the "Vacancies" page: /apply?vacancy=<id>&rank=<rank>&label=<what it is>
+  const [vacancy, setVacancy] = useState<{ id: string; label: string } | null>(() => {
+    const q = new URLSearchParams(window.location.search);
+    const id = q.get("vacancy") ?? "";
+    return /^[a-z0-9]{8,40}$/i.test(id) ? { id, label: (q.get("label") ?? "").slice(0, 140) } : null;
+  });
   // Link to the filled AURA SEA form the CRM returns for this application (valid for a day)
   const [formLink, setFormLink] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -672,6 +678,12 @@ export default function Apply() {
       /* storage unavailable */
     }
   }, [form, step, status]);
+
+  // The vacancy's rank goes into "Position applied for" if the seafarer has not written one yet
+  useEffect(() => {
+    const rank = new URLSearchParams(window.location.search).get("rank")?.slice(0, 60);
+    if (rank) setForm((f) => (f.work.desiredRank.trim() ? f : { ...f, work: { ...f.work, desiredRank: rank } }));
+  }, []);
 
   // Statistics: how far people get through the form (Umami, no personal data)
   useEffect(() => {
@@ -780,6 +792,7 @@ export default function Apply() {
       relatives: form.relatives.filter((r) => r.fullName.trim()),
       documents: form.documents.filter((d) => d.number.trim() || d.issueDate || d.expiry),
       photo,
+      vacancyId: vacancy?.id ?? "",
       website: honeypot,
     };
 
@@ -931,6 +944,16 @@ export default function Apply() {
         </div>
 
         <div ref={topRef} className="scroll-mt-24">
+          {vacancy && (
+            <div className="mb-4 flex items-start justify-between gap-3 rounded-2xl border border-cyan-400/50 bg-cyan-500/10 px-4 py-3 sm:px-6" data-testid="apply-vacancy">
+              <p className="text-base sm:text-lg text-foreground">
+                <span className="text-cyan-300">{t("Application for the vacancy:", "Анкета на вакансію:")}</span> {vacancy.label || t("from the vacancies page", "зі сторінки вакансій")}
+              </p>
+              <button type="button" onClick={() => setVacancy(null)} className="min-h-[44px] flex-shrink-0 px-2 text-sm text-muted-foreground hover:text-foreground">
+                {t("Not for this vacancy", "Не на цю вакансію")}
+              </button>
+            </div>
+          )}
           <Progress step={step} onPick={goTo} />
           <div className="glass-card rounded-2xl p-4 sm:p-8 flex gap-3 sm:gap-6" data-testid="apply-step-intro">
             <current.icon className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400 flex-shrink-0 mt-1" />
