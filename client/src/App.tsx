@@ -11,6 +11,7 @@ import Vacancies from "@/pages/Vacancies";
 import Contact from "@/pages/Contact";
 import Privacy from "@/pages/Privacy";
 import Apply from "@/pages/Apply";
+import Service from "@/pages/Service";
 import NotFound from "@/pages/not-found";
 import { LangProvider, type Lang } from "@/lib/i18n";
 import LanguageGate from "@/components/LanguageGate";
@@ -38,6 +39,7 @@ function AppRoutes() {
       <Route path="/contact" component={Contact} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/apply" component={Apply} />
+      <Route path="/services/:slug" component={Service} />
       <Route component={NotFound} />
     </Switch>
   );

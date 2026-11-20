@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { CERTIFICATES, DOCUMENT_TYPES, EMPLOYMENT_STATUSES, ENGLISH_LEVELS, RANKS, VESSEL_TYPES } from "@/lib/application-options";
 import { track } from "@/lib/analytics";
 import { useLang, usePageMeta, useT } from "@/lib/i18n";
+import { ServiceTiles } from "@/pages/Service";
 import heroImage from "@assets/stock_images/stormy_sea_2.webp";
 
 // Seafarer application form in six steps. Submits straight into the AURA SEA CRM (POST /api/public/apply), where it
@@ -372,6 +373,19 @@ function AddButton({ onClick, disabled, children }: { onClick: () => void; disab
 }
 
 /** Tick box with an explanation under it (career wishes on step 2). */
+/** A link from a career wish to the paid service page that helps with it. */
+function ServiceHint({ href, text }: { href: string; text: string }) {
+  const t = useT();
+  return (
+    <Link href={href} className="flex items-center justify-between gap-3 rounded-lg border border-cyan-400/40 bg-cyan-500/5 px-4 py-3 text-base text-cyan-200 hover:border-cyan-300" data-testid={`service-hint-${href.split("/").pop()}`}>
+      <span>{text}</span>
+      <span className="inline-flex items-center gap-1 text-sm font-medium whitespace-nowrap">
+        {t("Learn more", "Детальніше")} <ArrowRight className="w-4 h-4" aria-hidden="true" />
+      </span>
+    </Link>
+  );
+}
+
 function Choice({ checked, onChange, title, hint, testId }: { checked: boolean; onChange: (v: boolean) => void; title: string; hint: string; testId: string }) {
   return (
     <label
@@ -738,8 +752,10 @@ export default function Apply() {
             <ol className="space-y-3 text-base text-foreground/90 list-decimal pl-6 marker:text-cyan-300">
               <li>{t("A recruiter checks your application and documents.", "Рекрутер перегляне вашу анкету й документи.")}</li>
               <li>{t("When there is a suitable position, we call or write to you on the phone, WhatsApp or Telegram you gave.", "Коли буде відповідна посада, ми зателефонуємо або напишемо на вказаний телефон, у WhatsApp чи Telegram.")}</li>
-              <li>{t("If you asked for a consultation on promotion or a fleet change, we will discuss it in the same call.", "Якщо ви просили консультацію щодо підвищення чи зміни флоту, обговоримо це під час дзвінка.")}</li>
+              <li>{t("If you asked about promotion or a fleet change, we will discuss it in the same call.", "Якщо ви цікавилися підвищенням чи зміною флоту, обговоримо це під час дзвінка.")}</li>
             </ol>
+            <h2 className="font-headline text-xl font-medium text-foreground mt-10 mb-4">{t("Want to grow faster?", "Хочете зростати швидше?")}</h2>
+            <ServiceTiles />
             <p className="mt-6 text-base text-foreground/90">
               {t("Questions? Write to us:", "Є запитання? Напишіть нам:")}{" "}
               <a href="https://wa.me/380978458147" target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">WhatsApp</a>
@@ -1037,11 +1053,12 @@ export default function Apply() {
                 <p className="text-base text-muted-foreground font-light mb-4 flex items-start gap-2">
                   <Info className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
                   {t(
-                    "Optional. Tick what interests you — a recruiter will contact you for a free consultation on what is needed.",
-                    "Необов’язково. Позначте, що вас цікавить, — рекрутер зв’яжеться з вами для безкоштовної консультації щодо того, що для цього потрібно."
+                    "Optional. Tick what interests you — a recruiter will contact you and tell you what is needed.",
+                    "Необов’язково. Позначте, що вас цікавить, — рекрутер зв’яжеться з вами й розповість, що для цього потрібно."
                   )}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-3">
                   <Choice
                     checked={work.startPosition}
                     onChange={(v) => setWork("startPosition", v)}
@@ -1052,6 +1069,10 @@ export default function Apply() {
                     )}
                     testId="checkbox-start-position"
                   />
+                  {work.startPosition && (
+                    <ServiceHint href="/services/promotion" text={t("Personal preparation for the new rank", "Особиста підготовка до нової посади")} />
+                  )}
+                  </div>
                   <div className="space-y-3">
                     <Choice
                       checked={work.fleetChange}
@@ -1075,6 +1096,7 @@ export default function Apply() {
                           <Field label={t("Which type of vessels?", "На який тип суден?")}>
                             <Input list="vessel-types" value={work.fleetChangeTo} onChange={(e) => setWork("fleetChangeTo", e.target.value)} className={inputClass} placeholder={t("e.g. Oil tanker", "напр. Oil tanker")} />
                           </Field>
+                          <ServiceHint href="/services/fleet-change" text={t("Mentoring from specialists of that fleet", "Менторство від спеціалістів цього флоту")} />
                         </motion.div>
                       )}
                     </AnimatePresence>
