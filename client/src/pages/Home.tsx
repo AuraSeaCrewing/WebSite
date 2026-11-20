@@ -4,7 +4,8 @@ import { motion, useReducedMotion, useScroll, useTransform, type Variants } from
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { usePageMeta, useT } from "@/lib/i18n";
+import { useLang, usePageMeta, useT } from "@/lib/i18n";
+import { orderedServices } from "@/lib/services";
 import heroPhoto from "@assets/stock_images/Gemini_Generated_Image_x18mj0x18mj0x18m.webp";
 import crewPhoto from "@assets/stock_images/marine_engineer_offi_4366b328.webp";
 import portPhoto from "@assets/stock_images/maritime_shipping_po_c83c1900.webp";
@@ -71,6 +72,7 @@ function Point({ title, text }: { title: string; text: string }) {
 
 export default function Home() {
   const t = useT();
+  const lang = useLang();
   usePageMeta(
     "/",
     { en: "Maritime Crewing Agency — From Seafarers to Seafarers", uk: "Крюїнгова агенція — від моряків морякам" },
@@ -142,8 +144,14 @@ export default function Home() {
               {t("Apply as a seafarer", "Подати анкету моряка")}
               <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </Link>
-            <Link href="/ship-owners" className={secondary} data-testid="link-hero-ship-owners">
+            <Link href="/seafarers" className={secondary} data-testid="link-hero-services" data-umami-event="home-hero-services">
+              {t("Services for seafarers", "Послуги морякам")}
+            </Link>
+          </motion.div>
+          <motion.div variants={rise} className="mt-4">
+            <Link href="/ship-owners" className="inline-flex min-h-[44px] items-center gap-1.5 text-lg text-cyan-300 hover:text-cyan-200 underline-offset-4 hover:underline" data-testid="link-hero-ship-owners">
               {t("For ship-owners", "Судновласникам")}
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
           </motion.div>
         </motion.div>
@@ -191,6 +199,28 @@ export default function Home() {
                 )}
               />
             </motion.ul>
+            <motion.div variants={rise} className="mt-8" data-testid="home-services">
+              <h3 className="font-headline text-xl sm:text-2xl font-semibold text-white">{t("Services for seafarers", "Послуги морякам")}</h3>
+              <ul className="mt-4 grid grid-cols-2 gap-2.5">
+                {orderedServices()
+                  .filter((s) => s.slug !== "crewing-start")
+                  .map((s) => {
+                    const Icon = s.icon;
+                    return (
+                      <li key={s.slug}>
+                        <Link
+                          href={`/services/${s.slug}`}
+                          className="group flex h-full min-h-[60px] items-center gap-3 rounded-2xl border border-white/20 bg-white/[0.04] px-4 py-3 transition-colors duration-200 hover:border-cyan-300 hover:bg-cyan-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300"
+                          data-umami-event={`home-goal-${s.slug}`}
+                        >
+                          <Icon className="w-5 h-5 text-cyan-300 flex-shrink-0" aria-hidden="true" />
+                          <span className="text-base font-semibold leading-tight text-white">{s.goal[lang]}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+              </ul>
+            </motion.div>
             <motion.div variants={rise} className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4">
               <Link href="/apply" className={primary} data-testid="button-apply-home" data-umami-event="apply-button-home-seafarers">
                 {t("Apply now", "Подати анкету")}
