@@ -135,6 +135,15 @@ export default function LanguageGate({ lang }: { lang: Lang }) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeInOut" } }}
           data-testid="language-gate"
+          onKeyDown={(e) => {
+            // Esc keeps the language of the address opened; Tab stays inside the two buttons
+            if (e.key === "Escape") return choose(lang);
+            if (e.key !== "Tab") return;
+            const buttons = Array.from(e.currentTarget.querySelectorAll("button"));
+            const i = buttons.indexOf(document.activeElement as HTMLButtonElement);
+            e.preventDefault();
+            buttons[(i + (e.shiftKey ? -1 : 1) + buttons.length) % buttons.length]?.focus();
+          }}
         >
           <div className="absolute inset-0 bg-cover bg-center scale-105" style={{ backgroundImage: `url(${backgroundPhoto})` }} />
           <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-md" />
@@ -148,10 +157,10 @@ export default function LanguageGate({ lang }: { lang: Lang }) {
             className="relative w-full max-w-2xl glass-premium rounded-3xl border border-white/15 p-8 sm:p-12 text-center shadow-[0_8px_48px_rgba(0,0,0,0.5)]"
           >
             <img src={logoPng} alt="AURA SEA" className="h-20 w-auto mx-auto mb-6" />
-            <h1 id="language-gate-title" className="font-headline text-3xl sm:text-4xl font-bold text-white leading-tight">
+            <h2 id="language-gate-title" className="font-headline text-3xl sm:text-4xl font-bold text-white leading-tight">
               Оберіть мову
               <span className="block text-cyan-300 mt-1">Choose your language</span>
-            </h1>
+            </h2>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
               <button
                 ref={firstButton}
