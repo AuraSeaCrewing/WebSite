@@ -302,8 +302,8 @@ export default function Home() {
               <Point
                 title={t("Experienced crew database", "База досвідчених моряків")}
                 text={t(
-                  "500+ verified professionals across ranks and vessel types — containers, bulk carriers, tankers and more.",
-                  "Понад 500 перевірених фахівців усіх посад і типів суден — контейнеровози, балкери, танкери та інші."
+                  "2,000+ active seafarers across ranks and vessel types — containers, bulk carriers, tankers and more.",
+                  "Понад 2000 активних моряків усіх посад і типів суден — контейнеровози, балкери, танкери та інші."
                 )}
               />
             </motion.ul>
