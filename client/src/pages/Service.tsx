@@ -290,11 +290,12 @@ export function ServiceTiles({ exclude, className }: { exclude?: string; classNa
           data-testid={`service-tile-${s.slug}`}
           data-umami-event={`service-tile-${s.slug}`}
         >
-          <span className={cn("relative block overflow-hidden", wideTile ? "h-40 md:h-auto md:w-2/5" : "h-36 sm:h-40")}>
+          <span className={cn("relative block overflow-hidden", wideTile ? "h-40 md:h-auto md:w-1/2" : "h-40 sm:h-48")}>
             <img
-              src={s.image}
+              src={s.tile}
               alt=""
               loading="lazy"
+              style={s.tileFocus ? { objectPosition: s.tileFocus } : undefined}
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
             />
             <span className="absolute inset-0 bg-gradient-to-t from-[#0e1722] via-[#0e1722]/30 to-transparent" />
