@@ -25,8 +25,8 @@ export default function About() {
     "/about",
     { en: "About Us", uk: "Про нас" },
     {
-      en: "AURA SEA is a Ukrainian crewing agency founded by seafarers in Odesa: 500+ verified seafarers, modern HR system and psychological support for crews and families.",
-      uk: "AURA SEA — українська крюїнгова агенція, яку заснували моряки в Одесі: понад 500 перевірених моряків, сучасна HR-система та психологічна підтримка екіпажів і родин.",
+      en: "AURA SEA is a Ukrainian crewing agency founded by seafarers in Odesa: 2,000+ active seafarers, modern HR system and psychological support for crews and families.",
+      uk: "AURA SEA — українська крюїнгова агенція, яку заснували моряки в Одесі: понад 2000 активних моряків, сучасна HR-система та психологічна підтримка екіпажів і родин.",
     }
   );
 
@@ -328,7 +328,7 @@ export default function About() {
                 </CardHeader>
                 <CardContent className="space-y-4 text-muted-foreground font-light leading-relaxed text-sm">
                   <p>
-                    {t("Our crew database includes over 500 verified professionals across all maritime positions and ranks. Each profile is personally reviewed, regularly updated, and tracked for certification status and contract availability. We maintain direct contact with every candidate, tracking contracts, availability dates, and certification status.", "У нашій базі понад 500 перевірених фахівців усіх морських посад і рангів. Кожну анкету ми переглядаємо особисто, регулярно оновлюємо й стежимо за сертифікатами та готовністю до контракту. Ми на прямому зв’язку з кожним кандидатом і відстежуємо контракти, дати готовності та строки сертифікатів.")}
+                    {t("Our crew database includes over 2,000 active seafarers across all maritime positions and ranks. Each profile is personally reviewed, regularly updated, and tracked for certification status and contract availability. We maintain direct contact with every candidate, tracking contracts, availability dates, and certification status.", "У нашій базі понад 2000 активних моряків усіх морських посад і рангів. Кожну анкету ми переглядаємо особисто, регулярно оновлюємо й стежимо за сертифікатами та готовністю до контракту. Ми на прямому зв’язку з кожним кандидатом і відстежуємо контракти, дати готовності та строки сертифікатів.")}
                   </p>
                   <p>
                     {t("Over the last three years, Aura Sea Crewing has successfully placed more than 200 Ukrainian seafarers on vessels of different types, building long-term partnerships with trusted operators.", "За останні три роки Aura Sea Crewing успішно працевлаштувала понад 200 українських моряків на судна різних типів і збудувала довгострокову співпрацю з надійними операторами.")}

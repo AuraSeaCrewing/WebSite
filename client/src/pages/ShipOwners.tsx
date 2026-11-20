@@ -129,7 +129,7 @@ export default function ShipOwners() {
 
   const steps = [
     { title: t("Requirements", "Вимоги"), text: t("We discuss your fleet needs, vessel types, and specific crew requirements in detail.", "Детально обговорюємо потреби вашого флоту, типи суден і вимоги до екіпажу.") },
-    { title: t("Shortlist", "Шорт-лист"), text: t("Our team identifies qualified candidates from our extensive database of 500+ seafarers.", "Наша команда підбирає кваліфікованих кандидатів із бази понад 500 моряків.") },
+    { title: t("Shortlist", "Шорт-лист"), text: t("Our team identifies qualified candidates from our extensive database of 2,000+ active seafarers.", "Наша команда підбирає кваліфікованих кандидатів із бази понад 2000 активних моряків.") },
     { title: t("Vetting", "Перевірка"), text: t("Comprehensive background checks, certification verification, and qualification assessment.", "Ретельна перевірка біографії, сертифікатів і кваліфікації.") },
     { title: t("Deployment", "Направлення на судно"), text: t("Complete documentation preparation, travel arrangements, and vessel joining coordination.", "Повна підготовка документів, організація поїздки та координація посадки на судно.") },
     { title: t("Ongoing Support", "Постійна підтримка"), text: t("24/7 communication, contract management, and crew change coordination throughout the assignment.", "Зв’язок 24/7, супровід контракту та координація змін екіпажу протягом усього рейсу.") },
