@@ -2,10 +2,10 @@ import { cloneElement, createContext, isValidElement, useContext, useEffect, use
 import { Link } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  AlertCircle, Anchor, ArrowLeft, ArrowRight, CheckCircle, ChevronDown, ClipboardList, FileText, IdCard, Info, Loader2, MessageSquare, Pencil, Plus, Ship,
+  AlertCircle, Anchor, ArrowLeft, ArrowRight, Camera, CheckCircle, Download, ChevronDown, ClipboardList, FileText, IdCard, Info, Loader2, MessageSquare, Pencil, Plus, Ship,
   Trash2, User, Phone, Users,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -386,6 +386,92 @@ function ServiceHint({ href, text }: { href: string; text: string }) {
   );
 }
 
+/** Photo up to 800 px, JPEG: a phone picture of several MB becomes ~150 KB before it is sent. */
+async function shrinkPhoto(file: File): Promise<string> {
+  const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" } as ImageBitmapOptions);
+  const scale = Math.min(1, 800 / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("no canvas");
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", 0.85);
+}
+
+/** Optional portrait photo: it becomes the photo in the AURA SEA form and in the seafarer's card. */
+function PhotoInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const t = useT();
+  const id = useId();
+  const errors = useContext(ErrorsContext);
+  const [busy, setBusy] = useState(false);
+  const [own, setOwn] = useState("");
+  const error = own || errors.photo;
+  const pick = async (file: File | undefined) => {
+    if (!file) return;
+    setOwn("");
+    if (!file.type.startsWith("image/")) return setOwn(t("Please choose a photo (JPG or PNG).", "Оберіть, будь ласка, фото (JPG або PNG)."));
+    setBusy(true);
+    try {
+      onChange(await shrinkPhoto(file));
+    } catch {
+      setOwn(t("We could not read this photo. Please choose another one.", "Не вдалося прочитати фото. Оберіть, будь ласка, інше."));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <div className="mb-6 flex items-center gap-5" data-field="photo">
+      <div className="w-24 h-32 flex-shrink-0 overflow-hidden rounded-lg border border-border/70 bg-background/40 grid place-items-center">
+        {value ? (
+          <img src={value} alt={t("Your photo", "Ваше фото")} className="h-full w-full object-cover" />
+        ) : (
+          <Camera className="w-8 h-8 text-muted-foreground" aria-hidden="true" />
+        )}
+      </div>
+      <div className="min-w-0">
+        <p className="text-base text-foreground">{t("Photo", "Фото")} <span className="text-muted-foreground text-sm">({t("optional", "необов’язково")})</span></p>
+        <p className="text-sm text-muted-foreground mt-0.5">{t("A portrait like for documents. It goes into your application and the AURA SEA form.", "Портрет, як на документи. Буде у вашій анкеті й бланку AURA SEA.")}</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <label
+            htmlFor={id}
+            className="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border border-cyan-400/50 px-4 text-base text-cyan-200 hover:border-cyan-300 focus-within:outline focus-within:outline-2 focus-within:outline-cyan-300"
+          >
+            {busy ? <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /> : <Camera className="w-4 h-4" aria-hidden="true" />}
+            {value ? t("Change photo", "Змінити фото") : t("Add photo", "Додати фото")}
+            <input
+              id={id}
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? `${id}-error` : undefined}
+              onChange={(e) => {
+                void pick(e.target.files?.[0]);
+                e.target.value = "";
+              }}
+              data-testid="input-photo"
+            />
+          </label>
+          {value && (
+            <button type="button" onClick={() => onChange("")} className="min-h-[44px] rounded-full px-4 text-base text-muted-foreground hover:text-foreground">
+              {t("Remove", "Прибрати")}
+            </button>
+          )}
+        </div>
+        {error && (
+          <p id={`${id}-error`} className="mt-1.5 flex items-center gap-1.5 text-sm text-red-300">
+            <AlertCircle className="w-4 h-4" aria-hidden="true" />
+            {error}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function Choice({ checked, onChange, title, hint, testId }: { checked: boolean; onChange: (v: boolean) => void; title: string; hint: string; testId: string }) {
   return (
     <label
@@ -563,6 +649,10 @@ export default function Apply() {
   const direction = useRef(1);
   const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
+  // Photo: kept only in memory (not in the saved draft), sent with the application as a small JPEG
+  const [photo, setPhoto] = useState("");
+  // Link to the filled AURA SEA form the CRM returns for this application (valid for a day)
+  const [formLink, setFormLink] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Errors>({});
   /** The row just removed, for "Undo" (default passport and seaman's book rows are easy to delete by mistake). */
@@ -689,6 +779,7 @@ export default function Apply() {
       voyages: form.voyages.filter((v) => v.vesselName.trim()),
       relatives: form.relatives.filter((r) => r.fullName.trim()),
       documents: form.documents.filter((d) => d.number.trim() || d.issueDate || d.expiry),
+      photo,
       website: honeypot,
     };
 
@@ -700,6 +791,8 @@ export default function Apply() {
         body: JSON.stringify(payload),
       });
       if (res.ok) {
+        const ok = (await res.json().catch(() => ({}))) as { form?: string };
+        if (ok.form) setFormLink(`${CRM_URL}${ok.form}`);
         setStatus("done");
         track("application-sent");
         try {
@@ -713,6 +806,11 @@ export default function Apply() {
       }
       const body = (await res.json().catch(() => ({}))) as { error?: string; fields?: string[] };
       setStatus("idle");
+      if (res.status === 422 && body.fields?.includes("photo")) {
+        goTo(0);
+        setTimeout(() => showErrors({ photo: t("We could not read this photo. Please choose another one.", "Не вдалося прочитати фото. Оберіть, будь ласка, інше.") }), 60);
+        return;
+      }
       if (res.status === 422 && body.fields?.length) {
         // The server names the fields ("contacts.email"): open the first step that has one and mark them there
         const steps = body.fields.map((f) => SECTION_LABELS[f.split(".")[0]]?.step).filter((n): n is number => n !== undefined);
@@ -748,6 +846,22 @@ export default function Apply() {
                 {t(`Thank you, ${form.person.firstName}! Your application is already with our crewing team.`, `Дякуємо, ${form.person.firstName}! Ваша анкета вже в нашої команди.`)}
               </p>
             </div>
+            {formLink && (
+              <div className="mt-8 rounded-xl border border-cyan-400/40 bg-cyan-500/5 p-5" data-testid="apply-form-download">
+                <a
+                  href={formLink}
+                  download
+                  className={cn(buttonVariants({ size: "lg" }), "h-14 w-full text-lg !text-white gap-2")}
+                  onClick={() => track("application-form-download")}
+                >
+                  <Download className="w-5 h-5" aria-hidden="true" />
+                  {t("Download your application (AURA SEA form)", "Завантажити анкету (бланк AURA SEA)")}
+                </a>
+                <p className="mt-2 text-sm text-muted-foreground text-center">
+                  {t("Word file with your answers and photo. The link works for 24 hours.", "Файл Word з вашими відповідями та фото. Посилання діє добу.")}
+                </p>
+              </div>
+            )}
             <h2 className="font-headline text-xl font-medium text-foreground mt-8 mb-3">{t("What happens next", "Що далі")}</h2>
             <ol className="space-y-3 text-base text-foreground/90 list-decimal pl-6 marker:text-cyan-300">
               <li>{t("A recruiter checks your application and documents.", "Рекрутер перегляне вашу анкету й документи.")}</li>
@@ -877,6 +991,7 @@ export default function Apply() {
           {step === 0 && (
             <>
               <Section icon={User} title={t("Personal details", "Особисті дані")}>
+                <PhotoInput value={photo} onChange={(v) => { setPhoto(v); clearError("photo"); }} />
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                   <Field name="person.lastName" label={t("Last name", "Прізвище")} required hint={t("In Latin letters, as in your passport", "Латиницею, як у паспорті")}>
                     <Input required value={person.lastName} onChange={(e) => set("person", "lastName", e.target.value)} className={inputClass} autoComplete="family-name" />
