@@ -29,6 +29,10 @@ export type Service = {
   lead: Text;
   /** Small label above the title. */
   eyebrow: Text;
+  /** Who it is for, in the seafarer's words: the line on the tile. */
+  forWhom: Text;
+  /** The goal as the seafarer would say it: the quick-choice button in the "For Seafarers" hero. */
+  goal: Text;
   /** "Sounds familiar?" — the situations the service is for. */
   pains: Text[];
   /** What we do, step by step. */
@@ -44,6 +48,8 @@ const x = (en: string, uk: string): Text => ({ en, uk });
 export const SERVICES: Service[] = [
   {
     slug: "crewing-start",
+    forWhom: x("Captains and officers who want their own business: Lite, Pro and VIP packages", "Капітанам і офіцерам, які хочуть власну справу: пакети Lite, Pro, VIP"),
+    goal: x("Open my own crewing", "Відкрити свій крюїнг"),
     icon: Building2,
     image: portImage,
     name: x("Your own crewing agency", "Свій крюїнг"),
@@ -111,6 +117,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "documents",
+    forWhom: x("A diploma, endorsement, certificate or medical expiring soon?", "Закінчується диплом, підтвердження, сертифікат чи медкомісія?"),
+    goal: x("Sort out documents", "Оформити документи"),
     icon: FileCheck2,
     image: shipImage,
     name: x("Maritime documents", "Морські документи"),
@@ -144,6 +152,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "interview",
+    forWhom: x("Before an interview with a new company or for a new rank", "Перед співбесідою в нову компанію чи на нову посаду"),
+    goal: x("Prepare for an interview", "Підготуватися до співбесіди"),
     icon: BadgeCheck,
     image: crewImage,
     name: x("Interview preparation", "Підготовка до співбесіди"),
@@ -177,6 +187,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "promotion",
+    forWhom: x("Motorman → engineer, AB or cadet → 3rd Officer, 3rd → 2nd Engineer", "Моторист → механік, матрос чи кадет → 3-й помічник, 3-й → 2-й механік"),
+    goal: x("I want a promotion", "Хочу підвищення"),
     icon: Anchor,
     image: engineImage,
     name: x("Promotion", "Підвищення в посаді"),
@@ -210,6 +222,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "fleet-change",
+    forWhom: x("Bulker → tanker, container → gas carrier, cargo → offshore or passenger", "Балкер → танкер, контейнеровоз → газовоз, вантажне → офшор чи пасажирське"),
+    goal: x("Change fleet", "Змінити флот"),
     icon: Ship,
     image: seaImage,
     name: x("Fleet change", "Перехід на інший флот"),
@@ -242,5 +256,9 @@ export const SERVICES: Service[] = [
     ),
   },
 ];
+
+/** Order on "For Seafarers": the most asked-for first; own crewing (a different audience) last. */
+export const SERVICE_ORDER: ServiceSlug[] = ["promotion", "fleet-change", "interview", "documents", "crewing-start"];
+export const orderedServices = () => SERVICE_ORDER.map((slug) => SERVICES.find((s) => s.slug === slug)!);
 
 export const serviceBySlug = (slug: string) => SERVICES.find((s) => s.slug === slug);
