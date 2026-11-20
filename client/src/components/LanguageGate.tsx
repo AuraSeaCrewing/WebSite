@@ -1,4 +1,3 @@
-import { playWave } from "@/components/fx/PageWave";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -122,7 +121,6 @@ export default function LanguageGate({ lang }: { lang: Lang }) {
     if (picked) return;
     setPicked(chosen);
     saveLang(chosen);
-    playWave();
     // A beat for the chosen button to answer before the screen dissolves into the site
     setTimeout(
       () => {

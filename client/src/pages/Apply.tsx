@@ -5,7 +5,6 @@ import {
   AlertCircle, Anchor, ArrowLeft, ArrowRight, Camera, CheckCircle, Download, ChevronDown, ClipboardList, FileText, IdCard, Info, Loader2, MessageSquare, Pencil, Plus, Ship,
   Trash2, User, Phone, Users,
 } from "lucide-react";
-import { playWave } from "@/components/fx/PageWave";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -727,7 +726,6 @@ export default function Apply() {
     setError(null);
     setErrors({});
     setStep(n);
-    playWave();
     // The step changes in place: bring its top into view
     setTimeout(() => topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 30);
   };
@@ -796,7 +794,6 @@ export default function Apply() {
         const ok = (await res.json().catch(() => ({}))) as { form?: string };
         if (ok.form) setFormLink(`${CRM_URL}${ok.form}`);
         setStatus("done");
-        playWave();
         track("application-sent");
         try {
           localStorage.removeItem(DRAFT_KEY);
