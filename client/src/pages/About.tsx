@@ -104,15 +104,15 @@ export default function About() {
     { title: t("Development", "Розвиток"), text: t("We support professional growth through training, documents and the next rank.", "Підтримуємо професійне зростання — через навчання, документи й наступну посаду.") },
   ];
 
-  // The team (owner's photos, 20.11.2026). The managing director's name: to come from the owner.
+  // The team (owner's photos and facts from his profile, 21.11.2026).
   const team = [
     {
       photo: directorPhoto,
-      name: null as string | null,
-      role: t("Managing & Operations Director", "Керуючий та операційний директор"),
+      name: t("Maksym Prodius", "Максим Продіус") as string | null,
+      role: t("Founder, Managing & Operations Director", "Засновник, керуючий та операційний директор"),
       text: t(
-        "Over 4 years in maritime operations and crew management: ship-owners, vacancies, crew changes and the agency's development.",
-        "Понад 4 роки в морських операціях і управлінні екіпажами: судновласники, заявки, заміни екіпажів і розвиток агенції."
+        "15 years at sea. Graduate of Odesa National Maritime University. Founded Aura Sea Crewing in 2022 and works with ship-owners directly.",
+        "15 років у морі. Випускник Одеського національного морського університету. Заснував Aura Sea Crewing у 2022 році й працює із судновласниками напряму."
       ),
     },
     {
@@ -128,8 +128,8 @@ export default function About() {
 
   const gallery = [
     { src: atSea, caption: t("At sea", "У рейсі") },
-    { src: training1, caption: t("Training at a maritime training centre", "Навчання в морському тренажерному центрі") },
-    { src: training2, caption: t("Courses and meetings with instructors", "Курси й зустрічі з інструкторами") },
+    { src: training1, caption: t("Meeting at a leading European maritime training centre, Poland", "Зустріч у провідному європейському тренажерному центрі для моряків, Польща") },
+    { src: training2, caption: t("With an instructor of a leading European maritime training centre, Poland", "З інструктором провідного європейського тренажерного центру для моряків, Польща") },
     { src: careerFair, caption: t("Maritime career fair", "Морський ярмарок кар’єри") },
     { src: summit, caption: t("Marine Insight Summit 2025: certificate of participation", "Marine Insight Summit 2025: сертифікат учасника") },
   ];
@@ -202,8 +202,8 @@ export default function About() {
             <h2 className={h2} data-testid="card-about-company">{t("Founded in Odesa in April 2022", "Заснована в Одесі у квітні 2022 року")}</h2>
             <p className="mt-6 text-lg sm:text-xl text-white/85 leading-relaxed">
               {t(
-                "Aura Sea Crewing was founded and is run by experienced seafarers. We know life at sea from the inside, so we understand what a ship-owner needs and what matters to a seafarer and his family.",
-                "Aura Sea Crewing заснували й ведуть досвідчені моряки. Ми знаємо життя в морі зсередини, тому розуміємо, чого потребує судновласник і що важливо моряку та його родині."
+                "Aura Sea Crewing was founded by Maksym Prodius after 15 years at sea and is run by experienced seafarers. We know life at sea from the inside, so we understand what a ship-owner needs and what matters to a seafarer and his family.",
+                "Aura Sea Crewing заснував Максим Продіус після 15 років у морі, і ведуть її досвідчені моряки. Ми знаємо життя в морі зсередини, тому розуміємо, чого потребує судновласник і що важливо моряку та його родині."
               )}
             </p>
             <p className="mt-4 text-lg text-white/80 leading-relaxed">
