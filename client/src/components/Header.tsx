@@ -16,7 +16,7 @@ function LanguageSwitch({ className, onPick }: { className?: string; onPick?: ()
     { code: "en", label: "EN", title: "English" },
   ];
   return (
-    <div role="group" aria-label="Language / Мова" className={cn("inline-flex rounded-full border border-white/20 p-0.5 text-xs font-semibold", className)}>
+    <div role="group" aria-label="Language / Мова" className={cn("inline-flex rounded-full border border-white/20 p-0.5 text-sm font-semibold", className)}>
       {items.map((it) => (
         <Link
           key={it.code}
