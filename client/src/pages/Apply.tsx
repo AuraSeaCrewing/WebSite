@@ -1,6 +1,6 @@
 import { cloneElement, createContext, isValidElement, useContext, useEffect, useId, useRef, useState, type ReactElement, type ReactNode } from "react";
 import { Link } from "wouter";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   AlertCircle, Anchor, ArrowLeft, ArrowRight, CheckCircle, ChevronDown, ClipboardList, FileText, IdCard, Info, Loader2, MessageSquare, Pencil, Plus, Ship,
   Trash2, User, Phone, Users,
@@ -389,6 +389,34 @@ function Choice({ checked, onChange, title, hint, testId }: { checked: boolean; 
   );
 }
 
+/**
+ * Sent: the circle and the tick draw themselves, then one ripple spreads out like a wake. Happens once per
+ * application, so it can take a moment; with motion switched off it is simply the finished mark.
+ */
+function SuccessMark() {
+  const reduce = useReducedMotion();
+  const draw = (delay: number, duration: number) =>
+    reduce ? { initial: false as const } : { initial: { pathLength: 0 }, animate: { pathLength: 1 }, transition: { delay, duration, ease: [0.65, 0, 0.35, 1] as const } };
+  return (
+    <div className="relative mx-auto mb-5 w-20 h-20" aria-hidden="true">
+      {!reduce &&
+        [0, 1].map((i) => (
+          <motion.span
+            key={i}
+            className="absolute inset-0 rounded-full border-2 border-emerald-400/60"
+            initial={{ scale: 1, opacity: 0 }}
+            animate={{ scale: 2.4, opacity: [0, 0.7, 0] }}
+            transition={{ delay: 0.9 + i * 0.25, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          />
+        ))}
+      <svg viewBox="0 0 80 80" className="relative w-20 h-20 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+        <motion.circle cx="40" cy="40" r="36" {...draw(0.1, 0.6)} />
+        <motion.path d="M24 41 l11 11 l21 -23" {...draw(0.6, 0.4)} />
+      </svg>
+    </div>
+  );
+}
+
 function Progress({ step, onPick }: { step: number; onPick: (n: number) => void }) {
   const lang = useLang();
   const t = useT();
@@ -517,6 +545,8 @@ export default function Apply() {
   );
   const [form, setForm] = useState<Form>(loadDraft);
   const [step, setStep] = useState<number>(loadStep);
+  /** +1 going forward, -1 going back: the new step slides in from the side you are moving to. */
+  const direction = useRef(1);
   const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -588,6 +618,7 @@ export default function Apply() {
   }, [removed]);
 
   const goTo = (n: number) => {
+    direction.current = n >= step ? 1 : -1;
     setError(null);
     setErrors({});
     setStep(n);
@@ -697,7 +728,7 @@ export default function Apply() {
         <section className="relative z-10 pt-40 pb-24 px-4">
           <div className="glass-card rounded-2xl p-6 sm:p-10 max-w-2xl mx-auto" data-testid="application-success">
             <div className="text-center">
-              <CheckCircle className="w-16 h-16 mx-auto mb-4 text-emerald-400" aria-hidden="true" />
+              <SuccessMark />
               <h1 className="font-headline text-3xl sm:text-4xl font-semibold mb-3 text-foreground">{t("Application received", "Анкету отримано")}</h1>
               <p className="text-base sm:text-lg text-foreground/85 font-light">
                 {t(`Thank you, ${form.person.firstName}! Your application is already with our crewing team.`, `Дякуємо, ${form.person.firstName}! Ваша анкета вже в нашої команди.`)}
@@ -820,7 +851,13 @@ export default function Apply() {
           </div>
         )}
 
-        <motion.div key={step} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }} className="space-y-6">
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 32 * direction.current }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+          className="space-y-4 sm:space-y-6"
+        >
           {step === 0 && (
             <>
               <Section icon={User} title={t("Personal details", "Особисті дані")}>
@@ -1026,11 +1063,21 @@ export default function Apply() {
                       )}
                       testId="checkbox-fleet-change"
                     />
-                    {work.fleetChange && (
-                      <Field label={t("Which type of vessels?", "На який тип суден?")}>
-                        <Input list="vessel-types" value={work.fleetChangeTo} onChange={(e) => setWork("fleetChangeTo", e.target.value)} className={inputClass} placeholder={t("e.g. Oil tanker", "напр. Oil tanker")} />
-                      </Field>
-                    )}
+                    <AnimatePresence initial={false}>
+                      {work.fleetChange && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <Field label={t("Which type of vessels?", "На який тип суден?")}>
+                            <Input list="vessel-types" value={work.fleetChangeTo} onChange={(e) => setWork("fleetChangeTo", e.target.value)} className={inputClass} placeholder={t("e.g. Oil tanker", "напр. Oil tanker")} />
+                          </Field>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
               </div>

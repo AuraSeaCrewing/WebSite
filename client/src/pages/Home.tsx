@@ -1,6 +1,6 @@
 import { Link } from "wouter";
-import { useEffect, useState } from "react";
-import { motion, type Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -62,10 +62,10 @@ function AmbientVideo() {
 /** One benefit as a line of large text with its explanation — no icon tiles. */
 function Point({ title, text }: { title: string; text: string }) {
   return (
-    <motion.li variants={rise} className="py-4 first:pt-0">
+    <li className="py-4 first:pt-0">
       <h3 className="font-headline text-xl sm:text-2xl font-semibold text-white">{title}</h3>
       <p className="mt-1.5 text-base sm:text-lg text-white/80 leading-relaxed">{text}</p>
-    </motion.li>
+    </li>
   );
 }
 
@@ -80,6 +80,12 @@ export default function Home() {
     }
   );
 
+  const heroRef = useRef<HTMLElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const shipY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "18%"]);
+  const copyY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "-12%"]);
+
   const primary = cn(
     buttonVariants({ size: "lg" }),
     "h-14 px-8 text-lg !text-white inline-flex items-center justify-center gap-2 transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97]"
@@ -92,8 +98,9 @@ export default function Home() {
   return (
     <div className="relative bg-[#0b1118]">
       {/* ═══════════ HERO: for the seafarer first ═══════════ */}
-      <section className="relative min-h-[92svh] flex items-end sm:items-center overflow-hidden">
+      <section ref={heroRef} className="relative min-h-[92svh] flex items-end sm:items-center overflow-hidden">
         <motion.img
+          style={{ y: shipY }}
           src={heroPhoto}
           alt=""
           aria-hidden="true"
@@ -108,10 +115,14 @@ export default function Home() {
           initial="hidden"
           animate="show"
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } } }}
+          style={{ y: copyY }}
           className="relative w-full max-w-7xl mx-auto px-5 sm:px-8 pt-32 pb-16 sm:py-32"
         >
           <motion.h1
-            variants={rise}
+            variants={{
+              hidden: { opacity: 0, y: 40, clipPath: "inset(0 0 100% 0)" },
+              show: { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", transition: { duration: 1, ease: EASE } },
+            }}
             className="font-headline text-5xl sm:text-7xl lg:text-8xl font-bold uppercase tracking-tight leading-[0.95] text-white max-w-4xl"
             data-testid="text-hero-tagline"
           >
@@ -153,7 +164,7 @@ export default function Home() {
             <motion.p variants={rise} className="mt-4 text-lg sm:text-xl text-white/85 leading-relaxed">
               {t("Transparent contracts, timely payments and real career growth.", "Прозорі контракти, вчасні виплати й реальне кар’єрне зростання.")}
             </motion.p>
-            <motion.ul variants={group} className="mt-8">
+            <motion.ul variants={rise} className="mt-8">
               <Point
                 title={t("Fair contracts", "Чесні контракти")}
                 text={t(
@@ -207,7 +218,7 @@ export default function Home() {
               "Поєднуємо міцний морський досвід із сучасною системою підбору, прозорою комунікацією та турботою про добробут моряка на кожному етапі."
             )}
           </motion.p>
-          <motion.div variants={group} className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+          <motion.div variants={rise} className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             {[
               {
                 title: t("Psychological care", "Психологічна підтримка"),
@@ -231,10 +242,10 @@ export default function Home() {
                 ),
               },
             ].map((x) => (
-              <motion.div key={x.title} variants={rise} className="border-t-2 border-cyan-400/70 pt-5">
+              <div key={x.title} className="border-t-2 border-cyan-400/70 pt-5">
                 <h3 className="font-headline text-2xl font-semibold text-white">{x.title}</h3>
                 <p className="mt-2 text-base sm:text-lg text-white/80 leading-relaxed">{x.text}</p>
-              </motion.div>
+              </div>
             ))}
           </motion.div>
         </motion.div>
@@ -250,7 +261,7 @@ export default function Home() {
             <motion.p variants={rise} className="mt-4 text-lg sm:text-xl text-white/85 leading-relaxed">
               {t("Your reliable partner for comprehensive crew management.", "Надійний партнер у комплексному управлінні екіпажами.")}
             </motion.p>
-            <motion.ul variants={group} className="mt-8">
+            <motion.ul variants={rise} className="mt-8">
               <Point
                 title={t("Compliance and certification", "Відповідність стандартам і сертифікація")}
                 text={t(

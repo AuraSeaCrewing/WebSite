@@ -3,6 +3,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Logo from "./Logo";
 import { pathFor, useLang, useT, type Lang } from "@/lib/i18n";
 import { saveLang } from "./LanguageGate";
@@ -131,9 +132,15 @@ export default function Header() {
           </div>
         </div>
 
+        {/* The menu opens and closes the same way (before, it vanished instantly on close) */}
+        <AnimatePresence>
         {mobileMenuOpen && (
-          <div
-            className={`md:hidden pb-4 space-y-2 rounded-xl p-2 animate-in fade-in slide-in-from-top-4 duration-300 ease-out ${
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className={`md:hidden pb-4 space-y-2 rounded-xl p-2 ${
               isScrolled
                 ? "glass-card border border-border shadow-md"
                 : "border border-white/15 bg-slate-950/75 backdrop-blur-xl"
@@ -173,8 +180,9 @@ export default function Header() {
             >
               {t("Contact Us", "Контакти")}
             </Link>
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
     </header>
   );

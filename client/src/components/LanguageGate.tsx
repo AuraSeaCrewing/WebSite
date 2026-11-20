@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { pathFor, type Lang } from "@/lib/i18n";
 import logoPng from "@assets/logo.png";
 import backgroundPhoto from "@assets/stock_images/Gemini_Generated_Image_x18mj0x18mj0x18m.webp";
@@ -115,14 +115,34 @@ export default function LanguageGate({ lang }: { lang: Lang }) {
     };
   }, [open]);
 
+  const reduce = useReducedMotion();
+  const [picked, setPicked] = useState<Lang | null>(null);
   const choose = (chosen: Lang) => {
+    if (picked) return;
+    setPicked(chosen);
     saveLang(chosen);
-    if (chosen !== lang) {
-      const path = window.location.pathname.replace(/^\/en(?=\/|$)/, "") || "/";
-      navigate("~" + pathFor(path, chosen) + window.location.search, { replace: true });
-    }
-    setOpen(false);
+    // A beat for the chosen button to answer before the screen dissolves into the site
+    setTimeout(
+      () => {
+        if (chosen !== lang) {
+          const path = window.location.pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+          navigate("~" + pathFor(path, chosen) + window.location.search, { replace: true });
+        }
+        setOpen(false);
+      },
+      reduce ? 0 : 280
+    );
   };
+  /** Each option rises in after the title; once one is picked it swells a little and the other steps back. */
+  const option = (code: Lang, index: number) => ({
+    initial: { opacity: 0, y: 22 },
+    animate: picked
+      ? { opacity: picked === code ? 1 : 0.35, y: 0, scale: picked === code ? 1.04 : 0.98 }
+      : { opacity: 1, y: 0, scale: 1 },
+    transition: picked
+      ? { type: "spring" as const, stiffness: 420, damping: 26 }
+      : { delay: 0.45 + index * 0.12, type: "spring" as const, stiffness: 260, damping: 22 },
+  });
 
   return (
     <AnimatePresence>
@@ -133,7 +153,8 @@ export default function LanguageGate({ lang }: { lang: Lang }) {
           aria-labelledby="language-gate-title"
           className="fixed inset-0 z-[100] flex items-center justify-center px-4"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeInOut" } }}
+          // The screen lifts away and blurs into the site underneath
+          exit={{ opacity: 0, filter: "blur(10px)", transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } }}
           data-testid="language-gate"
           onKeyDown={(e) => {
             // Esc keeps the language of the address opened; Tab stays inside the two buttons
@@ -152,7 +173,7 @@ export default function LanguageGate({ lang }: { lang: Lang }) {
           <motion.div
             initial={{ opacity: 0, y: 24, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -16, transition: { duration: 0.4 } }}
+            exit={{ opacity: 0, y: -24, scale: 0.97, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="relative w-full max-w-2xl glass-premium rounded-3xl border border-white/15 p-8 sm:p-12 text-center shadow-[0_8px_48px_rgba(0,0,0,0.5)]"
           >
@@ -162,22 +183,25 @@ export default function LanguageGate({ lang }: { lang: Lang }) {
               <span className="block text-cyan-300 mt-1">Choose your language</span>
             </h2>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <motion.div {...option("uk", 0)}>
               <button
                 ref={firstButton}
                 type="button"
                 lang="uk"
                 onClick={() => choose("uk")}
-                className="lang-btn-ua relative overflow-hidden rounded-full px-8 py-6 min-h-[7rem] sm:min-h-[8rem] text-white transition-transform duration-300 hover:scale-[1.04] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                className="lang-btn-ua w-full relative overflow-hidden rounded-full px-8 py-6 min-h-[7rem] sm:min-h-[8rem] text-white transition-transform duration-300 hover:scale-[1.04] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
                 data-testid="language-gate-uk"
               >
                 <span className="relative block text-2xl sm:text-3xl font-semibold drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]">Українська</span>
                 <span className="relative block mt-1 text-base sm:text-lg font-light text-white/90 drop-shadow-[0_1px_4px_rgba(0,0,0,0.55)]">Ukrainian</span>
               </button>
+              </motion.div>
+              <motion.div {...option("en", 1)}>
               <button
                 type="button"
                 lang="en"
                 onClick={() => choose("en")}
-                className="lang-btn-en relative overflow-hidden rounded-full px-8 py-6 min-h-[7rem] sm:min-h-[8rem] text-white transition-transform duration-300 hover:scale-[1.04] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                className="lang-btn-en w-full relative overflow-hidden rounded-full px-8 py-6 min-h-[7rem] sm:min-h-[8rem] text-white transition-transform duration-300 hover:scale-[1.04] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
                 data-testid="language-gate-en"
               >
                 <span className="relative flex items-center justify-center gap-4">
@@ -188,6 +212,7 @@ export default function LanguageGate({ lang }: { lang: Lang }) {
                   </span>
                 </span>
               </button>
+              </motion.div>
             </div>
           </motion.div>
         </motion.div>

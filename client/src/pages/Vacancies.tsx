@@ -86,7 +86,7 @@ export default function Vacancies() {
 
             <div className="relative z-10 p-8 sm:p-12 lg:p-16 max-w-3xl text-center lg:text-left mx-auto lg:mx-0">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6 shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true"></span>
                 <span className="text-xs font-medium text-emerald-50 tracking-wider uppercase">{t("Live Updates", "Оновлюється щодня")}</span>
               </div>
               <h1 className="font-headline text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-lg tracking-tight" data-testid="heading-vacancies">
