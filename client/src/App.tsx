@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { PageWave, playWave } from "@/components/fx/PageWave";
 import { Router as WouterRouter, Switch, Route, useLocation } from "wouter";
 import { MotionConfig } from "framer-motion";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +18,20 @@ import { LangProvider, type Lang } from "@/lib/i18n";
 import LanguageGate from "@/components/LanguageGate";
 
 const wouterBase = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
+
+/** A colourful wave from the pressed link or button whenever the page (or language) changes. */
+function WaveOnRoute() {
+  const [location] = useLocation();
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    playWave();
+  }, [location]);
+  return null;
+}
 
 /** New page opens at the top (the browser keeps the scroll position on client-side navigation). */
 function ScrollToTop() {
@@ -73,6 +88,8 @@ function App() {
           stay "/about" and resolve to the right language automatically. */}
       <WouterRouter base={wouterBase}>
         <Gate />
+        <PageWave />
+        <WaveOnRoute />
         <Switch>
           <Route path="/en" nest>
             <Site lang="en" />

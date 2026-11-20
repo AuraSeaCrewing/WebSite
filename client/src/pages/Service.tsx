@@ -3,6 +3,7 @@ import { Link, useParams } from "wouter";
 import { motion, type Variants } from "framer-motion";
 import { AlertCircle, ArrowRight, Check, Loader2, MessageCircle, Send } from "lucide-react";
 
+import { playWave } from "@/components/fx/PageWave";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -361,6 +362,7 @@ function RequestForm({ service, plan, setPlan }: { service: ServiceData; plan: P
       });
       if (res.ok) {
         setState("sent");
+        playWave();
         track(`service-request-${service.slug}`);
         return;
       }
