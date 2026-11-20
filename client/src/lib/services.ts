@@ -12,6 +12,13 @@ import engineImage from "@assets/stock_images/marine_engineer_offi_4366b328.webp
 import portImage from "@assets/stock_images/maritime_shipping_po_c83c1900.webp";
 import shipImage from "@assets/stock_images/Gemini_Generated_Image_x18mj0x18mj0x18m.webp";
 import seaImage from "@assets/stock_images/venti-views-1cqIcrWFQBI-unsplash.webp";
+// Tile pictures from the owner's collage (20.11.2026): icons and captions cut off, the generated logo
+// on the folder and the office wall replaced with the real AURA SEA logo.
+import crewingTile from "@assets/services/crewing-start.webp";
+import documentsTile from "@assets/services/documents.webp";
+import interviewTile from "@assets/services/interview.webp";
+import promotionTile from "@assets/services/promotion.webp";
+import fleetTile from "@assets/services/fleet-change.webp";
 
 export type Text = { en: string; uk: string };
 export type ServiceSlug = "crewing-start" | "documents" | "interview" | "promotion" | "fleet-change";
@@ -23,6 +30,10 @@ export type Service = {
   slug: ServiceSlug;
   icon: LucideIcon;
   image: string;
+  /** Picture on the service tile ("For Seafarers", after the application, other services). */
+  tile: string;
+  /** Which part of the tile picture stays in view (CSS object-position). */
+  tileFocus?: string;
   /** Short name for tiles and the CRM. */
   name: Text;
   title: Text;
@@ -52,6 +63,7 @@ export const SERVICES: Service[] = [
     goal: x("Open my own crewing", "Відкрити свій крюїнг"),
     icon: Building2,
     image: portImage,
+    tile: crewingTile,
     name: x("Your own crewing agency", "Свій крюїнг"),
     eyebrow: x("For those who want to build their own business", "Для тих, хто хоче власну справу"),
     title: x("Your own crewing agency — with a team that has walked this road", "Власний крюїнг — разом із командою, яка вже пройшла цей шлях"),
@@ -121,6 +133,8 @@ export const SERVICES: Service[] = [
     goal: x("Sort out documents", "Оформити документи"),
     icon: FileCheck2,
     image: shipImage,
+    tile: documentsTile,
+    tileFocus: "40% 75%",
     name: x("Maritime documents", "Морські документи"),
     eyebrow: x("Diplomas, endorsements, certificates, seaman's book", "Дипломи, підтвердження, сертифікати, мореходна книжка"),
     title: x("Maritime documents of any complexity", "Оформлення морських документів будь-якої складності"),
@@ -156,6 +170,7 @@ export const SERVICES: Service[] = [
     goal: x("Prepare for an interview", "Підготуватися до співбесіди"),
     icon: BadgeCheck,
     image: crewImage,
+    tile: interviewTile,
     name: x("Interview preparation", "Підготовка до співбесіди"),
     eyebrow: x("For any company and any rank", "У будь-яку компанію, на будь-яку посаду"),
     title: x("Come to the interview prepared — and calm", "Прийдіть на співбесіду підготовленим — і спокійним"),
@@ -191,6 +206,8 @@ export const SERVICES: Service[] = [
     goal: x("I want a promotion", "Хочу підвищення"),
     icon: Anchor,
     image: engineImage,
+    tile: promotionTile,
+    tileFocus: "center 40%",
     name: x("Promotion", "Підвищення в посаді"),
     eyebrow: x("Personal 1-to-1 consultations", "Особисті консультації 1×1"),
     title: x("Your next rank — with a plan, not by chance", "Наступна посада — за планом, а не навмання"),
@@ -226,6 +243,7 @@ export const SERVICES: Service[] = [
     goal: x("Change fleet", "Змінити флот"),
     icon: Ship,
     image: seaImage,
+    tile: fleetTile,
     name: x("Fleet change", "Перехід на інший флот"),
     eyebrow: x("A special AURA SEA service", "Особлива послуга AURA SEA"),
     title: x("Move to another fleet — faster and with fewer mistakes", "Перехід на інший флот — швидше й без зайвих помилок"),
