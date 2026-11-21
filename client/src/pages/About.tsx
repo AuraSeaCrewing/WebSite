@@ -1,457 +1,386 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Shield,
-  Heart,
-  TrendingUp,
-  Users,
-  Target,
-  Award,
-  CheckCircle,
-  Database,
-  Sparkles,
-} from "lucide-react";
-import { motion } from "framer-motion";
-const MotionCard = motion.create(Card);
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import aboutHero from "@assets/stock_images/stormy_sea_about.webp";
-import { usePageMeta, useT } from "@/lib/i18n";
-import heroPhoto from "@assets/stock_images/venti-views-1cqIcrWFQBI-unsplash.webp";
+import { Link } from "wouter";
+import { motion, type Variants } from "framer-motion";
+import { ArrowRight, Check, Heart, Phone, ShieldCheck } from "lucide-react";
+
+import { buttonVariants } from "@/components/ui/button";
+import { useLang, usePageMeta, useT } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
+import { COMPANY } from "@/pages/Privacy";
+import heroPhoto from "@assets/stock_images/stormy_sea_about.webp";
+import storyPhoto from "@assets/ship_owners/horizon-top.webp";
+import workPhoto from "@assets/services/documents.webp";
+import familyPhoto from "@assets/ship_owners/beyond.webp";
+import directorPhoto from "@assets/team/managing-director.webp";
+import anastasiiaPhoto from "@assets/team/anastasiia-prodius.webp";
+import atSea from "@assets/gallery/at-sea.webp";
+import training1 from "@assets/gallery/training-1.webp";
+import training2 from "@assets/gallery/training-2.webp";
+import careerFair from "@assets/gallery/career-fair.webp";
+import summit from "@assets/gallery/summit-2025.webp";
+
+// "About us", rebuilt 20.11.2026 after the impeccable / taste / motion review: facts first (founded by
+// seafarers in Odesa, April 2022; 2000+ seafarers in the base; 200+ placed), how the work is really done
+// (what the CRM does: every CV checked by a recruiter, document expiry tracking, matching by rank and
+// vessel type, feedback after each contract — no "algorithms" or guarantees), the family support that
+// sets the agency apart, values once (not twice), the team and the Ministry list entry for trust,
+// and two ways forward at the end. Team and gallery: the owner's photos (20.11.2026).
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+const rise: Variants = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } } };
+const inView = { initial: "hidden", whileInView: "show", viewport: { once: true, margin: "-60px" } } as const;
+
+/** A decorative photo, framed from the top (the campaign photos are retouched lower down). */
+function Picture({ src, className }: { src: string; className?: string }) {
+  return (
+    <div className={cn("relative overflow-hidden rounded-2xl", className)}>
+      <img src={src} alt="" aria-hidden="true" loading="lazy" className="h-full w-full object-cover object-top" />
+      <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl" />
+    </div>
+  );
+}
 
 export default function About() {
-  useScrollAnimation();
   const t = useT();
+  const lang = useLang();
   usePageMeta(
     "/about",
-    { en: "About Us", uk: "Про нас" },
+    { en: "About AURA SEA — crewing founded by seafarers", uk: "Про AURA SEA — крюїнг, який заснували моряки" },
     {
-      en: "AURA SEA is a Ukrainian crewing agency founded by seafarers in Odesa: 500+ verified seafarers, modern HR system and psychological support for crews and families.",
-      uk: "AURA SEA — українська крюїнгова агенція, яку заснували моряки в Одесі: понад 500 перевірених моряків, сучасна HR-система та психологічна підтримка екіпажів і родин.",
+      en: "AURA SEA is a Ukrainian crewing agency founded by seafarers in Odesa in 2022: 2,000+ active seafarers in the base, 200+ placements, document tracking and psychological support for seafarers' families.",
+      uk: "AURA SEA — українська крюїнгова агенція, яку заснували моряки в Одесі у 2022 році: понад 2000 активних моряків у базі, понад 200 працевлаштувань, супровід документів і психологічна підтримка родин моряків.",
     }
   );
 
-  const missionVisionValues = [
-    {
-      icon: Target,
-      title: t("Mission", "Місія"),
-      desc: t("To provide reliable crewing solutions through transparent communication, modern processes, and long-term partnerships built on trust and excellence.", "Надавати надійні крюїнгові рішення завдяки прозорій комунікації, сучасним процесам і довгостроковій співпраці, побудованій на довірі та якості."),
-      iconBg: "bg-cyan-500/10",
-      iconClass: "text-cyan-400",
-    },
-    {
-      icon: TrendingUp,
-      title: t("Vision", "Бачення"),
-      desc: t("To become a leading maritime holding company, continuously innovating in crew management, training, psychology crew and family wellnes and related services while maintaining our commitment to care.", "Стати провідним морським холдингом, який постійно вдосконалює управління екіпажами, навчання, психологічну підтримку моряків і їхніх родин та суміжні послуги, зберігаючи відданість турботі."),
-      iconBg: "bg-teal-500/10",
-      iconClass: "text-teal-400",
-    },
-    {
-      icon: Award,
-      title: t("Values", "Цінності"),
-      desc: t("Safety, transparency, respect, reliability, and professional development guide every decision we make.", "Безпека, прозорість, повага, надійність і професійний розвиток визначають кожне наше рішення."),
-      iconBg: "bg-blue-500/10",
-      iconClass: "text-blue-400",
-    },
-  ] as const;
+  const stats = [
+    { value: "2000+", label: t("active seafarers in our base", "активних моряків у нашій базі") },
+    { value: "200+", label: t("seafarers placed on vessels", "моряків працевлаштовано на судна") },
+    { value: "2022", label: t("founded in Odesa", "заснована в Одесі") },
+  ];
 
-  const coreValues = [
-    {
-      icon: Shield,
-      title: t("Safety First", "Безпека понад усе"),
-      desc: t("Ensuring the safety and well-being of seafarers is our top priority, with rigorous vetting and compliance procedures.", "Безпека й добробут моряків — наш головний пріоритет, тому ми ретельно перевіряємо кандидатів і дотримуємося всіх вимог."),
-      iconBg: "bg-cyan-500/10",
-      iconClass: "text-cyan-400",
-    },
-    {
-      icon: Target,
-      title: t("Transparency", "Прозорість"),
-      desc: t("Open, honest communication in all our dealings, from contract terms to operational updates.", "Відкрита й чесна комунікація в усьому — від умов контракту до поточних новин."),
-      iconBg: "bg-teal-500/10",
-      iconClass: "text-teal-400",
-    },
-    {
-      icon: Heart,
-      title: t("Respect", "Повага"),
-      desc: t("Treating every seafarer and partner with dignity, recognizing the vital role they play in global maritime trade.", "Ставимося до кожного моряка й партнера з гідністю, визнаючи їхню важливу роль у світовій морській торгівлі."),
-      iconBg: "bg-blue-500/10",
-      iconClass: "text-blue-400",
-    },
-    {
-      icon: TrendingUp,
-      title: t("Development", "Розвиток"),
-      desc: t("Supporting continuous professional growth through training opportunities and career advancement.", "Підтримуємо постійне професійне зростання через навчання та кар’єрне просування."),
-      iconBg: "bg-cyan-500/10",
-      iconClass: "text-cyan-400",
-    },
-  ] as const;
+  const vesselTypes = ["Container", "Bulk carrier", "General cargo", "VLCC", "Tanker", "Yacht", "Passenger"];
 
-  const leadership = [
+  const steps = [
     {
-      icon: Users,
-      title: t("Managing Director", "Керуючий директор"),
-      badge: t("Leadership", "Керівництво"),
-      desc: t("4 years in maritime operations and crew management.", "4 роки в морських операціях і управлінні екіпажами."),
-      gradient: "from-cyan-500 to-teal-600",
+      title: t("Every CV is checked by a person", "Кожну анкету перевіряє людина"),
+      text: t(
+        "CVs come by email, from the website and in person. Our CRM reads them, and a recruiter checks every field before anything is saved.",
+        "Анкети надходять поштою, із сайту й особисто. Наша CRM їх розбирає, а рекрутер перевіряє кожне поле, перш ніж щось зберегти."
+      ),
     },
     {
-      icon: Target,
-      title: t("Operations Director", "Операційний директор"),
-      badge: t("Operations", "Операції"),
-      desc: t("Expert in crew deployment and vessel operations management.", "Експерт із розстановки екіпажів і управління суднами."),
-      gradient: "from-teal-500 to-blue-600",
+      title: t("Documents and their dates", "Документи та їхні строки"),
+      text: t(
+        "We keep track of diplomas, endorsements, certificates and medicals, and remind the seafarer well before a document expires.",
+        "Стежимо за дипломами, підтвердженнями, сертифікатами й медкомісією та заздалегідь нагадуємо моряку, що строк документа закінчується."
+      ),
     },
     {
-      icon: Heart,
-      title: t("HR Director", "HR-директор"),
-      badge: t("Human Resources", "Персонал"),
-      desc: t("Dedicated to seafarer welfare and career development.", "Опікується добробутом моряків і їхнім кар’єрним розвитком."),
-      gradient: "from-blue-500 to-cyan-600",
+      title: t("Matching to the vacancy", "Підбір під заявку"),
+      text: t(
+        "For each ship-owner's request we select by rank, vessel type and sea service, and talk to every candidate before proposing them.",
+        "Під кожну заявку судновласника підбираємо за посадою, типом судна й стажем і говоримо з кожним кандидатом, перш ніж його запропонувати."
+      ),
     },
-  ] as const;
+    {
+      title: t("Interview and preparation", "Співбесіда й підготовка"),
+      text: t(
+        "Competency-based interviews, help with documents and travel, and a smooth joining — we work to MLC 2006 and STCW.",
+        "Співбесіди на основі компетенцій, допомога з документами й поїздкою, спокійна посадка на судно — працюємо за вимогами MLC 2006 і STCW."
+      ),
+    },
+    {
+      title: t("Feedback after the contract", "Відгук після контракту"),
+      text: t(
+        "After each contract we record the ship-owner's and master's feedback and take it into account in the next selection.",
+        "Після кожного контракту записуємо відгук судновласника й капітана та враховуємо його в наступному підборі."
+      ),
+    },
+  ];
+
+  const values = [
+    { title: t("Safety First", "Безпека понад усе"), text: t("The safety and well-being of seafarers come first: we check candidates carefully and follow every requirement.", "Безпека й добробут моряків — на першому місці: ретельно перевіряємо кандидатів і дотримуємося всіх вимог.") },
+    { title: t("Transparency", "Прозорість"), text: t("Open, honest communication in everything, from contract terms to day-to-day news.", "Відкрита й чесна комунікація в усьому — від умов контракту до поточних новин.") },
+    { title: t("Respect", "Повага"), text: t("We treat every seafarer and partner with dignity, recognising their vital role in world shipping.", "Ставимося до кожного моряка й партнера з гідністю, визнаючи їхню важливу роль у світовому судноплавстві.") },
+    { title: t("Development", "Розвиток"), text: t("We support professional growth through training, documents and the next rank.", "Підтримуємо професійне зростання — через навчання, документи й наступну посаду.") },
+  ];
+
+  // The team (owner's photos and facts from his profile, 21.11.2026).
+  const team = [
+    {
+      photo: directorPhoto,
+      name: t("Maksym Prodius", "Максим Продіус") as string | null,
+      role: t("Founder, Managing & Operations Director", "Засновник, керуючий та операційний директор"),
+      text: t(
+        "15 years at sea. Graduate of Odesa National Maritime University. Founded Aura Sea Crewing in 2022 and works with ship-owners directly.",
+        "15 років у морі. Випускник Одеського національного морського університету. Заснував Aura Sea Crewing у 2022 році й працює із судновласниками напряму."
+      ),
+    },
+    {
+      photo: anastasiiaPhoto,
+      name: t("Anastasiia Prodius", "Анастасія Продіус"),
+      role: t("HR Director, staff psychologist", "HR-директор, штатний психолог"),
+      text: t(
+        "Seafarers' welfare and careers, and psychological support for seafarers and their families.",
+        "Добробут і кар’єра моряків, психологічна підтримка моряків і їхніх родин."
+      ),
+    },
+  ];
+
+  const gallery = [
+    { src: atSea, caption: t("At sea", "У рейсі") },
+    { src: training1, caption: t("Meeting at a leading European maritime training centre, Poland", "Зустріч у провідному європейському тренажерному центрі для моряків, Польща") },
+    { src: training2, caption: t("With an instructor of a leading European maritime training centre, Poland", "З інструктором провідного європейського тренажерного центру для моряків, Польща") },
+    { src: careerFair, caption: t("Maritime career fair", "Морський ярмарок кар’єри") },
+    { src: summit, caption: t("Marine Insight Summit 2025: certificate of participation", "Marine Insight Summit 2025: сертифікат учасника") },
+  ];
+
+  const primary = cn(buttonVariants({ size: "lg" }), "h-14 px-8 text-lg !text-white gap-2");
+  const secondary = cn(buttonVariants({ size: "lg", variant: "secondary" }), "h-14 px-8 text-lg !text-white gap-2");
+  const h2 = "font-headline text-3xl sm:text-5xl font-semibold text-white text-balance";
 
   return (
-    <div className="min-h-screen pb-16 relative">
-      {/* Fixed background for the whole page */}
-      <div
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat z-0"
-        style={{ backgroundImage: `url(${aboutHero})` }}
-      />
-      <div className="fixed inset-0 bg-black/40 z-0" />
-
-      {/* ═══════════ HERO ═══════════ */}
-      <section className="py-24 pt-32 relative flex items-center z-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full scroll-animate">
-          <div className="relative rounded-3xl border border-white/10 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] min-h-[400px] flex items-center">
-            {/* Background Image */}
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${heroPhoto})` }}
-            />
-            {/* Elegant Gradient Overlays for Text Legibility and Aesthetics */}
-            <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-slate-950/95 via-slate-950/70 to-slate-950/20 backdrop-blur-none" />
-            <div className="absolute inset-0 bg-cyan-900/20 mix-blend-color" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.15),transparent_40%)]" />
-
-            <div className="relative z-10 p-8 sm:p-12 lg:p-16 max-w-3xl text-center lg:text-left mx-auto lg:mx-0">
-
-              <h1
-                className="font-headline text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-lg tracking-tight"
-                data-testid="heading-about"
-              >
-                {t("About AURA SEA", "Про AURA SEA")}
-              </h1>
-              <p className="text-lg sm:text-xl font-light leading-relaxed text-white/90 drop-shadow-md">
-                {t("Maritime experience, digital innovation, and mental health awareness - where professionalism meets care", "Морський досвід, цифрові інновації та увага до психічного здоров’я — де професіоналізм поєднується з турботою")}
-              </p>
-            </div>
-          </div>
-        </div>
+    <div className="relative bg-[#0b1118] text-white">
+      {/* ═══════════ HERO: who we are, in numbers ═══════════ */}
+      <section className="relative min-h-[100svh] flex items-end overflow-hidden">
+        <motion.img
+          src={heroPhoto}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2.2, ease: EASE }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0b1118] via-[#0b1118]/75 to-[#0b1118]/25" />
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } } }}
+          className="relative w-full max-w-6xl mx-auto px-5 sm:px-8 pt-28 pb-12 sm:pb-20"
+        >
+          <motion.h1
+            variants={{
+              hidden: { opacity: 0, y: 32, clipPath: "inset(0 0 100% 0)" },
+              show: { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", transition: { duration: 0.9, ease: EASE } },
+            }}
+            className="font-headline text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.02] max-w-4xl text-balance"
+            data-testid="heading-about"
+          >
+            {t("Crewing founded by seafarers", "Крюїнг, який заснували моряки")}
+          </motion.h1>
+          <motion.p variants={rise} className="mt-5 text-lg sm:text-2xl text-white/85 leading-relaxed max-w-3xl">
+            {t(
+              "Odesa, since April 2022. Sea experience, a modern CRM and psychological support for seafarers' families.",
+              "Одеса, з квітня 2022 року. Морський досвід, сучасна CRM і психологічна підтримка родин моряків."
+            )}
+          </motion.p>
+          <motion.dl variants={rise} className="mt-10 grid grid-cols-3 gap-4 sm:gap-10 max-w-3xl">
+            {stats.map((s) => (
+              <div key={s.value} className="border-t-2 border-cyan-400/70 pt-3">
+                <dt className="sr-only">{s.label}</dt>
+                <dd className="font-headline text-3xl sm:text-5xl font-bold tabular-nums">{s.value}</dd>
+                <dd className="mt-1 text-sm sm:text-base text-white/75 leading-snug">{s.label}</dd>
+              </div>
+            ))}
+          </motion.dl>
+          <motion.div variants={rise} className="mt-10 flex flex-col sm:flex-row gap-3">
+            <Link href="/apply" className={primary} data-umami-event="about-hero-apply">
+              {t("Apply as a seafarer", "Подати анкету моряка")}
+              <ArrowRight className="w-5 h-5" aria-hidden="true" />
+            </Link>
+            <Link href="/ship-owners" className={secondary} data-umami-event="about-hero-ship-owners">
+              {t("For ship-owners", "Судновласникам")}
+            </Link>
+          </motion.div>
+        </motion.div>
       </section>
 
-      <div className="relative z-10">
-        {/* ═══════════ MISSION / VISION / VALUES ═══════════ */}
-        <section className="py-20">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate">
-              {t("Mission, vision & values", "Місія, бачення та цінності")}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-              {missionVisionValues.map((item, i) => {
-                const Icon = item.icon;
-                return (
-                  <MotionCard
-                    key={item.title}
-                    initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-                    whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.8, delay: (0.1 + (i * 0.2)).toFixed(1), ease: "easeOut" }}
-                    className={`glass-card h-full text-center group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
-                    data-testid={`card-about-${item.title.toLowerCase()}`}
-                  >
-                    <CardHeader>
-                      <div
-                        className={`w-14 h-14 rounded-xl ${item.iconBg} flex items-center justify-center mx-auto mb-2`}
-                      >
-                        <Icon className={`w-7 h-7 transition-transform duration-500 ease-out ${item.iconClass}`} />
-                      </div>
-                      <CardTitle className="font-headline text-xl font-medium">{item.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground font-light leading-relaxed">{item.desc}</p>
-                    </CardContent>
-                  </MotionCard>
-                );
-              })}
-            </div>
-
-            <MotionCard
-  initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-  whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-  viewport={{ once: true, margin: "-50px" }}
-  transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card group transition-all duration-300 hover:shadow-2xl hover:border-primary/30 hover:shadow-primary/10" data-testid="card-about-company">
-              <CardHeader>
-                <CardTitle
-                  className="font-headline text-2xl sm:text-3xl font-semibold"
-                  data-testid="heading-about-company"
-                >
-                  {t("About the company", "Про компанію")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-muted-foreground font-light leading-relaxed">
-                <p className="text-foreground/90 font-normal">{t("Founded in April 2022 in Odesa, Ukraine", "Заснована у квітні 2022 року в Одесі, Україна")}</p>
-                <p>
-                  {t("Aura Sea Crewing is a professional crewing agency established and operated by experienced seafarers.", "Aura Sea Crewing — професійна крюїнгова агенція, яку заснували й ведуть досвідчені моряки.")}
-                </p>
-                <p>
-                  {t("We specialize in providing qualified and verified Ukrainian crew members for various vessel types, including Container Ships, Bulk Carriers, General Cargo, VLCCs, Tankers, Yachts, and Passenger vessels.", "Ми підбираємо кваліфікованих і перевірених українських моряків для суден різних типів: контейнеровозів, балкерів, суден генерального вантажу, VLCC, танкерів, яхт і пасажирських суден.")}
-                </p>
-                <p>
-                  {t("Our operations are built on modern technology, efficiency, and accountability - ensuring shipowners receive reliable and competent personnel, ready to join worldwide.", "Наша робота спирається на сучасні технології, ефективність і відповідальність — судновласники отримують надійних і компетентних фахівців, готових до посадки в будь-якій точці світу.")}
-                </p>
-              </CardContent>
-            </MotionCard>
+      {/* ═══════════ OUR STORY ═══════════ */}
+      <section className="py-20 sm:py-28">
+        <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <div>
+            <h2 className={h2} data-testid="card-about-company">{t("Founded in Odesa in April 2022", "Заснована в Одесі у квітні 2022 року")}</h2>
+            <p className="mt-6 text-lg sm:text-xl text-white/85 leading-relaxed">
+              {t(
+                "Aura Sea Crewing was founded by Maksym Prodius after 15 years at sea and is run by experienced seafarers. We know life at sea from the inside, so we understand what a ship-owner needs and what matters to a seafarer and his family.",
+                "Aura Sea Crewing заснував Максим Продіус після 15 років у морі, і ведуть її досвідчені моряки. Ми знаємо життя в морі зсередини, тому розуміємо, чого потребує судновласник і що важливо моряку та його родині."
+              )}
+            </p>
+            <p className="mt-4 text-lg text-white/80 leading-relaxed">
+              {t(
+                "We select qualified, verified Ukrainian officers and ratings for ships of different types — and over these years have placed more than 200 seafarers, building long-term work with ship-owners.",
+                "Ми підбираємо кваліфікованих і перевірених українських офіцерів і рядовий склад для суден різних типів — і за ці роки працевлаштували понад 200 моряків, збудувавши довгострокову співпрацю із судновласниками."
+              )}
+            </p>
+            <ul className="mt-6 flex flex-wrap gap-2" aria-label={t("Vessel types", "Типи суден")}>
+              {vesselTypes.map((v) => (
+                <li key={v} className="rounded-full border border-white/20 px-3.5 py-1.5 text-sm sm:text-base text-white/85">
+                  {v}
+                </li>
+              ))}
+            </ul>
           </div>
-        </section>
+          <Picture src={storyPhoto} className="aspect-[5/2] lg:aspect-[2/1]" />
+        </motion.div>
+      </section>
 
-        {/* ═══════════ OUR SYSTEM & TECHNOLOGY — parallel columns ═══════════ */}
-        <section className="py-20 relative">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-              <MotionCard
-  initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-  whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-  viewport={{ once: true, margin: "-50px" }}
-  transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full flex flex-col group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30" data-testid="card-our-system">
-                <CardHeader className="flex flex-col sm:flex-row sm:items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                    <Sparkles className="w-6 h-6 text-teal-400 transition-transform duration-500 ease-out" />
-                  </div>
-                  <div className="space-y-1 flex-1">
-                    <CardTitle
-                      className="font-headline text-2xl sm:text-3xl font-semibold"
-                      data-testid="heading-our-system"
-                    >
-                      {t("Our system", "Наша система")}
-                    </CardTitle>
-                    <CardDescription className="text-base font-light leading-relaxed">
-                      {t("Aura Sea Crewing applies the newest generation of HR technologies and data-driven recruitment algorithms tailored for the maritime industry. We utilize structured evaluation workflows that include:", "Aura Sea Crewing застосовує HR-технології нового покоління та алгоритми підбору на основі даних, створені для морської галузі. Наш структурований процес оцінки включає:")}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-6 flex-1 flex flex-col">
-                  <ul className="space-y-3 text-sm text-muted-foreground font-light flex-1">
-                    {[
-                      t("Real-time database management and continuous updates", "Базу даних, що оновлюється в реальному часі"),
-                      t("Automated verification of maritime documents and certificates", "Автоматизовану перевірку морських документів і сертифікатів"),
-                      t("Competency-based interviewing and psychological assessment", "Співбесіди на основі компетенцій і психологічну оцінку"),
-                      t("Candidate scoring system based on performance and readiness", "Оцінку кандидатів за результатами роботи та готовністю"),
-                    ].map((line) => (
-                      <li key={line} className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-teal-400 mt-0.5 flex-shrink-0" />
-                        <span>{line}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="text-muted-foreground font-light leading-relaxed text-sm border-t border-border/60 pt-6 mt-auto">
-                    {t("This ensures every seafarer profile is authentic, current, and job-ready.", "Тож кожна анкета моряка — достовірна, актуальна й готова до роботи.")}
-                  </p>
-                </CardContent>
-              </MotionCard>
-
-              <MotionCard
-  initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-  whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-  viewport={{ once: true, margin: "-50px" }}
-  transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full flex flex-col group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30 scroll-animate-delay-1"
-                data-testid="card-technology"
-              >
-                <CardHeader className="flex flex-col sm:flex-row sm:items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-blue-400 transition-transform duration-500 ease-out" />
-                  </div>
-                  <div className="space-y-1 flex-1">
-                    <CardTitle
-                      className="font-headline text-2xl sm:text-3xl font-semibold"
-                      data-testid="heading-technology-innovation"
-                    >
-                      {t("Technology & innovation", "Технології та інновації")}
-                    </CardTitle>
-                    <CardDescription className="text-base font-light leading-relaxed">
-                      {t("We implement modern HR standards, digital tracking systems, and automated analytics to improve every stage of the crewing process. Our adaptive digital infrastructure allows us to:", "Ми впроваджуємо сучасні HR-стандарти, цифрові системи обліку й автоматизовану аналітику, щоб покращувати кожен етап крюїнгу. Наша гнучка цифрова інфраструктура дає змогу:")}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent className="flex-1 flex flex-col">
-                  <ul className="space-y-3 text-sm text-muted-foreground font-light">
-                    {[
-                      t("Locate and verify crew members globally", "Знаходити й перевіряти моряків по всьому світу"),
-                      t("Reduce recruitment time and administrative workload", "Скорочувати час підбору та адміністративне навантаження"),
-                      t("Maintain stable communication between shipowners and crew", "Підтримувати стабільний зв’язок між судновласниками й екіпажем"),
-                      t("Guarantee compliance with MLC 2006 and international labor standards", "Гарантувати відповідність MLC 2006 і міжнародним трудовим стандартам"),
-                    ].map((line) => (
-                      <li key={line} className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                        <span>{line}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </MotionCard>
+      {/* ═══════════ HOW WE WORK ═══════════ */}
+      <section className="py-20 sm:py-28 bg-white/[0.03] border-y border-white/10">
+        <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-start">
+            <div>
+              <h2 className={h2}>{t("How we work", "Як ми працюємо")}</h2>
+              <p className="mt-5 text-lg sm:text-xl text-white/80 leading-relaxed">
+                {t(
+                  "Our base holds more than 2,000 active seafarers of all ranks. Every profile is kept current: documents, dates, contracts and when the seafarer is ready to join.",
+                  "У нашій базі понад 2000 активних моряків усіх посад. Кожна анкета актуальна: документи, строки, контракти й коли моряк готовий до посадки."
+                )}
+              </p>
+              <Picture src={workPhoto} className="mt-8 aspect-[16/10] hidden lg:block" />
             </div>
+            <ol className="space-y-8">
+              {steps.map((s, i) => (
+                <li key={s.title} className="flex gap-5">
+                  <span className="mt-1 grid size-9 flex-shrink-0 place-items-center rounded-full bg-cyan-500/15 text-base font-semibold text-cyan-300 tabular-nums" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <span>
+                    <span className="block font-headline text-xl sm:text-2xl font-semibold">{s.title}</span>
+                    <span className="mt-1.5 block text-base sm:text-lg text-white/80 leading-relaxed">{s.text}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
           </div>
-        </section>
+        </motion.div>
+      </section>
 
-        {/* ═══════════ CREW DATABASE & WELLBEING ═══════════ */}
-        <section className="py-20">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-            <h2
-              className="font-headline text-3xl font-semibold text-center text-foreground scroll-animate"
-              data-testid="heading-database-wellbeing"
-            >
-              {t("Crew database & wellbeing", "База моряків і добробут")}
-            </h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <MotionCard
-  initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-  whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-  viewport={{ once: true, margin: "-50px" }}
-  transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30" data-testid="card-crew-database">
-                <CardHeader className="flex flex-row items-center gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-                    <Database className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out" />
-                  </div>
-                  <CardTitle className="font-headline text-xl sm:text-2xl font-semibold">{t("Our crew database", "Наша база моряків")}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-muted-foreground font-light leading-relaxed text-sm">
-                  <p>
-                    {t("Our crew database includes over 500 verified professionals across all maritime positions and ranks. Each profile is personally reviewed, regularly updated, and tracked for certification status and contract availability. We maintain direct contact with every candidate, tracking contracts, availability dates, and certification status.", "У нашій базі понад 500 перевірених фахівців усіх морських посад і рангів. Кожну анкету ми переглядаємо особисто, регулярно оновлюємо й стежимо за сертифікатами та готовністю до контракту. Ми на прямому зв’язку з кожним кандидатом і відстежуємо контракти, дати готовності та строки сертифікатів.")}
-                  </p>
-                  <p>
-                    {t("Over the last three years, Aura Sea Crewing has successfully placed more than 200 Ukrainian seafarers on vessels of different types, building long-term partnerships with trusted operators.", "За останні три роки Aura Sea Crewing успішно працевлаштувала понад 200 українських моряків на судна різних типів і збудувала довгострокову співпрацю з надійними операторами.")}
-                  </p>
-                </CardContent>
-              </MotionCard>
+      {/* ═══════════ FAMILIES: what sets us apart ═══════════ */}
+      <section className="py-20 sm:py-28">
+        <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <Picture src={familyPhoto} className="aspect-[16/10] order-last lg:order-first" />
+          <div>
+            <Heart className="w-9 h-9 text-teal-300" aria-hidden="true" />
+            <h2 className={cn(h2, "mt-4")}>{t("Support for seafarers and their families", "Підтримка моряків і їхніх родин")}</h2>
+            <p className="mt-5 text-lg sm:text-xl text-white/85 leading-relaxed">
+              {t(
+                "Aura Sea Crewing is the first Ukrainian crewing agency with psychological support programmes for seafarers and their families. Calm and emotional balance matter for safe work at sea.",
+                "Aura Sea Crewing — перша українська крюїнгова агенція з програмами психологічної підтримки для моряків і їхніх родин. Спокій і емоційна рівновага важливі для безпечної роботи в морі."
+              )}
+            </p>
+            <p className="mt-6 text-base font-semibold">{t("Our certified psychologist partners offer:", "Наші сертифіковані партнери-психологи пропонують:")}</p>
+            <ul className="mt-3 space-y-3 text-base sm:text-lg text-white/85">
+              {[
+                t("Consultations for seafarers' wives, husbands and relatives", "Консультації для дружин, чоловіків і рідних моряків"),
+                t("Support for the seafarer's wife: life apart and time together at home", "Підтримку дружини моряка: життя на відстані й час разом удома"),
+                t("Stress-resilience sessions for seafarers before and after a contract", "Заняття зі стресостійкості для моряків до і після контракту"),
+              ].map((x) => (
+                <li key={x} className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-teal-300 mt-1 flex-shrink-0" aria-hidden="true" />
+                  {x}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-base text-white/85">
+              <Phone className="w-5 h-5 text-teal-300" aria-hidden="true" />
+              {t("24/7:", "24/7:")}
+              <a href="tel:+380938298652" className="text-teal-300 hover:underline underline-offset-4">+380 93 829 86 52</a>
+              <span className="text-white/60">(WhatsApp, Telegram)</span>
+            </p>
+          </div>
+        </motion.div>
+      </section>
 
-              <MotionCard
-  initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-  whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-  viewport={{ once: true, margin: "-50px" }}
-  transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-  className="glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30 scroll-animate-delay-1" data-testid="card-wellbeing">
-                <CardHeader className="flex flex-row items-center gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-                    <Heart className="w-6 h-6 text-cyan-400 transition-transform duration-500 ease-out" />
-                  </div>
-                  <CardTitle className="font-headline text-xl sm:text-2xl font-semibold">
-                    {t("Wellbeing & psychological support", "Добробут і психологічна підтримка")}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground font-light leading-relaxed text-sm">
-                    {t("Beyond recruitment, Aura Sea Crewing is the first Ukrainian agency integrating psychological support programs for seafarers and their families. We believe that mental stability and emotional balance are critical for safe and effective work at sea.", "Крім підбору, Aura Sea Crewing — перша українська агенція, що впроваджує програми психологічної підтримки для моряків і їхніх родин. Ми переконані: психологічна стабільність і емоційна рівновага критично важливі для безпечної та ефективної роботи в морі.")}
-                  </p>
-                  <p className="text-sm font-medium text-foreground">{t("Our certified psychological partners provide:", "Наші сертифіковані партнери-психологи надають:")}</p>
-                  <ul className="space-y-3 text-sm text-muted-foreground font-light">
-                    {[
-                      t("Support and consultations for seafarers' spouses and relatives", "Підтримку й консультації для дружин, чоловіків і родичів моряків"),
-                      t("Stress-resilience sessions for seafarers before and after contracts", "Заняття зі стресостійкості для моряків до і після контракту"),
-                      t("Continuous mental health awareness integrated into our HR process", "Постійну увагу до психічного здоров’я як частину нашого HR-процесу"),
-                      t("Supporting the mental health of a sailor's wife and improving the quality of long-distance relationships and a comfortable stay together", "Підтримку психічного здоров’я дружини моряка, покращення стосунків на відстані та комфортного часу разом"),
-                    ].map((line) => (
-                      <li key={line} className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
-                        <span>{line}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="text-muted-foreground font-light leading-relaxed text-sm pt-2 border-t border-border/60">
-                    {t("This approach allows us not only to fill vacancies - but to build sustainable, motivated, and mentally healthy maritime teams.", "Такий підхід дає змогу не просто закривати вакансії, а формувати стабільні, вмотивовані й психологічно здорові морські команди.")}
-                  </p>
-                </CardContent>
-              </MotionCard>
+      {/* ═══════════ MISSION AND VALUES (once) ═══════════ */}
+      <section className="py-20 sm:py-28 bg-white/[0.03] border-y border-white/10">
+        <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
+          <h2 className={h2} data-testid="heading-core-values">{t("What we stand for", "Що для нас важливо")}</h2>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
+            <p className="text-lg sm:text-xl text-white/85 leading-relaxed">
+              <span className="font-semibold text-white">{t("Mission. ", "Місія. ")}</span>
+              {t(
+                "Reliable crewing through open communication, modern processes and long-term partnership built on trust.",
+                "Надійний крюїнг завдяки відкритій комунікації, сучасним процесам і довгостроковій співпраці, побудованій на довірі."
+              )}
+            </p>
+            <p className="text-lg sm:text-xl text-white/85 leading-relaxed">
+              <span className="font-semibold text-white">{t("Vision. ", "Бачення. ")}</span>
+              {t(
+                "To grow into a maritime group: crew management, training, and psychological support for crews and families — with care at the centre.",
+                "Вирости в морську групу компаній: управління екіпажами, навчання, психологічна підтримка екіпажів і родин — з турботою в центрі."
+              )}
+            </p>
+          </div>
+          <ul className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-8">
+            {values.map((v) => (
+              <li key={v.title} className="border-t-2 border-cyan-400/70 pt-5">
+                <h3 className="font-headline text-xl sm:text-2xl font-semibold">{v.title}</h3>
+                <p className="mt-2 text-base text-white/80 leading-relaxed">{v.text}</p>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      </section>
+
+      {/* ═══════════ TEAM ═══════════ */}
+      <section className="py-20 sm:py-28">
+        <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
+          <h2 className={h2} data-testid="heading-leadership">{t("Leadership team", "Команда керівників")}</h2>
+          <ul className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 max-w-4xl">
+            {team.map((m) => (
+              <li key={m.role} data-testid="team-member">
+                <div className="overflow-hidden rounded-2xl ring-1 ring-white/10 aspect-[4/5] max-w-sm">
+                  <img src={m.photo} alt={m.name ?? m.role} loading="lazy" className="h-full w-full object-cover" />
+                </div>
+                {m.name && <p className="mt-5 font-headline text-2xl font-semibold">{m.name}</p>}
+                <p className={cn("text-lg font-semibold text-cyan-300", m.name ? "mt-1" : "mt-5")}>{m.role}</p>
+                <p className="mt-2 text-base sm:text-lg text-white/80 leading-relaxed max-w-sm">{m.text}</p>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      </section>
+
+      {/* ═══════════ GALLERY ═══════════ */}
+      <section className="pb-20 sm:pb-28">
+        <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
+          <h2 className={h2}>{t("AURA SEA at work", "AURA SEA у роботі")}</h2>
+          <div className="mt-10 columns-1 sm:columns-2 lg:columns-3 gap-5 [&>figure]:mb-5" data-testid="about-gallery">
+            {gallery.map((g) => (
+              <figure key={g.caption} className="break-inside-avoid">
+                <img src={g.src} alt={g.caption} loading="lazy" className="w-full rounded-2xl ring-1 ring-white/10" />
+                <figcaption className="mt-2 text-sm sm:text-base text-white/70">{g.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ═══════════ TRUST + NEXT STEP ═══════════ */}
+      <section className="pb-24 sm:pb-32">
+        <motion.div {...inView} variants={rise} className="max-w-6xl mx-auto px-5 sm:px-8">
+          <div className="glass-card rounded-3xl p-7 sm:p-12">
+            <p className="flex items-start gap-3 text-base sm:text-lg text-white/85 leading-relaxed max-w-4xl">
+              <ShieldCheck className="w-6 h-6 text-cyan-300 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <span>
+                {/* The same wording as in the Privacy Policy, with the company in front */}
+                {t("AURA SEA is ", "AURA SEA ")}
+                {COMPANY.intermediaryRegister[lang].replace(/^Included/, "included").replace(/^Включена/, "включена")}.
+              </span>
+            </p>
+            <h2 className="mt-8 font-headline text-3xl sm:text-4xl font-semibold text-balance">{t("Let's work together", "Працюймо разом")}</h2>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <Link href="/apply" className={primary} data-umami-event="about-close-apply">
+                {t("Apply as a seafarer", "Подати анкету моряка")}
+                <ArrowRight className="w-5 h-5" aria-hidden="true" />
+              </Link>
+              <Link href="/ship-owners" className={secondary} data-umami-event="about-close-ship-owners">
+                {t("Request candidates", "Запросити кандидатів")}
+              </Link>
             </div>
           </div>
-        </section>
-
-        {/* ═══════════ CORE VALUES ═══════════ */}
-        <section className="py-20 relative">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate" data-testid="heading-core-values">
-              {t("Our core values", "Наші ключові цінності")}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {coreValues.map((item, i) => {
-                const Icon = item.icon;
-                return (
-                  <MotionCard
-                    key={item.title}
-                    initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-                    whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.8, delay: (0.1 + (Math.min(i, 3) * 0.2)).toFixed(1), ease: "easeOut" }}
-                    className={`glass-card h-full group cursor-default transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
-                    data-testid={`card-core-value-${item.title.toLowerCase().replace(/\s+/g, "-")}`}
-                  >
-                    <CardHeader className="flex flex-row items-start gap-4 space-y-0">
-                      <div className={`flex-shrink-0 w-12 h-12 rounded-lg ${item.iconBg} flex items-center justify-center`}>
-                        <Icon className={`w-6 h-6 transition-transform duration-500 ease-out ${item.iconClass}`} />
-                      </div>
-                      <div>
-                        <CardTitle className="font-headline text-lg font-medium mb-2">{item.title}</CardTitle>
-                        <CardDescription className="text-sm font-light leading-relaxed">{item.desc}</CardDescription>
-                      </div>
-                    </CardHeader>
-                  </MotionCard>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════ LEADERSHIP ═══════════ */}
-        <section className="py-20">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="font-headline text-3xl font-semibold text-center text-foreground mb-12 scroll-animate" data-testid="heading-leadership">
-              {t("Leadership team", "Команда керівників")}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {leadership.map((item, i) => {
-                const Icon = item.icon;
-                return (
-                  <MotionCard
-                    key={item.title}
-                    initial={{ opacity: 0, y: 40, x: 0, scale: 1 }}
-                    whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.8, delay: (0.1 + (i * 0.2)).toFixed(1), ease: "easeOut" }}
-                    className={`glass-card text-center group transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30`}
-                    data-testid={`card-leadership-${item.badge.toLowerCase().replace(/\s+/g, "-")}`}
-                  >
-                    <CardHeader className="items-center pb-2">
-                      <div
-                        className={`w-20 h-20 rounded-full bg-gradient-to-br ${item.gradient} mb-4 flex items-center justify-center shadow-lg`}
-                      >
-                        <Icon className="w-10 h-10 text-primary-foreground transition-transform duration-500 ease-out" />
-                      </div>
-                      <CardTitle className="font-headline text-lg font-medium">{item.title}</CardTitle>
-                      <Badge variant="secondary" className="mt-2 font-light text-xs w-fit mx-auto">
-                        {item.badge}
-                      </Badge>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground font-light">{item.desc}</p>
-                    </CardContent>
-                  </MotionCard>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      </div>
+        </motion.div>
+      </section>
     </div>
   );
 }

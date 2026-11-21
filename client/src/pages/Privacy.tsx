@@ -15,7 +15,7 @@ const EFFECTIVE_DATE = { en: "19 November 2026", uk: "19 листопада 2026
  * The legal name and registration code are required by Art. 12 of the Law of Ukraine
  * "On Personal Data Protection" and Art. 13 GDPR (identity of the controller).
  */
-const COMPANY = {
+export const COMPANY = {
   brand: "AURA SEA",
   // Individual entrepreneur (ФОП). Her tax number (РНОКПП) is personal data and is deliberately not published here
   legalName: { en: "Individual Entrepreneur Anastasiia Prodius", uk: "ФОП Продіус Анастасія Олегівна" },

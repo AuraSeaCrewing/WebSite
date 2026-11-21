@@ -12,6 +12,7 @@ import beyondImage from "@assets/ship_owners/beyond.webp";
 import readyImage from "@assets/ship_owners/ready.webp";
 import partnerImage from "@assets/ship_owners/partner.webp";
 import horizonImage from "@assets/ship_owners/horizon.webp";
+import directorPhoto from "@assets/team/managing-director.webp";
 
 // "For Ship-Owners", rebranded after the AURA SEA campaign (owner's series of 7 posters, 20.11.2026):
 // the page tells the same story frame by frame — need a full crew → the challenge → the right people →
@@ -129,7 +130,7 @@ export default function ShipOwners() {
 
   const steps = [
     { title: t("Requirements", "Вимоги"), text: t("We discuss your fleet needs, vessel types, and specific crew requirements in detail.", "Детально обговорюємо потреби вашого флоту, типи суден і вимоги до екіпажу.") },
-    { title: t("Shortlist", "Шорт-лист"), text: t("Our team identifies qualified candidates from our extensive database of 500+ seafarers.", "Наша команда підбирає кваліфікованих кандидатів із бази понад 500 моряків.") },
+    { title: t("Shortlist", "Шорт-лист"), text: t("Our team identifies qualified candidates from our extensive database of 2,000+ active seafarers.", "Наша команда підбирає кваліфікованих кандидатів із бази понад 2000 активних моряків.") },
     { title: t("Vetting", "Перевірка"), text: t("Comprehensive background checks, certification verification, and qualification assessment.", "Ретельна перевірка біографії, сертифікатів і кваліфікації.") },
     { title: t("Deployment", "Направлення на судно"), text: t("Complete documentation preparation, travel arrangements, and vessel joining coordination.", "Повна підготовка документів, організація поїздки та координація посадки на судно.") },
     { title: t("Ongoing Support", "Постійна підтримка"), text: t("24/7 communication, contract management, and crew change coordination throughout the assignment.", "Зв’язок 24/7, супровід контракту та координація змін екіпажу протягом усього рейсу.") },
@@ -260,6 +261,19 @@ export default function ShipOwners() {
           <motion.p variants={rise} className="mt-6 text-lg sm:text-xl text-white/85 max-w-2xl leading-relaxed">
             {t("Contact us today to learn how AURA SEA can become your reliable crewing partner.", "Зв’яжіться з нами, щоб дізнатися, як AURA SEA може стати вашим надійним крюїнговим партнером.")}
           </motion.p>
+          {/* Direct line to the director (from the owner's LinkedIn profile, 21.11.2026) */}
+          <motion.div variants={rise} className="mt-8 flex items-center gap-4 max-w-2xl" data-testid="ship-owners-director">
+            <img src={directorPhoto} alt={t("Maksym Prodius", "Максим Продіус")} loading="lazy" className="size-16 sm:size-20 flex-shrink-0 rounded-full object-cover ring-2 ring-[#19d3f5]/70" />
+            <p className="text-base sm:text-lg text-white/90 leading-relaxed">
+              <span className="block font-semibold text-white">
+                {t("Direct line to the agency director — no account managers, no middlemen.", "Прямий зв’язок із директором агенції — без менеджерів-посередників.")}
+              </span>
+              {t(
+                "Maksym Prodius, founder, 15 years at sea, answers every enquiry from ship-owners and fleet managers personally.",
+                "Максим Продіус, засновник, 15 років у морі, особисто відповідає на кожен запит судновласників і менеджерів флоту."
+              )}
+            </p>
+          </motion.div>
           <motion.div variants={rise} className="mt-9 flex flex-col sm:flex-row gap-3">
             <a href="mailto:partner@aurasea.org" className={primary} data-testid="button-contact-ship-owners" data-umami-event="ship-owners-email">
               <Mail className="w-5 h-5" aria-hidden="true" />
