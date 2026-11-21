@@ -6,6 +6,7 @@ import {
   Trash2, User, Phone, Users,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { PhotoCropper } from "@/components/PhotoCropper";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -386,19 +387,17 @@ function ServiceHint({ href, text }: { href: string; text: string }) {
   );
 }
 
-/** Photo up to 800 px, JPEG: a phone picture of several MB becomes ~150 KB before it is sent. */
-async function shrinkPhoto(file: File): Promise<string> {
+/** The chosen photo, turned by EXIF and brought down to 1600 px: the editor works on this. */
+async function loadPhoto(file: File): Promise<ImageBitmap> {
   const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" } as ImageBitmapOptions);
-  const scale = Math.min(1, 800 / Math.max(bitmap.width, bitmap.height));
+  const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+  if (scale === 1) return bitmap;
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(bitmap.width * scale);
   canvas.height = Math.round(bitmap.height * scale);
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("no canvas");
-  ctx.fillStyle = "#fff";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  return canvas.toDataURL("image/jpeg", 0.85);
+  canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  return createImageBitmap(canvas);
 }
 
 /** Optional portrait photo: it becomes the photo in the AURA SEA form and in the seafarer's card. */
@@ -408,6 +407,9 @@ function PhotoInput({ value, onChange }: { value: string; onChange: (v: string) 
   const errors = useContext(ErrorsContext);
   const [busy, setBusy] = useState(false);
   const [own, setOwn] = useState("");
+  // The photo being framed in the editor, and the last one chosen (for "Adjust")
+  const [editing, setEditing] = useState<ImageBitmap | null>(null);
+  const [source, setSource] = useState<ImageBitmap | null>(null);
   const error = own || errors.photo;
   const pick = async (file: File | undefined) => {
     if (!file) return;
@@ -415,7 +417,9 @@ function PhotoInput({ value, onChange }: { value: string; onChange: (v: string) 
     if (!file.type.startsWith("image/")) return setOwn(t("Please choose a photo (JPG or PNG).", "Оберіть, будь ласка, фото (JPG або PNG)."));
     setBusy(true);
     try {
-      onChange(await shrinkPhoto(file));
+      const bitmap = await loadPhoto(file);
+      setSource(bitmap);
+      setEditing(bitmap);
     } catch {
       setOwn(t("We could not read this photo. Please choose another one.", "Не вдалося прочитати фото. Оберіть, будь ласка, інше."));
     } finally {
@@ -424,16 +428,27 @@ function PhotoInput({ value, onChange }: { value: string; onChange: (v: string) 
   };
   return (
     <div className="mb-6 flex items-center gap-5" data-field="photo">
-      <div className="w-24 h-32 flex-shrink-0 overflow-hidden rounded-lg border border-border/70 bg-background/40 grid place-items-center">
+      {editing && (
+        <PhotoCropper
+          image={editing}
+          onCancel={() => setEditing(null)}
+          onDone={(url) => {
+            onChange(url);
+            setEditing(null);
+          }}
+        />
+      )}
+      {/* Round, as the avatar in the CRM */}
+      <div className="size-24 sm:size-28 flex-shrink-0 overflow-hidden rounded-full border border-border/70 bg-background/40 grid place-items-center">
         {value ? (
-          <img src={value} alt={t("Your photo", "Ваше фото")} className="h-full w-full object-cover" />
+          <img src={value} alt={t("Your photo", "Ваше фото")} className="h-full w-full object-cover" data-testid="photo-preview" />
         ) : (
           <Camera className="w-8 h-8 text-muted-foreground" aria-hidden="true" />
         )}
       </div>
       <div className="min-w-0">
         <p className="text-base text-foreground">{t("Photo", "Фото")} <span className="text-muted-foreground text-sm">({t("optional", "необов’язково")})</span></p>
-        <p className="text-sm text-muted-foreground mt-0.5">{t("A portrait like for documents. It goes into your application and the AURA SEA form.", "Портрет, як на документи. Буде у вашій анкеті й бланку AURA SEA.")}</p>
+        <p className="text-sm text-muted-foreground mt-0.5">{t("A portrait like for documents. After choosing, place your face in the circle.", "Портрет, як на документи. Після вибору розмістіть обличчя в колі.")}</p>
         <div className="mt-2 flex flex-wrap gap-2">
           <label
             htmlFor={id}
@@ -455,6 +470,11 @@ function PhotoInput({ value, onChange }: { value: string; onChange: (v: string) 
               data-testid="input-photo"
             />
           </label>
+          {value && source && (
+            <button type="button" onClick={() => setEditing(source)} className="min-h-[44px] rounded-full px-4 text-base text-cyan-200 hover:text-cyan-100" data-testid="photo-adjust">
+              {t("Adjust", "Змінити кадр")}
+            </button>
+          )}
           {value && (
             <button type="button" onClick={() => onChange("")} className="min-h-[44px] rounded-full px-4 text-base text-muted-foreground hover:text-foreground">
               {t("Remove", "Прибрати")}
